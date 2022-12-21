@@ -4,6 +4,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
+import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { read as xlsxread, utils as xlsxUtils, WorkBook } from 'xlsx';
 import { IMstc } from './interface/mstc';
 import { Mstc } from './model/mstc';
@@ -17,6 +18,7 @@ import { SpinnerService } from './service/spinner.service';
 export class AppComponent implements OnInit {
   mstcArray: Mstc[] = [];
   mstcArrayVVRProducts: Mstc[] = [];
+  mstcArrayVVRProductsGroup: Mstc[] = [];
 
   @ViewChild('fileUpload')
   fileUpload: ElementRef;
@@ -24,33 +26,54 @@ export class AppComponent implements OnInit {
   files: FileList;
   excelFile: File;
 
+  selectedTableType: string = 'product';
+
   //showSpinner: boolean = false;
 
-  displayedColumns = [
-    'name',
-    'year-month',
-    'groupCode',
-    'indexNumber',
-    'itemDesc',
-    'stackNumber',
-    'casePack',
-    'openingCases',
-    'openingUnits',
-    'receivedCases',
-    'receivedUnits',
-    'soldCases',
-    'soldUnits',
-    'otherIssueCases',
-    'otherIssueUnits',
-    'stockedCases',
-    'stockedUnits',
-    'deniedCases',
-    'deniedUnits',
+  // displayedColumns = [
+  //   'name',
+  //   'year-month',
+  //   'groupCode',
+  //   'indexNumber',
+  //   'itemDesc',
+  //   'stackNumber',
+  //   'casePack',
+  //   'openingCases',
+  //   'openingUnits',
+  //   'receivedCases',
+  //   'receivedUnits',
+  //   'soldCases',
+  //   'soldUnits',
+  //   'otherIssueCases',
+  //   'otherIssueUnits',
+  //   'stockedCases',
+  //   'stockedUnits',
+  //   'deniedCases',
+  //   'deniedUnits',
+  // ];
+
+  mergeColumns: Array<keyof Mstc> = [
+    'QTY_OPENING_CASES',
+    'QTY_OPENING_UNITS',
+    'QTY_RECEIVED_CASES',
+    'QTY_RECEIVED_UNITS',
+    'QTY_SOLD_CASES',
+    'QTY_SOLD_UNITS',
+    'QTY_OTHER_ISS_CASES',
+    'QTY_OTHER_ISS_UNITS',
+    'QTY_STOCKED_CASES',
+    'QTY_STOCKED_UNITS',
+    'QTY_DENIED_CASES',
+    'QTY_DENIED_UNITS',
   ];
 
   constructor(private spinnerService: SpinnerService) {}
 
   ngOnInit(): void {}
+
+  onTableTypeChange(event: MatButtonToggleChange) {
+    this.selectedTableType = event.value
+  }
 
   onClick(event: Event) {
     if (this.fileUpload) {
@@ -97,8 +120,12 @@ export class AppComponent implements OnInit {
         this.mstcArrayVVRProducts = this.mstcArray.filter(
           (mstc: Mstc) => this.myProductIds.indexOf(mstc.INDEX_NUM) !== -1
         );
+
+        this.mstcArrayVVRProductsGroup = this.prepareDataGroup(JSON.parse(JSON.stringify(this.mstcArrayVVRProducts)));
+
         console.log('mstcArray => ', this.mstcArray);
         console.log('mstcArrayVVRProducts => ', this.mstcArrayVVRProducts);
+        console.log('mstcArrayVVRProductsGroup => ', this.mstcArrayVVRProductsGroup);
         //this.showSpinner = false;
         this.spinnerService.spin$.next(false);
       };
@@ -110,6 +137,31 @@ export class AppComponent implements OnInit {
       this.excelFile = undefined;
       this.spinnerService.spin$.next(false);
     }
+  }
+
+  prepareDataGroup(data: Mstc[]) :Mstc[] {
+    let group: Mstc[] = [];
+    data.forEach((obj: Mstc) => {
+      let existingObj = group.find(
+        (item: Mstc) => item.INDEX_NUM == obj.INDEX_NUM
+      );
+
+      if (existingObj) {
+        existingObj = this.mergeMstcObj(existingObj, obj);
+      } else {
+        delete obj.STACK_NUM;
+        group.push(obj);
+      }
+    });
+
+    return group;
+  }
+
+  mergeMstcObj(existingObj: Mstc, obj: Mstc): Mstc {
+    this.mergeColumns.forEach((col: keyof Mstc) => {
+      (existingObj[col] as number) = (existingObj[col] as number)  + (obj[col] as number);
+    });
+    return existingObj;
   }
 
   // product ids aka index_num hard coded for now

@@ -19,8 +19,9 @@ export class MatTableComponent implements AfterViewInit, OnChanges {
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   @Input() tableData: Mstc[];
+  //@Input() displayGroup: boolean;
 
-  displayedColumns: string[] = [
+  displayedColumns: Array<keyof Mstc> = [
     'NAME',
     'YEAR_MONTH',
     'GROUP_CODE',
@@ -64,7 +65,7 @@ export class MatTableComponent implements AfterViewInit, OnChanges {
     QTY_DENIED_UNITS: 'Denied Units',
   };
 
-  totalParams = [
+  totalParams: Array<keyof Mstc> = [
     'QTY_OPENING_CASES',
     'QTY_OPENING_UNITS',
     'QTY_RECEIVED_CASES',
@@ -87,6 +88,13 @@ export class MatTableComponent implements AfterViewInit, OnChanges {
     if (changes && changes.tableData) {
       this.setDatasource(this.tableData);
     }
+    // if (changes && changes.displayGroup.currentValue) {
+    //   if(changes.displayGroup.currentValue){
+
+    //   } else{
+
+    //   }
+    // }
   }
 
   ngAfterViewInit(): void {
@@ -116,7 +124,7 @@ export class MatTableComponent implements AfterViewInit, OnChanges {
     };
   }
 
-  getTotal(param: string): number {
+  getTotal(param: keyof Mstc): number {
     if (this.totalParams.indexOf(param) === -1) {
       return null;
     }
@@ -129,7 +137,7 @@ export class MatTableComponent implements AfterViewInit, OnChanges {
     }
     if (data) {
       return data
-        .map((t: Mstc) => t[param as keyof Mstc] as number)
+        .map((t: Mstc) => t[param] as number)
         .reduce((acc, value) => acc + value, 0);
     }
     return null;

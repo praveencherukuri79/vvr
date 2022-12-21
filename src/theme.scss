@@ -29,6 +29,25 @@ $theme: mat.define-light-theme((
   typography: mat.define-typography-config(),
 ));
 
+// mat-button-toggle.mat-button-toggle-checked, mat-button-toggle.cdk-focused, mat-button-toggle.cdk-mouse-focused {
+//   background: $theme-primary;
+//   }
+
+
+// .mat-button-toggle {
+// background-color: mat.get-color-from-palette($theme-primary);
+// color: mat.get-color-from-palette($theme-primary, 'default-contrast');
+// }
+
+// .mat-button-toggle-disabled {
+// background-color: rgba(0,0,0,.12);
+// color: rgba(0,0,0,.26);
+// }
+// .mat-button-toggle-checked {
+// background-color: mat.get-color-from-palette($theme-accent);
+// color: mat.get-color-from-palette($theme-accent, 'default-contrast');
+// }
+
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
