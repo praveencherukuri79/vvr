@@ -176,3 +176,94 @@
 //         <!-- </table> -->
 //     </mat-table>
 // </div>
+
+
+
+
+
+
+
+
+//************Print********************* */
+//************Print********************* */
+//************Print********************* */
+//************Print********************* */
+
+
+
+
+
+
+
+
+
+
+
+
+  // printWindow1() {
+  //   let doc = new jsPDF();
+  //   let data: Array<any> = [];
+
+  //   this.dataSource.filteredData.forEach((obj: Mstc) => {
+  //     let arr: Array<any> = [];
+  //     this.displayedColumns.forEach((col) => {
+  //       arr.push(obj[col]);
+  //     });
+  //     data.push(arr);
+  //   });
+  //   // autoTable({
+  //   //   head: [['NAme','approved','utilised', 'available','asd','sadadasada','asdas']],
+  //   //   body: data
+  //   // });
+
+  //   autoTable(doc, {
+  //     head: [this.displayedColumns],
+  //     body: data,
+  //     didDrawPage: (dataArg) => {
+  //       doc.text('PAGE', dataArg.settings.margin.left, 10);
+  //     },
+  //   });
+  //   doc.save('table.pdf');
+  // }
+
+//   printWindow5() {
+//     const printContent = document.getElementById('vvr-mat-table');
+//     let printHead = document.head.innerHTML;
+//     // const WindowPrt = window.open(
+//     //   '',
+//     //   '',
+//     //   'left=0,top=0,width=900,height=900,toolbar=0,scrollbars=0,status=0'
+//     // );
+//     const WindowPrt = window.open(
+//       '',
+//       '_blank',
+//       'top=0,left=0,height=auto,width=900'
+//     );
+//     //WindowPrt.document.write(printContent.innerHTML);
+//     WindowPrt.document.write(`
+//   <html>
+//   ${printHead}
+// <body>${printContent.innerHTML}</body>
+//   </html>`);
+//     WindowPrt.document.close();
+//     WindowPrt.focus();
+//     WindowPrt.print();
+//     WindowPrt.close();
+//   }
+
+//   printWindow4() {
+//     let printContents, popupWin;
+//     printContents = document.getElementById('vvr-mat-table').innerHTML;
+//     //console.log(printContents)
+//     popupWin = window.open('', '_blank', 'top=0,left=0,height=auto,width=auto');
+//     popupWin.document.open();
+//     popupWin.document.write(`
+//   <html>
+//     <head>
+//       <title>Print tab</title>
+     
+//     </head>
+// <body onload="window.print();window.close()"><table class="table table-bordered">${printContents}</table></body>
+//   </html>`);
+//     popupWin.document.close();
+//   }

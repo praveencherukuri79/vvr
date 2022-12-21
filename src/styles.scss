@@ -1,14 +1,78 @@
 body {
-    font-family: Roboto, "Helvetica Neue", sans-serif;
-    margin: 0;
-    padding: 30px;
-  }
-  
-  html, body {
-    height: 100%;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  margin: 0;
+  padding: 30px;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+.cdk-overlay-backdrop.cdk-overlay-backdrop-showing.dark-backdrop {
+  background: grey;
+  opacity: 0.45 !important;
+}
+
+.px-10 {
+  padding: 10px;
+}
+
+.mx-10 {
+  margin: 10px;
+}
+
+// @media print and (width: 21cm) and (height: 29.7cm) {
+//   @page {
+//      margin: 3cm;
+//   }
+// }
+
+// /* style sheet for "letter" printing */
+// @media print and (width: 8.5in) and (height: 11in) {
+//  @page {
+//      margin: 1in;
+//  }
+// }
+
+// @media print {
+// /* A3 Landscape*/
+// @page {
+//   size: A3 landscape;
+//   margin: 10%;
+//  }
+// }
+
+.only-print{
+  display: none !important;
+}
+
+@media print {
+  #vvr-mat-table>mat-footer-row {
+    bottom: 0px !important;
+    position: static !important;
   }
 
-  .cdk-overlay-backdrop.cdk-overlay-backdrop-showing.dark-backdrop {
-    background: grey;
-    opacity: 0.45 !important;
+  .no-print{
+    display: none !important;
   }
+
+  .only-print{
+    display: block !important;
+  }
+  // body *:not(#vvr-mat-table) {
+  //   display: none;
+  // }
+
+  // body>* {
+  //   display: none;
+  // }
+
+  // #vvr-mat-table {
+  //   display: block;
+  // }
+
+  // body > app-root > app-mat-table > div.example-container.mat-elevation-z8 > #vvr-mat-table {
+  //   display: block !important;
+  // }
+}

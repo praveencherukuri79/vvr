@@ -45,7 +45,7 @@ export class MatTableComponent implements AfterViewInit, OnChanges {
 
   displayNames: { [key: string]: string } = {
     NAME: 'Name',
-    YEAR_MONTH: 'year Month',
+    YEAR_MONTH: 'Year Month',
     GROUP_CODE: 'Group Code',
     INDEX_NUM: 'Index Number',
     ITEM_DESC: 'Item Desc',
@@ -148,5 +148,9 @@ export class MatTableComponent implements AfterViewInit, OnChanges {
     filterValue = filterValue.trim().toLowerCase();
     filterValue = column + '||' + filterValue;
     this.dataSource.filter = filterValue;
+  }
+
+  printWindow() {
+    window.print();
   }
 }

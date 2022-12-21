@@ -1,36 +1,56 @@
+<div class="print-window px-10 no-print">
+  <button mat-raised-button color="primary" (click)="printWindow()" matTooltip="use A3 size and landsacpe view">
+    <mat-icon fontIcon="print"></mat-icon> Print</button>
+</div>
+
 <div class="example-container mat-elevation-z8" [class.hidden]="!dataSource">
 
-    <mat-form-field>
-        <mat-label>Filter by Index Number</mat-label>
-        <input matInput (keyup)="applyFilter($event, 'INDEX_NUM')" placeholder="Index Number">
-      </mat-form-field>
+  <mat-form-field class="no-print">
+    <mat-label>Filter by Index Number</mat-label>
+    <input matInput (keyup)="applyFilter($event, 'INDEX_NUM')" placeholder="Index Number">
+  </mat-form-field>
 
-      <mat-form-field>
-        <mat-label>Filter by Name</mat-label>
-        <input matInput (keyup)="applyFilter($event, 'NAME')" placeholder="Name">
-      </mat-form-field>
+  <mat-form-field class="no-print">
+    <mat-label>Filter by Name</mat-label>
+    <input matInput (keyup)="applyFilter($event, 'NAME')" placeholder="Name">
+  </mat-form-field>
 
-      <mat-form-field>
-        <mat-label>Filter by Item Description</mat-label>
-        <input matInput (keyup)="applyFilter($event, 'ITEM_DESC')" placeholder="Item Description">
-      </mat-form-field>
+  <mat-form-field class="no-print">
+    <mat-label>Filter by Item Description</mat-label>
+    <input matInput (keyup)="applyFilter($event, 'ITEM_DESC')" placeholder="Item Description">
+  </mat-form-field>
 
-    <!-- <mat-table #table [dataSource]="dataSource" matSort> -->
-    <mat-table #table [dataSource]="dataSource" matSort matSortDirection="asc" matSortActive="indexNumber"
-        matSortDisableClear>
+  <mat-table id="vvr-mat-table" [dataSource]="dataSource" matSort matSortDirection="asc" matSortActive="indexNumber"
+    matSortDisableClear>
 
-        <ng-container *ngFor="let column of displayedColumns">
-            <ng-container [matColumnDef]="column">
-                <mat-header-cell *matHeaderCellDef [mat-sort-header]="column"> {{displayNames[column]}} </mat-header-cell>
-                <mat-cell *matCellDef="let element"><span class="mobile-label">{{displayNames[column]}}:</span>
-                    {{element[column]}} </mat-cell>
-                <mat-footer-cell *matFooterCellDef> {{column == 'NAME' ? 'Total' : getTotal(column)}} </mat-footer-cell>
-            </ng-container>
-        </ng-container>
+    <ng-container *ngFor="let column of displayedColumns">
+      <ng-container [matColumnDef]="column">
+        <mat-header-cell *matHeaderCellDef [mat-sort-header]="column"> {{displayNames[column]}} </mat-header-cell>
+        <mat-cell *matCellDef="let element"><span class="mobile-label">{{displayNames[column]}}:</span>
+          {{element[column]}} </mat-cell>
+        <mat-footer-cell *matFooterCellDef> {{column == 'NAME' ? 'Total' : getTotal(column)}} </mat-footer-cell>
+      </ng-container>
+    </ng-container>
 
-        <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-        <mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></mat-footer-row>
-        <!-- </table> -->
-    </mat-table>
+    <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    <mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></mat-footer-row>
+  </mat-table>
+
+  <!-- <table mat-table #table [dataSource]="dataSource" matSort matSortDirection="asc" matSortActive="indexNumber"
+    matSortDisableClear>
+
+    <ng-container *ngFor="let column of displayedColumns">
+      <ng-container [matColumnDef]="column">
+        <th mat-header-cell *matHeaderCellDef [mat-sort-header]="column"> {{displayNames[column]}} </th>
+        <td mat-cell *matCellDef="let element"><span class="mobile-label">{{displayNames[column]}}:</span>
+          {{element[column]}} </td>
+        <td mat-footer-cell *matFooterCellDef> {{column == 'NAME' ? 'Total' : getTotal(column)}} </td>
+      </ng-container>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></tr>
+  </table> -->
 </div>

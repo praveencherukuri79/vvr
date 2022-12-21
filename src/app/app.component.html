@@ -2,11 +2,26 @@
     <mat-progress-spinner [mode]="mode" [value]="value">
     </mat-progress-spinner>
 </div> -->
-<h1 class="heading-vvr">Welcome to VVR Project</h1>
+<h1 class="heading-vvr no-print">Welcome to VVR Project</h1>
 
-<div class="file-select">
-    <button mat-raised-button color="primary" (click)="onClick($event)">
-        <mat-icon fontIcon="add"></mat-icon>
+<h1 class="heading-vvr only-print">Invoice of Sales</h1>
+
+<div class="only-print px-10">
+    <p>To,</p>
+    <p>The Manager</p>
+    <p>Company Name</p>
+    <p>Address - zipCode</p>
+    <br>
+    <p>Dear Sir,</p>
+    <br>
+    <p>Sub: SALE & STOCK POSITON FOR THE MONTH OF Month - Year of Depot.</p>
+    <br>
+</div>
+
+<div class="file-select no-print">
+    <button mat-raised-button color="primary" (click)="onClick($event)"
+        matTooltip="supported files are '.xls' and '.xlsx'">
+        <mat-icon fontIcon="upload"></mat-icon>
         Choose File</button>
     <input #fileUpload type="file" class="ng-hide" id="input-file-id" (change)="onFileChange($event)"
         accept=".xls, .xlsx" />
@@ -27,10 +42,11 @@
 
 
 
+
 <ng-container
     *ngIf="mstcArrayVVRProducts && mstcArrayVVRProducts.length && mstcArrayVVRProductsGroup && mstcArrayVVRProductsGroup.length">
 
-    <div class="px-10">
+    <div class="px-10 no-print">
         <h3>Select Product Or Group Table</h3>
         <mat-button-toggle-group name="tableType" aria-label="Table Type" [value]="selectedTableType"
             (change)="onTableTypeChange($event)">
@@ -48,3 +64,9 @@
 <!-- <ng-container *ngIf="mstcArrayVVRProductsGroup && mstcArrayVVRProductsGroup.length">
     <app-mat-table [tableData]="mstcArrayVVRProductsGroup"></app-mat-table>
 </ng-container> -->
+
+<div class="only-print px-10">
+    <p>Regards</p>
+    <p>VVR</p>
+    <br>
+</div>
