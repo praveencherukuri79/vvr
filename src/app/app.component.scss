@@ -7,7 +7,12 @@
 }
 
 .file-select {
-    padding: 5px;
+    display: flex;
+    padding: 10px;
+}
+
+.selected_file{
+    padding: 10px;
 }
 
 .progress-spinner {

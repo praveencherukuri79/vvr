@@ -11,19 +11,21 @@
     <input #fileUpload type="file" class="ng-hide" id="input-file-id" (change)="onFileChange($event)"
         accept=".xls, .xlsx" />
     <!-- <label for="input-file-id" class="md-button md-raised md-primary">Choose Files</label> -->
+
+    <div *ngIf="excelFile" class="selected_file">
+        <span>Selected file is "{{excelFile.name}}"</span>
+        <!-- <button mat-icon-button
+                color="primary"
+                title="Delete"
+                (click)="removeFile(event,i)"
+        >
+          <mat-icon fontIcon="delete"></mat-icon>
+        </button> -->
+    </div>
 </div>
 
 
-<div *ngIf="excelFile">
-    <span>Selected file is "{{excelFile.name}}"</span>
-    <!-- <button mat-icon-button
-            color="primary"
-            title="Delete"
-            (click)="removeFile(event,i)"
-    >
-      <mat-icon fontIcon="delete"></mat-icon>
-    </button> -->
-</div>
+
 
 
 
