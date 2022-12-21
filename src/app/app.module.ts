@@ -6,10 +6,11 @@ import { AppComponent } from './app.component';
 import { MaterialModule } from './material.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { AppSpinnerComponent } from './component/app-spinner/app-spinner.component';
+import { MatTableComponent } from './component/mat-table/mat-table.component';
 
 @NgModule({
   declarations: [
-    AppComponent, AppSpinnerComponent
+    AppComponent, AppSpinnerComponent, MatTableComponent
   ],
   imports: [
     BrowserAnimationsModule,
