@@ -1,6 +1,11 @@
-import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { MatSort, Sort } from '@angular/material/sort';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { read as xlsxread, utils as xlsxUtils, WorkBook } from 'xlsx';
 import { IMstc } from './interface/mstc';
@@ -12,7 +17,7 @@ import { SpinnerService } from './service/spinner.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements AfterViewInit, OnInit {
   mstcArray: Mstc[] = [];
   mstcArrayVVRProducts: Mstc[] = [];
 
@@ -51,9 +56,23 @@ export class AppComponent implements AfterViewInit {
     'deniedUnits',
   ];
   //dataSource = new MatTableDataSource<IMstc>(this.mstcArrayVVRProducts);
-  dataSource: MatTableDataSource<IMstc>;
+  dataSource: MatTableDataSource<Mstc>;
 
-  constructor(private spinnerService: SpinnerService, private _liveAnnouncer: LiveAnnouncer) {}
+  constructor(private spinnerService: SpinnerService) {}
+
+  ngOnInit(): void {}
+
+  setFilterPredictate() {
+    this.dataSource.filterPredicate = (data: Mstc, filter: string): boolean => {
+      const filterArray = filter.split('||');
+      const columnName = filterArray[0];
+      const filterKey = filterArray[1];
+      return data[columnName as keyof Mstc]
+        .toString()
+        .toLowerCase()
+        .includes(filterKey);
+    };
+  }
 
   onClick(event: Event) {
     if (this.fileUpload) {
@@ -97,13 +116,15 @@ export class AppComponent implements AfterViewInit {
             this.mstcArray.push(new Mstc(obj));
           });
         }
-        this.mstcArrayVVRProducts = this.mstcArray.filter((mstc: Mstc)=> this.myProductIds.indexOf(mstc.INDEX_NUM) !== -1);
+        this.mstcArrayVVRProducts = this.mstcArray.filter(
+          (mstc: Mstc) => this.myProductIds.indexOf(mstc.INDEX_NUM) !== -1
+        );
         //this.mstcArrayVVRProducts = this.mstcArrayVVRProducts.slice(0,10);
-        this.dataSource = new MatTableDataSource<IMstc>(this.mstcArrayVVRProducts);
-        //setTimeout(() => {
-          this.dataSource.sort = this.sort
-        //}, 1000);
-        //this.dataSource.sort = this.sort;
+        this.dataSource = new MatTableDataSource<Mstc>(
+          this.mstcArrayVVRProducts
+        );
+        this.dataSource.sort = this.sort;
+        this.setFilterPredictate();
         console.log('mstcArray => ', this.mstcArray);
         console.log('mstcArrayVVRProducts => ', this.mstcArrayVVRProducts);
         //this.showSpinner = false;
@@ -117,6 +138,37 @@ export class AppComponent implements AfterViewInit {
       this.excelFile = undefined;
       this.spinnerService.spin$.next(false);
     }
+  }
+
+  getTotal(param: string): number {
+    let data: Mstc[];
+    if (this.dataSource && this.dataSource.filteredData) {
+      data = this.dataSource.filteredData;
+    } else if (this.dataSource && this.dataSource.data) {
+      data = this.dataSource.data;
+    }
+    if (data) {
+      return data
+        .map((t: Mstc) => t[param as keyof Mstc] as number)
+        .reduce((acc, value) => acc + value, 0);
+    }
+    return null;
+  }
+
+  applyFilterIndexNum(event: Event) {
+    let filterValue = (event.target as HTMLInputElement).value;
+    filterValue = filterValue.trim().toLowerCase();
+    filterValue = 'INDEX_NUM' + '||' + filterValue;
+    this.dataSource.filter = filterValue;
+    //this.table.renderRows();
+  }
+
+  applyFilterName(event: Event) {
+    let filterValue = (event.target as HTMLInputElement).value;
+    filterValue = filterValue.trim().toLowerCase();
+    filterValue = 'NAME' + '||' + filterValue;
+    this.dataSource.filter = filterValue;
+    //this.table.renderRows();
   }
 
   // SortChange(sortState: Sort) {
@@ -136,7 +188,6 @@ export class AppComponent implements AfterViewInit {
   //       this.files.
   //     }
   //   }
-
 
   // product ids aka index_num hard coded for now
   myProductIds = [

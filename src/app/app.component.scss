@@ -19,6 +19,10 @@
     transform: translateX(-50%) translateY(-50%);
 }
 
+.mat-mdc-footer-row .mat-mdc-footer-cell{
+    font-weight: bold;
+  }
+
 //   .example-container {
 //     display: flex;
 //     flex-direction: column;
@@ -73,6 +77,14 @@
     }
 
     .mat-mdc-header-row {
+        display: none;
+    }
+
+    .mat-footer-row {
+        display: none;
+    }
+
+    .mat-mdc-footer-row {
         display: none;
     }
 
