@@ -43,7 +43,7 @@ body {
 //  }
 // }
 
-.only-print{
+.only-print {
   display: none !important;
 }
 
@@ -53,13 +53,30 @@ body {
     position: static !important;
   }
 
-  .no-print{
+  .no-print {
     display: none !important;
   }
 
-  .only-print{
+  .only-print {
     display: block !important;
   }
+
+  body {
+    background-color: #d3edec;
+  }
+
+  #vvr-mat-table {
+    background-color: #b0cfc0;
+
+    mat-header-row {
+      background-color: #678f81;
+    }
+
+    mat-footer-row {
+      background-color: #678f81;
+    }
+  }
+
   // body *:not(#vvr-mat-table) {
   //   display: none;
   // }
