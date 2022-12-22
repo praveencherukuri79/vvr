@@ -1,3 +1,9 @@
+<div class="only-print px-10" *ngIf="invoiceHeader">
+  <ng-container *ngFor="let content of invoiceHeader">
+    <div [innerHtml]="content" class="invoice-content"></div>
+  </ng-container>
+</div>
+
 <div class="print-window px-10 no-print">
   <button mat-raised-button color="primary" (click)="printWindow()" matTooltip="use A3 size and landsacpe view">
     <mat-icon fontIcon="print"></mat-icon> Print</button>
@@ -53,4 +59,10 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     <tr mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></tr>
   </table> -->
+</div>
+
+<div class="only-print px-10" *ngIf="invoiceFooter" class="invoice-footer">
+  <ng-container *ngFor="let content of invoiceFooter">
+    <div [innerHtml]="content" class="invoice-content"></div>
+  </ng-container>
 </div>

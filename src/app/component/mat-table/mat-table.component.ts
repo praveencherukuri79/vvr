@@ -6,9 +6,11 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Mstc } from 'src/app/model/mstc';
+import { InvoiceDialogComponent } from '../invoice-dialog/invoice-dialog.component';
 
 @Component({
   selector: 'app-mat-table',
@@ -82,7 +84,11 @@ export class MatTableComponent implements AfterViewInit, OnChanges {
 
   dataSource: MatTableDataSource<Mstc>;
 
-  constructor() {}
+  invoiceHeader: Array<string>;
+  invoiceFooter: Array<string>;
+  //invoiceTest = "To,\nThe manager,\nsiyaram ltd,\nhyd-12345\n\ndear sir,\n\nSUb: jddjn jjjjj euhdeuhe edeedne njenedjuejn nxjednxeujnhuuejdneude.\n".split("\n");
+
+  constructor(private dialog: MatDialog) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes && changes.tableData) {
@@ -151,6 +157,21 @@ export class MatTableComponent implements AfterViewInit, OnChanges {
   }
 
   printWindow() {
-    window.print();
+    const dialogRef = this.dialog.open(InvoiceDialogComponent, {
+      height: '85vh',
+      width: '60vw',
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log(`Dialog result: ${result}`);
+      if (result) {
+        console.log('form data => ', result);
+        this.invoiceHeader = result.header ? result.header.split('\n') : null;
+        this.invoiceFooter = result.footer ? result.footer.split('\n') : null;
+        setTimeout(() => {
+          window.print();
+        }, 200);
+      }
+    });
+    //window.print();
   }
 }

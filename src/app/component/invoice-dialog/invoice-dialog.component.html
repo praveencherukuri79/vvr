@@ -1,0 +1,23 @@
+<h2 mat-dialog-title>Provide Invoice Input</h2>
+<mat-dialog-content>
+    <div class="dialog-close-icon">
+        <button mat-raised-button align="right" color="primary" (click)="close()"><mat-icon
+                fontIcon="close" class="no-margin"></mat-icon></button>
+    </div>
+    <form class="invoice-form" [formGroup]="invoiceForm">
+
+        <mat-form-field class="full-width">
+            <mat-label>Invoice Header</mat-label>
+            <textarea matInput placeholder="To, Manager, ....." rows="12" formControlName="header"></textarea>
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+            <mat-label>Invoice Footer</mat-label>
+            <textarea matInput placeholder="Regards, VVR ....." rows="6" formControlName="footer"></textarea>
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="center">
+    <button mat-raised-button color="primary" (click)="submit()">Continue</button>
+</mat-dialog-actions>

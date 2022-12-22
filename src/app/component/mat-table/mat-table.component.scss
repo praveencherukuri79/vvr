@@ -29,6 +29,15 @@
     display: none;
 }
 
+.invoice-content{
+padding: 10px 0px;
+}
+
+.invoice-footer{
+    padding-top: 20px;
+}
+
+
 @media(max-width: 600px) {
     .mobile-label {
         width: 80px;
