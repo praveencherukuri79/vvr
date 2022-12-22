@@ -61,7 +61,7 @@
   </table> -->
 </div>
 
-<div class="only-print px-10" *ngIf="invoiceFooter" class="invoice-footer">
+<div class="only-print px-10 invoice-footer" *ngIf="invoiceFooter">
   <ng-container *ngFor="let content of invoiceFooter">
     <div [innerHtml]="content" class="invoice-content"></div>
   </ng-container>
