@@ -25,28 +25,6 @@ export class AppComponent implements OnInit {
 
   //showSpinner: boolean = false;
 
-  // displayedColumns = [
-  //   'name',
-  //   'year-month',
-  //   'groupCode',
-  //   'indexNumber',
-  //   'itemDesc',
-  //   'stackNumber',
-  //   'casePack',
-  //   'openingCases',
-  //   'openingUnits',
-  //   'receivedCases',
-  //   'receivedUnits',
-  //   'soldCases',
-  //   'soldUnits',
-  //   'otherIssueCases',
-  //   'otherIssueUnits',
-  //   'stockedCases',
-  //   'stockedUnits',
-  //   'deniedCases',
-  //   'deniedUnits',
-  // ];
-
   mergeColumns: Array<keyof Mstc> = [
     'QTY_OPENING_CASES',
     'QTY_OPENING_UNITS',
@@ -83,17 +61,21 @@ export class AppComponent implements OnInit {
   }
 
   onFileChange(event: Event) {
+    this.resetTableData();
+    this.spinnerService.spin$.next(true);
+    setTimeout(() => {
+      this.parseFileData(event);
+    }, 100);
+  }
+
+  parseFileData(event: Event) {
     try {
-      //this.showSpinner = true;
-      this.spinnerService.spin$.next(true);
-      this.resetTableData();
       const target: HTMLInputElement = event.target as HTMLInputElement;
       this.files = target.files as FileList;
       this.excelFile = this.files[0];
 
       let workBook: WorkBook;
       let jsonData: { [key: string]: any } = {};
-
       const reader: FileReader = new FileReader();
 
       reader.onload = (event1) => {
@@ -128,7 +110,6 @@ export class AppComponent implements OnInit {
           'mstcArrayVVRProductsGroup => ',
           this.mstcArrayVVRProductsGroup
         );
-        //this.showSpinner = false;
         this.spinnerService.spin$.next(false);
       };
 

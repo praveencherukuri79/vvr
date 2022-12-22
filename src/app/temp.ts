@@ -267,3 +267,28 @@
 //   </html>`);
 //     popupWin.document.close();
 //   }
+
+
+// *****************//
+
+  // displayedColumns = [
+  //   'name',
+  //   'year-month',
+  //   'groupCode',
+  //   'indexNumber',
+  //   'itemDesc',
+  //   'stackNumber',
+  //   'casePack',
+  //   'openingCases',
+  //   'openingUnits',
+  //   'receivedCases',
+  //   'receivedUnits',
+  //   'soldCases',
+  //   'soldUnits',
+  //   'otherIssueCases',
+  //   'otherIssueUnits',
+  //   'stockedCases',
+  //   'stockedUnits',
+  //   'deniedCases',
+  //   'deniedUnits',
+  // ];
