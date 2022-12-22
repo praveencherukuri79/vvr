@@ -1,9 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { read as xlsxread, utils as xlsxUtils, WorkBook } from 'xlsx';
 import { IMstc } from './interface/mstc';
@@ -72,7 +67,7 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {}
 
   onTableTypeChange(event: MatButtonToggleChange) {
-    this.selectedTableType = event.value
+    this.selectedTableType = event.value;
   }
 
   onClick(event: Event) {
@@ -91,6 +86,7 @@ export class AppComponent implements OnInit {
     try {
       //this.showSpinner = true;
       this.spinnerService.spin$.next(true);
+      this.resetTableData();
       const target: HTMLInputElement = event.target as HTMLInputElement;
       this.files = target.files as FileList;
       this.excelFile = this.files[0];
@@ -112,6 +108,7 @@ export class AppComponent implements OnInit {
         console.log('jsonData => ', jsonData);
 
         let mstc = jsonData['MSTC'];
+
         if (mstc && mstc.length > 0) {
           mstc.forEach((obj: IMstc) => {
             this.mstcArray.push(new Mstc(obj));
@@ -121,11 +118,16 @@ export class AppComponent implements OnInit {
           (mstc: Mstc) => this.myProductIds.indexOf(mstc.INDEX_NUM) !== -1
         );
 
-        this.mstcArrayVVRProductsGroup = this.prepareDataGroup(JSON.parse(JSON.stringify(this.mstcArrayVVRProducts)));
+        this.mstcArrayVVRProductsGroup = this.prepareDataGroup(
+          JSON.parse(JSON.stringify(this.mstcArrayVVRProducts))
+        );
 
         console.log('mstcArray => ', this.mstcArray);
         console.log('mstcArrayVVRProducts => ', this.mstcArrayVVRProducts);
-        console.log('mstcArrayVVRProductsGroup => ', this.mstcArrayVVRProductsGroup);
+        console.log(
+          'mstcArrayVVRProductsGroup => ',
+          this.mstcArrayVVRProductsGroup
+        );
         //this.showSpinner = false;
         this.spinnerService.spin$.next(false);
       };
@@ -139,7 +141,13 @@ export class AppComponent implements OnInit {
     }
   }
 
-  prepareDataGroup(data: Mstc[]) :Mstc[] {
+  resetTableData() {
+    this.mstcArray = [];
+    this.mstcArrayVVRProducts = [];
+    this.mstcArrayVVRProductsGroup = [];
+  }
+
+  prepareDataGroup(data: Mstc[]): Mstc[] {
     let group: Mstc[] = [];
     data.forEach((obj: Mstc) => {
       let existingObj = group.find(
@@ -159,7 +167,8 @@ export class AppComponent implements OnInit {
 
   mergeMstcObj(existingObj: Mstc, obj: Mstc): Mstc {
     this.mergeColumns.forEach((col: keyof Mstc) => {
-      (existingObj[col] as number) = (existingObj[col] as number)  + (obj[col] as number);
+      (existingObj[col] as number) =
+        (existingObj[col] as number) + (obj[col] as number);
     });
     return existingObj;
   }
