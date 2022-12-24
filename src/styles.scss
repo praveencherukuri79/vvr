@@ -61,6 +61,10 @@ body {
     position: static !important;
   }
 
+  #vvr-mat-table>mat-header-row {
+    position: static !important;
+  }
+
   .no-print {
     display: none !important;
   }
@@ -84,20 +88,4 @@ body {
       background-color: #678f81;
     }
   }
-
-  // body *:not(#vvr-mat-table) {
-  //   display: none;
-  // }
-
-  // body>* {
-  //   display: none;
-  // }
-
-  // #vvr-mat-table {
-  //   display: block;
-  // }
-
-  // body > app-root > app-mat-table > div.example-container.mat-elevation-z8 > #vvr-mat-table {
-  //   display: block !important;
-  // }
 }

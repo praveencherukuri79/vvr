@@ -20,6 +20,10 @@ export class SpinnerService {
         this.spinnerTopRef.hasAttached() ? this.stopSpinner() : null;
       }
     });
+    this.spinnerTopRef.backdropClick().subscribe((e: MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+    });
   }
 
   private cdkSpinnerCreate(): OverlayRef {

@@ -11,7 +11,29 @@
 
 <div class="example-container mat-elevation-z8" [class.hidden]="!dataSource">
 
-  <mat-form-field class="no-print">
+  <form [formGroup]="inputForm" class="input-form">
+    <ng-container *ngFor="let filter of searchFilters">
+      <mat-form-field class="no-print">
+        <mat-label>{{filter.label}}</mat-label>
+        <mat-select (selectionChange)="onSelectFilter($event.value, filter.name)" [(value)]="filter.matSelectDefaultValue">
+          <!-- <mat-option> <input #matInputSearch matInput [formControlName]="filter.name"
+              placeholder="{{filter.placeHolder}}" [(ngModel)]="filter.inputValue"></mat-option> -->
+              <div class="search-input-flex">
+                <input #matInputSearch matInput [formControlName]="filter.name"
+                placeholder="{{filter.placeHolder}}" [(ngModel)]="filter.inputValue">
+                <button mat-raised-button color="primary" (click)="filter.inputValue = '';filter.matSelectDefaultValue='';onSelectFilter(null, filter.name)">{{filter.defaultValue}}</button>
+              </div>
+          <!-- <input #matInputSearch matInput [formControlName]="filter.name"
+            placeholder="{{filter.placeHolder}}" [(ngModel)]="filter.inputValue">
+          <mat-option (click)="filter.inputValue = ''" class="reset-mat-option">{{filter.defaultValue}}</mat-option> -->
+          <mat-option *ngFor="let item of filter.data" [value]="item">{{item}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </ng-container>
+  </form>
+  <!-- (keyup)="onSearchFilter($event, filter.name)"  (input)="onSearchFilter($event, filter.name)"-->
+
+  <!-- <mat-form-field class="no-print">
     <mat-label>Filter by Index Number</mat-label>
     <input matInput (keyup)="applyFilter($event, 'INDEX_NUM')" placeholder="Index Number">
   </mat-form-field>
@@ -24,7 +46,7 @@
   <mat-form-field class="no-print">
     <mat-label>Filter by Item Description</mat-label>
     <input matInput (keyup)="applyFilter($event, 'ITEM_DESC')" placeholder="Item Description">
-  </mat-form-field>
+  </mat-form-field> -->
 
   <mat-table id="vvr-mat-table" [dataSource]="dataSource" matSort matSortDirection="asc" matSortActive="indexNumber"
     matSortDisableClear>

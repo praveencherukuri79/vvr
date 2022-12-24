@@ -6,18 +6,6 @@
 
 <h1 class="heading-vvr only-print">Invoice of Sales</h1>
 
-<!-- <div class="only-print px-10">
-    <p>To,</p>
-    <p>The Manager</p>
-    <p>Company Name</p>
-    <p>Address - zipCode</p>
-    <br>
-    <p>Dear Sir,</p>
-    <br>
-    <p>Sub: SALE & STOCK POSITON FOR THE MONTH OF Month - Year of Depot.</p>
-    <br>
-</div> -->
-
 <div class="file-select no-print">
     <button mat-raised-button color="primary" (click)="onClick($event)"
         matTooltip="supported files are '.xls' and '.xlsx'">
@@ -25,23 +13,10 @@
         Choose File</button>
     <input #fileUpload type="file" class="ng-hide" id="input-file-id" (change)="onFileChange($event)"
         accept=".xls, .xlsx" />
-    <!-- <label for="input-file-id" class="md-button md-raised md-primary">Choose Files</label> -->
-
     <div *ngIf="excelFile" class="selected_file">
         <span>Selected file is "{{excelFile.name}}"</span>
-        <!-- <button mat-icon-button
-                color="primary"
-                title="Delete"
-                (click)="removeFile(event,i)"
-        >
-          <mat-icon fontIcon="delete"></mat-icon>
-        </button> -->
     </div>
 </div>
-
-
-
-
 
 <ng-container
     *ngIf="mstcArrayVVRProducts && mstcArrayVVRProducts.length && mstcArrayVVRProductsGroup && mstcArrayVVRProductsGroup.length">
@@ -60,13 +35,3 @@
 
     <app-mat-table *ngIf="selectedTableType == 'group'" [tableData]="mstcArrayVVRProductsGroup"></app-mat-table>
 </ng-container>
-
-<!-- <ng-container *ngIf="mstcArrayVVRProductsGroup && mstcArrayVVRProductsGroup.length">
-    <app-mat-table [tableData]="mstcArrayVVRProductsGroup"></app-mat-table>
-</ng-container> -->
-
-<!-- <div class="only-print px-10">
-    <p>Regards</p>
-    <p>VVR</p>
-    <br>
-</div> -->

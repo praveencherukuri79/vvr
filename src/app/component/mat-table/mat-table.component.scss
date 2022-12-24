@@ -29,12 +29,20 @@
     display: none;
 }
 
-.invoice-content{
-padding: 10px 0px;
+.invoice-content {
+    padding: 10px 0px;
 }
 
-.invoice-footer{
+.invoice-footer {
     padding-top: 20px;
+}
+
+.input-form {
+    display: flex;
+
+    .mat-mdc-form-field {
+        width: 100%;
+    }
 }
 
 
@@ -75,7 +83,37 @@ padding: 10px 0px;
     }
 }
 
-.print-window{
+.print-window {
     display: flex;
     justify-content: right;
+}
+
+.reset-mat-option {
+    background-color: #e0e0e0;
+    justify-content: end;
+    &:focus{
+        background-color: #afacac;
+    }
+    input{
+        margin: 10px;
+    }
+    button{
+        margin: 5px;
+    }
+}
+
+.search-input-flex{
+    display: flex;
+    flex-direction: row;
+    padding: 0 10px;
+}
+
+// .mat-mdc-select-panel .mdc-text-field__input::placeholder {
+//     opacity: 1 !important;
+// }
+
+@media all {
+    .mdc-text-field__input::placeholder {
+        opacity: 1 !important;
+    }
 }
