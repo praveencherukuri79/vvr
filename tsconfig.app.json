@@ -3,7 +3,14 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": []
+    "types": [],
+    "paths": {
+      "@app/*": ["src/app/*"],
+      // "@auth/*": ["src/app/modules/auth/*"],
+      //"@dashboard/*": ["src/app/modules/dashboard/*"],
+      //"@home/*": ["src/app/modules/home/*"],
+      //"@shared/*": ["src/app/shared/*"],
+    }
   },
   "files": [
     "src/main.ts"

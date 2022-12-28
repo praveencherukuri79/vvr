@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/vvr",
+            "outputPath": "dist/vvr/browser",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
@@ -64,6 +64,9 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "proxyConfig": "src/proxy.conf.js"
+          },
           "configurations": {
             "production": {
               "browserTarget": "vvr:build:production"
@@ -99,6 +102,60 @@
             ],
             "scripts": []
           }
+        },
+        "server": {
+          "builder": "@angular-devkit/build-angular:server",
+          "options": {
+            "outputPath": "dist/vvr/server",
+            "main": "backend/server.ts",
+            "tsConfig": "tsconfig.server.json",
+            "inlineStyleLanguage": "scss"
+          },
+          "configurations": {
+            "production": {
+              "outputHashing": "media"
+            },
+            "development": {
+              "optimization": false,
+              "sourceMap": true,
+              "extractLicenses": false,
+              "vendorChunk": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve-ssr": {
+          "builder": "@nguniversal/builders:ssr-dev-server",
+          "configurations": {
+            "development": {
+              "browserTarget": "vvr:build:development",
+              "serverTarget": "vvr:server:development"
+            },
+            "production": {
+              "browserTarget": "vvr:build:production",
+              "serverTarget": "vvr:server:production"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "prerender": {
+          "builder": "@nguniversal/builders:prerender",
+          "options": {
+            "routes": [
+              "/"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "vvr:build:production",
+              "serverTarget": "vvr:server:production"
+            },
+            "development": {
+              "browserTarget": "vvr:build:development",
+              "serverTarget": "vvr:server:development"
+            }
+          },
+          "defaultConfiguration": "production"
         }
       }
     }

@@ -1,0 +1,28 @@
+<div class="file-select no-print">
+    <button mat-raised-button color="primary" (click)="onClick($event)"
+        matTooltip="supported files are '.xls' and '.xlsx'">
+        <mat-icon fontIcon="upload"></mat-icon>
+        Choose File</button>
+    <input #fileUpload type="file" class="ng-hide" id="input-file-id" (change)="onFileChange($event)"
+        accept=".xls, .xlsx" />
+    <div *ngIf="excelFile" class="selected_file">
+        <span>Selected file is "{{excelFile.name}}"</span>
+    </div>
+</div>
+
+<ng-container
+    *ngIf="mstcArrayVVRProducts && mstcArrayVVRProducts.length && mstcArrayVVRProductsGroup && mstcArrayVVRProductsGroup.length">
+
+    <div class="px-10 no-print">
+        <h3>Select Product Or Group Table</h3>
+        <mat-button-toggle-group name="tableType" aria-label="Table Type" [value]="selectedTableType"
+            (change)="onTableTypeChange($event)">
+            <mat-button-toggle value="product">Product Table</mat-button-toggle>
+            <mat-button-toggle value="group">Group Table</mat-button-toggle>
+        </mat-button-toggle-group>
+    </div>
+
+    <app-mat-table *ngIf="selectedTableType == 'product'" [tableData]="mstcArrayVVRProducts"></app-mat-table>
+
+    <app-mat-table *ngIf="selectedTableType == 'group'" [tableData]="mstcArrayVVRProductsGroup"></app-mat-table>
+</ng-container>

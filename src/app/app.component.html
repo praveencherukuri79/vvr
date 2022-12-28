@@ -6,7 +6,44 @@
 
 <h1 class="heading-vvr only-print">Invoice of Sales</h1>
 
-<div class="file-select no-print">
+<div>
+    <!-- <mat-toolbar color="primary">
+        <button mat-button aria-label="dashboard" (click)="navigateTo('dashboard')">
+            <mat-icon fontIcon="dashboard"></mat-icon>Dashboard
+        </button>
+        <span class="vvr-spacer"></span>
+
+        <button mat-button aria-label="login" (click)="navigateTo('login')">
+            <mat-icon fontIcon="login"></mat-icon>Login
+        </button>
+        <button mat-button aria-label="signup" (click)="navigateTo('signup')">
+            <mat-icon fontIcon="person_add"></mat-icon>Signup
+        </button>
+        <button mat-button aria-label="signup" (click)="navigateTo('logout')">
+            <mat-icon fontIcon="logout"></mat-icon>Logout
+        </button>
+        <button mat-button aria-label="admin" (click)="navigateTo('admin')">
+            <mat-icon fontIcon="admin_panel_settings"></mat-icon>Admin
+        </button>
+    </mat-toolbar> -->
+
+    <mat-toolbar color="primary">
+        <ng-container *ngFor="let nav of navData; let i= index">
+            <button mat-button (click)="navigateTo(nav.url)" *ngIf="nav.display">
+                <mat-icon [fontIcon]="nav.fontIcon"></mat-icon>{{nav.displayText}}
+            </button>
+            <span class="vvr-spacer" *ngIf="i === 0"></span>
+        </ng-container>
+
+    </mat-toolbar>
+
+</div>
+
+<!-- <button mat-raised-button type="text" (click)="signUp()" color="basic">Sign up</button> -->
+
+<router-outlet></router-outlet>
+
+<!-- <div class="file-select no-print">
     <button mat-raised-button color="primary" (click)="onClick($event)"
         matTooltip="supported files are '.xls' and '.xlsx'">
         <mat-icon fontIcon="upload"></mat-icon>
@@ -30,8 +67,7 @@
         </mat-button-toggle-group>
     </div>
 
-
     <app-mat-table *ngIf="selectedTableType == 'product'" [tableData]="mstcArrayVVRProducts"></app-mat-table>
 
     <app-mat-table *ngIf="selectedTableType == 'group'" [tableData]="mstcArrayVVRProductsGroup"></app-mat-table>
-</ng-container>
+</ng-container> -->

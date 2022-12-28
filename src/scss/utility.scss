@@ -1,0 +1,33 @@
+$paddingDirection: ('right', 'left', 'top', 'bottom');
+$paddingLength: (5, 10, 15, 20, 25, 30, 35, 40, 45, 50);
+
+@each $dir in $paddingDirection {
+  @each $len in $paddingLength {
+    .p-#{$dir}-#{$len} {
+      padding-#{$dir}: #{$len}px;
+    }
+  }
+}
+
+@each $len in $paddingLength {
+  .p-#{$len} {
+    padding: #{$len}px;
+  }
+}
+
+$marginDirection: ('right', 'left', 'top', 'bottom');
+$marginLength: (5, 10, 15, 20, 25, 30, 35, 40, 45, 50);
+
+@each $dir in $marginDirection {
+  @each $len in $marginLength {
+    .m-#{$dir}-#{$len} {
+      margin-#{$dir}: #{$len}px;
+    }
+  }
+}
+
+@each $len in $marginLength {
+  .m-#{$len} {
+    margin: #{$len}px;
+  }
+}

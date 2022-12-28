@@ -5,7 +5,15 @@
     "outDir": "./out-tsc/spec",
     "types": [
       "jasmine"
-    ]
+    ],
+    "baseUrl": "./",
+    "paths": {
+      "@app/*": ["src/app/*"],
+      // "@auth/*": ["src/app/modules/auth/*"],
+      //"@dashboard/*": ["src/app/modules/dashboard/*"],
+      //"@home/*": ["src/app/modules/home/*"],
+      //"@shared/*": ["src/app/shared/*"],
+    }
   },
   "include": [
     "src/**/*.spec.ts",

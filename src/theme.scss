@@ -9,11 +9,88 @@
 // Be sure that you only ever include this mixin once!
 @include mat.core();
 
+$vvr-accent: (
+    50 : #f8f5e8,
+    100 : #ede5c6,
+    200 : #e1d4a0,
+    300 : #d5c27a,
+    400 : #ccb55e,
+    500 : #c3a841,
+    600 : #bda03b,
+    700 : #b59732,
+    800 : #ae8d2a,
+    900 : #a17d1c,
+    A100 : #fff4d9,
+    A200 : #ffe5a6,
+    A400 : #ffd673,
+    A700 : #ffce59,
+    contrast: (
+        50 : #000000,
+        100 : #000000,
+        200 : #000000,
+        300 : #000000,
+        400 : #000000,
+        500 : #000000,
+        600 : #000000,
+        700 : #000000,
+        800 : #000000,
+        900 : #ffffff,
+        A100 : #000000,
+        A200 : #000000,
+        A400 : #000000,
+        A700 : #000000,
+    )
+);
+
+/* For use in src/lib/core/theming/_palette.scss */
+$vvr-primary: (
+    50 : #e6f1ee,
+    100 : #c0ddd5,
+    200 : #96c6b9,
+    300 : #6baf9d,
+    400 : #4c9e88,
+    500 : #2c8d73,
+    600 : #27856b,
+    700 : #217a60,
+    800 : #1b7056,
+    900 : #105d43,
+    A100 : #94ffd7,
+    A200 : #61ffc4,
+    A400 : #2effb1,
+    A700 : #14ffa8,
+    contrast: (
+        50 : #000000,
+        100 : #000000,
+        200 : #000000,
+        300 : #000000,
+        400 : #000000,
+        500 : #ffffff,
+        600 : #ffffff,
+        700 : #ffffff,
+        800 : #ffffff,
+        900 : #ffffff,
+        A100 : #000000,
+        A200 : #000000,
+        A400 : #000000,
+        A700 : #000000,
+    )
+);
+
+
+
+
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$theme-primary: mat.define-palette(mat.$indigo-palette);
-$theme-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+
+// $theme-primary: mat.define-palette(mat.$indigo-palette);
+// $theme-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+
+// // The warn palette is optional (defaults to red).
+// $theme-warn: mat.define-palette(mat.$red-palette);
+
+$theme-primary: mat.define-palette($vvr-primary);
+$theme-accent: mat.define-palette($vvr-accent);
 
 // The warn palette is optional (defaults to red).
 $theme-warn: mat.define-palette(mat.$red-palette);

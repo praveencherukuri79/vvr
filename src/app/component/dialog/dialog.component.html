@@ -1,0 +1,21 @@
+<!-- <button class="dialog-close" *ngIf="returnData.enableCloseButton || enableCloseButton" (click)="closeDialog()">close</button>
+<ng-template #target></ng-template> -->
+
+<button class="float-right" mat-button type="text" *ngIf="enableCloseButton || enableCloseFromChild" (click)="closeDialog()">
+  <mat-icon>close</mat-icon>
+</button>
+
+<h2 mat-dialog-title>MyTitle</h2>
+
+<mat-dialog-content class="padding-5">
+  <!-- <button mat-button type="text" *ngIf="enableCloseButton || enableCloseFromChild" (click)="closeDialog()" >
+    <mat-icon>close</mat-icon>
+  </button> -->
+
+  <!-- <button class="dialog-close" *ngIf="enableCloseButton || enableCloseFromChild" (click)="closeDialog()">close</button> -->
+  <ng-template #target></ng-template>
+</mat-dialog-content>
+<!-- <mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button [mat-dialog-close]="true">Close</button>
+</mat-dialog-actions> -->

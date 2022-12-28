@@ -1,0 +1,19 @@
+// input {
+//     max-width: 50%;
+// }
+.login-component {
+  padding: 24px;
+}
+
+.container {
+  display: flex;
+  flex-flow: column wrap;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.admin-error{
+  color: red;
+}
