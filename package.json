@@ -4,8 +4,9 @@
   "scripts": {
     "prettier-format": "prettier --config .prettierrc \"src/**/*.{ts,css,scss,js,html}\" --write",
     "prettier-format:staged": "prettier --config .prettierrc --write",
+    "create-env": "printenv > .env",
     "ng": "ng",
-    "start": "ng serve",
+    "start": "node dist/vvr/server/main.js",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",

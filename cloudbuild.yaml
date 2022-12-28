@@ -1,0 +1,22 @@
+steps:
+  - name: node:18
+    entrypoint: npm
+    args: ['install']
+  - name: node:18
+    entrypoint: npm
+    args: ['run', 'create-env']
+    env:
+      - 'DATABASE_URI=${_DATABASE_URI}'
+      - 'DATABASE_USER=${_DATABASE_USER}'
+      - 'DATABASE_PASSWORD=${_DATABASE_PASSWORD}'
+      - 'DATABASE_TABLE=${_DATABASE_TABLE}'
+      - 'JWT_SECRET=${_JWT_SECRET}'
+      - 'JWT_SECRET_RESET_PW=${_JWT_SECRET_RESET_PW}'
+      - 'JWT_EXPIRY=${_JWT_EXPIRY}'
+  - name: node:18
+    entrypoint: npm
+    args: ['run', 'build:ssr']
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'bash'
+    args: ['-c', 'gcloud config set app/cloud_build_timeout 1600 && gcloud app deploy']
+timeout: '1600s'
