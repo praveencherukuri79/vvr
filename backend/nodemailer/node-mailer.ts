@@ -11,7 +11,9 @@ import * as SMTPTransport from 'nodemailer/lib/smtp-transport';
 //const oAuth2Client = new google.auth.OAuth2(process.env.CLIENT_ID, process.env.CLIENT_SECRET, process.env.REDIRECT_URI);
 const oAuth2Client = new OAuth2Client(process.env.CLIENT_ID, process.env.CLIENT_SECRET, process.env.REDIRECT_URI);
 
+console.log('process.env.EMAIL_AUTH_USER before init=> ', process.env.REFRESH_TOKEN);
 oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
+console.log('oAuth2Client refresh_token 1=> ', oAuth2Client.credentials.refresh_token);
 
 //get Transport
 export const getTransporter = (accessToken): Transporter<SMTPTransport.SentMessageInfo> => {
@@ -40,6 +42,10 @@ export const getTransporter = (accessToken): Transporter<SMTPTransport.SentMessa
 //send Email
 export async function sendMail(mailOptions) {
   try {
+    console.log('process.env.EMAIL_AUTH_USER after init=> ', process.env.REFRESH_TOKEN);
+    console.log('oAuth2Client refresh_token 2=> ', oAuth2Client.credentials.refresh_token);
+    oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
+    console.log('oAuth2Client refresh_token 3=> ', oAuth2Client.credentials.refresh_token);
     const accessToken = await oAuth2Client.getAccessToken();
     return await getTransporter(accessToken).sendMail(mailOptions);
   } catch (e) {
