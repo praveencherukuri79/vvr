@@ -1,20 +1,5 @@
 import NodeMailer from './node-mailer';
 
-const mailOptions = {
-  from: process.env.EMAIL_AUTH_USER_FROM,
-  subject: 'Thanks for signing up!',
-  to: '{{email}}',
-  text: 'Welcome to VVR APP, Hello {{name}}, you signed up as {{email}}, You can login at {{url}}/login',
-  html: `<div>
-          <h3>Hello {{name}},</h3>
-          <br>
-          <p>Welcome to VVR App</p>
-          <br>
-          <p>You signed up as <a href="mailto:{{email}}" target="_blank">{{email}}</a></p>
-          <p>You can login at <a href="{{url}}/login" target="_blank">VVR App</a></p>
-</div>`
-};
-
 const replaceStrings = [
   { name: '{{name}}', type: 'name' },
   { name: '{{email}}', type: 'email' },
@@ -22,6 +7,22 @@ const replaceStrings = [
 ];
 
 const getMailOptions = (userRecord) => {
+
+  const mailOptions = {
+    from: process.env.EMAIL_AUTH_USER_FROM,
+    subject: 'Thanks for signing up!',
+    to: '{{email}}',
+    text: 'Welcome to VVR APP, Hello {{name}}, you signed up as {{email}}, You can login at {{url}}/login',
+    html: `<div>
+            <h3>Hello {{name}},</h3>
+            <br>
+            <p>Welcome to VVR App</p>
+            <br>
+            <p>You signed up as <a href="mailto:{{email}}" target="_blank">{{email}}</a></p>
+            <p>You can login at <a href="{{url}}/login" target="_blank">VVR App</a></p>
+  </div>`
+  };
+  
   replaceStrings.forEach((item) => {
     switch (item.type) {
       case 'name':
@@ -45,16 +46,17 @@ const getMailOptions = (userRecord) => {
 };
 
 export const sendSignupEmail = (userRecord) => {
-  
+  //console.log('userRecord in signup success => ', userRecord);
   
   // console.log('signUpMailOptions => ', signUpMailOptions);
   // console.log('process.env.DATABASE_USER => ', process.env.DATABASE_USER);
   // console.log('process.env.EMAIL_AUTH_USER_FROM => ', process.env.EMAIL_AUTH_USER_FROM);
   // console.log('process.env.REFRESH_TOKEN => ', process.env.REFRESH_TOKEN);
   // console.log('process.env.EMAIL_AUTH_USER => ', process.env.EMAIL_AUTH_USER);
-  const nodeMailerInstance = new NodeMailer();
+  
   const signUpMailOptions = getMailOptions(userRecord);
-  nodeMailerInstance.sendMail(signUpMailOptions)
+  const nodeMailerInstance = new NodeMailer(signUpMailOptions);
+  nodeMailerInstance.sendMail()
     .then((result) => console.log('Email sent...', result))
     .catch((error) => console.log(error.message));
 };

@@ -3,6 +3,7 @@
 import { OAuth2Client } from 'google-auth-library/build/src';
 //import { google } from 'googleapis';
 import { createTransport, Transporter } from 'nodemailer';
+import * as Mail from 'nodemailer/lib/mailer';
 import * as SMTPTransport from 'nodemailer/lib/smtp-transport';
 //require('dotenv').config();
 //import * as dotenv from 'dotenv';
@@ -60,9 +61,11 @@ import * as SMTPTransport from 'nodemailer/lib/smtp-transport';
 
 export default class NodeMailer {
   oAuth2Client: OAuth2Client;
-  constructor() {
+  mailOptions: Mail.Options;
+  constructor(mailOptions) {
     this.oAuth2Client = new OAuth2Client(process.env.CLIENT_ID, process.env.CLIENT_SECRET, process.env.REDIRECT_URI);
     this.oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
+    this.mailOptions = mailOptions;
   }
   
   getTransporter = (accessToken): Transporter<SMTPTransport.SentMessageInfo> => {
@@ -79,11 +82,12 @@ export default class NodeMailer {
     } as SMTPTransport.Options);
   };
 
-  sendMail = async (mailOptions) => {
+  sendMail = async () => {
     try {
       //oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
       const accessToken = await this.oAuth2Client.getAccessToken();
-      return await this.getTransporter(accessToken).sendMail(mailOptions);
+      //console.log('mailOptions in node mailer => ', this.mailOptions);
+      return await this.getTransporter(accessToken).sendMail(this.mailOptions);
     } catch (e) {
       return e;
     }

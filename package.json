@@ -13,6 +13,7 @@
     "dev:ssr": "ng run vvr:serve-ssr",
     "serve:ssr": "node dist/vvr/server/main.js",
     "build:ssr": "ng build && ng run vvr:server",
+    "build:ssr:dev": "ng build && ng run vvr:server:development",
     "build:ssr:stats": "ng build --stats-json && ng run vvr:server --stats-json",
     "webpack-analyzer:browser": "webpack-bundle-analyzer dist/vvr/browser/stats.json",
     "webpack-analyzer:server": "webpack-bundle-analyzer dist/vvr/server/stats.json",
