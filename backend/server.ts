@@ -2,7 +2,7 @@ import 'zone.js/dist/zone-node';
 import { express_app } from './express-router/routes';
 import * as mongoose from 'mongoose';
 import { CustomRequest, CustomResponse } from 'backend/models/expressTypes';
-import { sendMail } from './nodemailer/node-mailer';
+//import { sendMail } from './nodemailer/node-mailer';
 //if (process.env.NODE_ENV !== 'production') {
 require('dotenv').config();
 //}

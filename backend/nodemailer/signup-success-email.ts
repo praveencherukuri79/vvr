@@ -1,4 +1,4 @@
-import { sendMail } from './node-mailer';
+import NodeMailer from './node-mailer';
 
 const mailOptions = {
   from: process.env.EMAIL_AUTH_USER_FROM,
@@ -45,15 +45,16 @@ const getMailOptions = (userRecord) => {
 };
 
 export const sendSignupEmail = (userRecord) => {
-  const signUpMailOptions = getMailOptions(userRecord);
   
-  console.log('signUpMailOptions => ', signUpMailOptions);
-  console.log('process.env.DATABASE_USER => ', process.env.DATABASE_USER);
-  console.log('process.env.EMAIL_AUTH_USER_FROM => ', process.env.EMAIL_AUTH_USER_FROM);
-  console.log('process.env.REFRESH_TOKEN => ', process.env.REFRESH_TOKEN);
-  console.log('process.env.EMAIL_AUTH_USER => ', process.env.EMAIL_AUTH_USER);
-
-  sendMail(signUpMailOptions)
+  
+  // console.log('signUpMailOptions => ', signUpMailOptions);
+  // console.log('process.env.DATABASE_USER => ', process.env.DATABASE_USER);
+  // console.log('process.env.EMAIL_AUTH_USER_FROM => ', process.env.EMAIL_AUTH_USER_FROM);
+  // console.log('process.env.REFRESH_TOKEN => ', process.env.REFRESH_TOKEN);
+  // console.log('process.env.EMAIL_AUTH_USER => ', process.env.EMAIL_AUTH_USER);
+  const nodeMailerInstance = new NodeMailer();
+  const signUpMailOptions = getMailOptions(userRecord);
+  nodeMailerInstance.sendMail(signUpMailOptions)
     .then((result) => console.log('Email sent...', result))
     .catch((error) => console.log(error.message));
 };

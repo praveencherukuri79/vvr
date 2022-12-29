@@ -5,34 +5,34 @@ import { OAuth2Client } from 'google-auth-library/build/src';
 import { createTransport, Transporter } from 'nodemailer';
 import * as SMTPTransport from 'nodemailer/lib/smtp-transport';
 //require('dotenv').config();
-import * as dotenv from 'dotenv';
-dotenv.config();
+//import * as dotenv from 'dotenv';
+//dotenv.config();
 // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
 
 // Refer - https://github.com/trulymittal/gmail-api
 
 //oAuth2Client
 //const oAuth2Client = new google.auth.OAuth2(process.env.CLIENT_ID, process.env.CLIENT_SECRET, process.env.REDIRECT_URI);
-const oAuth2Client = new OAuth2Client(process.env.CLIENT_ID, process.env.CLIENT_SECRET, process.env.REDIRECT_URI);
+// const oAuth2Client = new OAuth2Client(process.env.CLIENT_ID, process.env.CLIENT_SECRET, process.env.REDIRECT_URI);
 
-console.log('process.env.EMAIL_AUTH_USER before init=> ', process.env.REFRESH_TOKEN);
-oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
-console.log('oAuth2Client refresh_token 1=> ', oAuth2Client.credentials.refresh_token);
+// console.log('process.env.EMAIL_AUTH_USER before init=> ', process.env.REFRESH_TOKEN);
+// oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
+// console.log('oAuth2Client refresh_token 1=> ', oAuth2Client.credentials.refresh_token);
 
 //get Transport
-export const getTransporter = (accessToken): Transporter<SMTPTransport.SentMessageInfo> => {
-  return createTransport({
-    service: process.env.EMAIL_SERVICE, // gmail
-    auth: {
-      type: process.env.EMAIL_AUTH_TYPE, // OAuth2
-      user: process.env.EMAIL_AUTH_USER, // vvr.app.no.reply@gmail.com
-      clientId: process.env.CLIENT_ID,
-      clientSecret: process.env.CLIENT_SECRET,
-      refreshToken: process.env.REFRESH_TOKEN,
-      accessToken: accessToken
-    }
-  } as SMTPTransport.Options);
-};
+// export const getTransporter = (accessToken): Transporter<SMTPTransport.SentMessageInfo> => {
+//   return createTransport({
+//     service: process.env.EMAIL_SERVICE, // gmail
+//     auth: {
+//       type: process.env.EMAIL_AUTH_TYPE, // OAuth2
+//       user: process.env.EMAIL_AUTH_USER, // vvr.app.no.reply@gmail.com
+//       clientId: process.env.CLIENT_ID,
+//       clientSecret: process.env.CLIENT_SECRET,
+//       refreshToken: process.env.REFRESH_TOKEN,
+//       accessToken: accessToken
+//     }
+//   } as SMTPTransport.Options);
+// };
 
 // // sample mail options
 // const mailOptionsSample = {
@@ -44,15 +44,49 @@ export const getTransporter = (accessToken): Transporter<SMTPTransport.SentMessa
 // };
 
 //send Email
-export async function sendMail(mailOptions) {
-  try {
-    console.log('process.env.EMAIL_AUTH_USER after init=> ', process.env.REFRESH_TOKEN);
-    console.log('oAuth2Client refresh_token 2=> ', oAuth2Client.credentials.refresh_token);
-    oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
-    console.log('oAuth2Client refresh_token 3=> ', oAuth2Client.credentials.refresh_token);
-    const accessToken = await oAuth2Client.getAccessToken();
-    return await getTransporter(accessToken).sendMail(mailOptions);
-  } catch (e) {
-    return e;
+// export async function sendMail(mailOptions) {
+//   try {
+//     console.log('process.env.EMAIL_AUTH_USER after init=> ', process.env.REFRESH_TOKEN);
+//     console.log('oAuth2Client refresh_token 2=> ', oAuth2Client.credentials.refresh_token);
+//     oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
+//     console.log('oAuth2Client refresh_token 3=> ', oAuth2Client.credentials.refresh_token);
+//     const accessToken = await oAuth2Client.getAccessToken();
+//     return await getTransporter(accessToken).sendMail(mailOptions);
+//   } catch (e) {
+//     return e;
+//   }
+// }
+
+
+export default class NodeMailer {
+  oAuth2Client: OAuth2Client;
+  constructor() {
+    this.oAuth2Client = new OAuth2Client(process.env.CLIENT_ID, process.env.CLIENT_SECRET, process.env.REDIRECT_URI);
+    this.oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
   }
+  
+  getTransporter = (accessToken): Transporter<SMTPTransport.SentMessageInfo> => {
+    return createTransport({
+      service: process.env.EMAIL_SERVICE, // gmail
+      auth: {
+        type: process.env.EMAIL_AUTH_TYPE, // OAuth2
+        user: process.env.EMAIL_AUTH_USER, // vvr.app.no.reply@gmail.com
+        clientId: process.env.CLIENT_ID,
+        clientSecret: process.env.CLIENT_SECRET,
+        refreshToken: process.env.REFRESH_TOKEN,
+        accessToken: accessToken
+      }
+    } as SMTPTransport.Options);
+  };
+
+  sendMail = async (mailOptions) => {
+    try {
+      //oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
+      const accessToken = await this.oAuth2Client.getAccessToken();
+      return await this.getTransporter(accessToken).sendMail(mailOptions);
+    } catch (e) {
+      return e;
+    }
+  }
+
 }

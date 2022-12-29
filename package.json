@@ -18,6 +18,7 @@
     "webpack-analyzer:server": "webpack-bundle-analyzer dist/vvr/server/stats.json",
     "prerender": "ng run vvr:prerender",
     "start:server:dev": "cross-env NODE_ENV=development node -r dotenv/config dist/vvr/server/main.js dotenv_config_path=.env",
+    "start:server:dev2": "cross-env NODE_ENV=production node -r dotenv/config dist/vvr/server/main.js dotenv_config_path=.env",
     "start:server:prod": "cross-env NODE_ENV=production node dist/vvr/server/main.js"
   },
   "private": true,
