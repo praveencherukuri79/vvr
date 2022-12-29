@@ -39,6 +39,7 @@ const getMailOptions = (userRecord) => {
         break;
     }
   });
+  mailOptions.from = process.env.EMAIL_AUTH_USER_FROM;
 
   return mailOptions;
 };
