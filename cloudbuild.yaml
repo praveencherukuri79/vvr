@@ -13,6 +13,15 @@ steps:
       - 'JWT_SECRET=${_JWT_SECRET}'
       - 'JWT_SECRET_RESET_PW=${_JWT_SECRET_RESET_PW}'
       - 'JWT_EXPIRY=${_JWT_EXPIRY}'
+      - 'CLIENT_ID=${_CLIENT_ID}'
+      - 'CLIENT_SECRET=${_CLIENT_SECRET}'
+      - 'REDIRECT_URI=${_REDIRECT_URI}'
+      - 'REFRESH_TOKEN=${_REFRESH_TOKEN}'
+      - 'EMAIL_SERVICE=${_EMAIL_SERVICE}'
+      - 'EMAIL_AUTH_TYPE=${_EMAIL_AUTH_TYPE}'
+      - 'EMAIL_AUTH_USER=${_EMAIL_AUTH_USER}'
+      - 'EMAIL_AUTH_USER_FROM=${_EMAIL_AUTH_USER_FROM}'
+      - 'VVR_APP_URL=${_VVR_APP_URL}'
   - name: node:18
     entrypoint: npm
     args: ['run', 'build:ssr']

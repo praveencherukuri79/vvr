@@ -6,6 +6,7 @@ import UserModel from '../models/userModel';
 import * as jwt from 'jsonwebtoken';
 import { setBlackListTokens } from './../express-router/black-list-tokens/blck-list-tokens';
 import { getUserReturnData } from 'backend/utils/util';
+import { sendSignupEmail } from 'backend/nodemailer/signup-success-email';
 
 export default class AuthService {
   constructor() {}
@@ -71,7 +72,8 @@ export default class AuthService {
       name
     });
     const token = this.generateJWT(userRecord);
-    return getUserReturnData(userRecord, token)
+    sendSignupEmail(userRecord);
+    return getUserReturnData(userRecord, token);
     // return {
     //   user: {
     //     email: userRecord.email,

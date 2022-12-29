@@ -1,9 +1,10 @@
 import 'zone.js/dist/zone-node';
 import { express_app } from './express-router/routes';
 import * as mongoose from 'mongoose';
-import { CustomRequest, CustomResponse } from 'backend/models/expressTypes'
+import { CustomRequest, CustomResponse } from 'backend/models/expressTypes';
+import { sendMail } from './nodemailer/node-mailer';
 //if (process.env.NODE_ENV !== 'production') {
-    require('dotenv').config();
+require('dotenv').config();
 //}
 
 //import * as  Window from 'window';
@@ -43,12 +44,17 @@ function run(): void {
     //const mongoConnection = await mongoose.connect(DB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
     //console.log('connecting to MongoLocal Database => ', MongoLocal);
     //const mongoConnection = await mongoose.connect(MongoLocal, { useNewUrlParser: true, useUnifiedTopology: true });
-   // const mongoConnection = await mongoose.connect(MongoLocal);
-   mongoose.set('strictQuery', false);
-   const mongoConnection = await mongoose.connect(DB_URI);
+    // const mongoConnection = await mongoose.connect(MongoLocal);
+    mongoose.set('strictQuery', false);
+    const mongoConnection = await mongoose.connect(DB_URI);
 
-    console.log('Mong Database ready!')
+    console.log('Mongo Database ready!');
     console.log(`NODE SERVER LISTENING ON PORT - ${port}`);
+
+    // console.log('sending email!');
+    // sendMail()
+    //   .then((result) => console.log('Email sent...', result))
+    //   .catch((error) => console.log(error.message));
   });
 }
 
@@ -59,8 +65,8 @@ declare const __non_webpack_require__: NodeRequire;
 const mainModule = __non_webpack_require__.main;
 const moduleFilename = (mainModule && mainModule.filename) || '';
 if (moduleFilename === __filename || moduleFilename.includes('iisnode')) {
+  console.log('calling RUN !');
   run();
 }
 
 export * from './../src/main.server';
-
