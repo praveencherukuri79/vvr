@@ -13,6 +13,9 @@
     "dev:ssr": "ng run vvr:serve-ssr",
     "serve:ssr": "node dist/vvr/server/main.js",
     "build:ssr": "ng build && ng run vvr:server",
+    "build:ssr:stats": "ng build --stats-json && ng run vvr:server --stats-json",
+    "webpack-analyzer:browser": "webpack-bundle-analyzer dist/vvr/browser/stats.json",
+    "webpack-analyzer:server": "webpack-bundle-analyzer dist/vvr/server/stats.json",
     "prerender": "ng run vvr:prerender",
     "start:server:dev": "cross-env NODE_ENV=development node -r dotenv/config dist/vvr/server/main.js dotenv_config_path=.env",
     "start:server:prod": "cross-env NODE_ENV=production node dist/vvr/server/main.js"
@@ -44,7 +47,7 @@
     "dotenv": "16.0.3",
     "axios": "1.2.1",
     "request-promise": "4.2.6",
-    "googleapis": "110.0.0",
+    "google-auth-library":"8.7.0",
     "nodemailer": "6.8.0"
   },
   "devDependencies": {
@@ -69,6 +72,7 @@
     "lint-staged": "^10.5.3",
     "husky": "^4.3.6",
     "cross-env": "7.0.3",
-    "@types/nodemailer": "6.4.7"
+    "@types/nodemailer": "6.4.7",
+    "webpack-bundle-analyzer": "4.7.0"
   }
 }

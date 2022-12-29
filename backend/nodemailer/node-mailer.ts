@@ -1,11 +1,16 @@
-import { google } from 'googleapis';
+//import { oauth2 } from '@googleapis/oauth2';
+//import { auth } from 'googleapis-common/build/src/api';
+import { OAuth2Client } from 'google-auth-library/build/src';
+//import { google } from 'googleapis';
 import { createTransport, Transporter } from 'nodemailer';
 import * as SMTPTransport from 'nodemailer/lib/smtp-transport';
 
 // Refer - https://github.com/trulymittal/gmail-api
 
 //oAuth2Client
-const oAuth2Client = new google.auth.OAuth2(process.env.CLIENT_ID, process.env.CLIENT_SECRET, process.env.REDIRECT_URI);
+//const oAuth2Client = new google.auth.OAuth2(process.env.CLIENT_ID, process.env.CLIENT_SECRET, process.env.REDIRECT_URI);
+const oAuth2Client = new OAuth2Client(process.env.CLIENT_ID, process.env.CLIENT_SECRET, process.env.REDIRECT_URI);
+
 oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
 
 //get Transport
