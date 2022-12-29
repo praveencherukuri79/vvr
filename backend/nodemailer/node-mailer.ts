@@ -4,6 +4,10 @@ import { OAuth2Client } from 'google-auth-library/build/src';
 //import { google } from 'googleapis';
 import { createTransport, Transporter } from 'nodemailer';
 import * as SMTPTransport from 'nodemailer/lib/smtp-transport';
+//require('dotenv').config();
+import * as dotenv from 'dotenv';
+dotenv.config();
+// see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
 
 // Refer - https://github.com/trulymittal/gmail-api
 
