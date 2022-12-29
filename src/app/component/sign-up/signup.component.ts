@@ -22,6 +22,7 @@ export class SignupComponent implements OnInit {
   signupError: string;
   signupSuccess: boolean;
   userData: any;
+  showPassword:boolean = false;
 
   passwordPattern = '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{5,}$';
   emailPattern = '^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$';

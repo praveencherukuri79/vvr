@@ -93,7 +93,8 @@
       <div>
         <mat-form-field appearance="outline">
           <mat-label>Password</mat-label>
-          <input matInput formControlName="password" placeholder="Password" type="password" required />
+          <input matInput formControlName="password" placeholder="Password" [type]="showPassword ? 'text' : 'password'" required />
+          <mat-icon matSuffix style="cursor: pointer;" [fontIcon]="showPassword? 'visibility':'visibility_off'" (click)="showPassword = !showPassword"></mat-icon>
           <!-- <mat-icon matSuffix>email</mat-icon> -->
           <!-- <mat-hint>please enter your password</mat-hint> -->
           <mat-error class="error-message">{{ getErrorMessage('password') }}</mat-error>

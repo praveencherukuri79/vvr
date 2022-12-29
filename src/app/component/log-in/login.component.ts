@@ -24,6 +24,7 @@ export class LoginComponent implements OnInit {
   loginError: string;
   loginSuccess: boolean;
   userData: any;
+  showPassword:boolean = false;
   // showAdminError: boolean;
   // adminError: string;
 
