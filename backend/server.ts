@@ -32,6 +32,10 @@ require('dotenv').config();
 function run(): void {
   const port = process.env.PORT || 8000;
 
+  console.log('process.env.DATABASE_USER => ', process.env.DATABASE_USER);
+  console.log('process.env.EMAIL_AUTH_USER_FROM => ', process.env.EMAIL_AUTH_USER_FROM);
+  console.log('process.env.REFRESH_TOKEN => ', process.env.REFRESH_TOKEN);
+  console.log('process.env.EMAIL_AUTH_USER => ', process.env.EMAIL_AUTH_USER);
   // Start up the Node server
   const server = express_app();
   server.listen(port, async () => {

@@ -1,7 +1,7 @@
 import { sendMail } from './node-mailer';
 
 const mailOptions = {
-  from: process.env.EMAIL_AUTH_USER_FROM, // VVR APP <vvr.app.no.reply@gmail.com>
+  from: process.env.EMAIL_AUTH_USER_FROM,
   subject: 'Thanks for signing up!',
   to: '{{email}}',
   text: 'Welcome to VVR APP, Hello {{name}}, you signed up as {{email}}, You can login at {{url}}/login',
@@ -45,7 +45,13 @@ const getMailOptions = (userRecord) => {
 
 export const sendSignupEmail = (userRecord) => {
   const signUpMailOptions = getMailOptions(userRecord);
-  console.log('signUpMailOptions => ', signUpMailOptions)
+  
+  console.log('signUpMailOptions => ', signUpMailOptions);
+  console.log('process.env.DATABASE_USER => ', process.env.DATABASE_USER);
+  console.log('process.env.EMAIL_AUTH_USER_FROM => ', process.env.EMAIL_AUTH_USER_FROM);
+  console.log('process.env.REFRESH_TOKEN => ', process.env.REFRESH_TOKEN);
+  console.log('process.env.EMAIL_AUTH_USER => ', process.env.EMAIL_AUTH_USER);
+
   sendMail(signUpMailOptions)
     .then((result) => console.log('Email sent...', result))
     .catch((error) => console.log(error.message));
