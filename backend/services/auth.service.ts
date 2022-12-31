@@ -24,14 +24,6 @@ export default class AuthService {
     }
     console.log('loggenin user => ', userRecord.email);
     return getUserReturnData(userRecord, this.generateJWT(userRecord))
-    // return {
-    //   user: {
-    //     email: userRecord.email,
-    //     name: userRecord.name,
-    //     role: userRecord.role
-    //   },
-    //   token: this.generateJWT(userRecord)
-    // };
   }
 
   async LogOut(token: string) {
@@ -46,14 +38,6 @@ export default class AuthService {
     }
     console.log('user found => ', userRecord.email);
     return getUserReturnData(userRecord, this.generateJWT(userRecord));
-    // return {
-    //   user: {
-    //     email: userRecord.email,
-    //     name: userRecord.name,
-    //     role: userRecord.role
-    //   },
-    //   token: this.generateJWT(userRecord)
-    // };
   }
 
   async SignUp(email: string, password: string, name: string): Promise<any> {
@@ -71,17 +55,9 @@ export default class AuthService {
       //salt: salt.toString('hex'),
       name
     });
-    const token = this.generateJWT(userRecord);
+    //const token = this.generateJWT(userRecord);
     sendSignupEmail(userRecord);
-    return getUserReturnData(userRecord, token);
-    // return {
-    //   user: {
-    //     email: userRecord.email,
-    //     name: userRecord.name,
-    //     role: userRecord.role
-    //   },
-    //   token
-    // };
+    return getUserReturnData(userRecord, '');
   }
 
   private generateJWT(user: any) {

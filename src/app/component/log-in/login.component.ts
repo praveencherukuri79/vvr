@@ -5,7 +5,8 @@ import { TokenStorageService } from '@app/service/token-service/token-storage.se
 import { AuthService } from '@app/service/auth-service/auth.service';
 import { Custom_Validation_Messages } from './validation-messages';
 import { getFieldErrorMessage } from '@app/utils/utilities';
-import { filter, map } from 'rxjs';
+import { NotifierService } from '@app/service/notification-service/notification.service';
+import { SpinnerService } from '@app/service/spinner.service';
 
 @Component({
   selector: 'login',
@@ -14,17 +15,14 @@ import { filter, map } from 'rxjs';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
-  loading = false;
   submitted = false;
   returnUrl: string;
   @Input() isDialog: boolean;
   @Output() enableCloseButton: EventEmitter<any> = new EventEmitter();
   @Output() returnData: EventEmitter<any> = new EventEmitter();
   @Output() signUpEvent: EventEmitter<any> = new EventEmitter();
-  loginError: string;
-  loginSuccess: boolean;
-  userData: any;
-  showPassword:boolean = false;
+
+  showPassword: boolean = false;
   // showAdminError: boolean;
   // adminError: string;
 
@@ -37,19 +35,10 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
-    private tokenStorageService: TokenStorageService
-  ) {
-    // redirect to home if already logged in
-    // if (this.authenticationService.currentUserValue) {
-    //     this.router.navigate(['/']);
-    // }
-    // const navigation = this.router.getCurrentNavigation();
-    // const state = navigation && navigation.extras && (navigation.extras.state as { adminError: boolean });
-    // if (state && state.adminError) {
-    //   this.showAdminError = true;
-    //   this.adminError = 'Please login as Admin to continue to Admin page.';
-    // }
-  }
+    private tokenStorageService: TokenStorageService,
+    private notifierService: NotifierService,
+    private spinnerService: SpinnerService
+  ) {}
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
@@ -57,24 +46,6 @@ export class LoginComponent implements OnInit {
       password: ['', Validators.compose([Validators.required])]
     });
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-    // if(this.returnUrl == 'admin'){
-    //   this.showAdminError = true;
-    //   this.adminError = 'Please login as Admin to continue to Admin page.';
-    // }
-    //const navigation = this.router.getCurrentNavigation();
-    //const navigation = this.router.getCurrentNavigation();
-    // const routerState = this.router.events.pipe(
-    //   filter(e => e instanceof NavigationStart),
-    //   map(() => {
-    //     const currentState = this.router.getCurrentNavigation();
-    //     return currentState.extras.state;
-    //   })
-    // );
-    //const state = navigation && navigation.extras && navigation.extras.state as {adminError: boolean};
-    // if(routerState && routerState.adminError){
-    //   this.showAdminError = true;
-    //   this.adminError = 'Please login as Admin to continue to Admin page.';
-    // }
   }
 
   get formData() {
@@ -91,31 +62,28 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true;
-    this.loginError = '';
-    this.loginSuccess = false;
     if (this.loginForm.invalid) {
       return;
     }
     let email = this.formData.email.value;
     let password = this.formData.password.value;
     let postData = { user: { email, password } };
-    this.loading = true;
-    this.authService.logIn(postData).subscribe(
-      (data: any) => {
-        this.loading = false;
-        this.loginSuccess = true;
-        this.userData = data.user;
-        console.log('login sucsess', data);
+    this.spinnerService.spin$.next(true);
+    this.authService.logIn(postData).subscribe({
+      next: (data: any) => {
+        this.spinnerService.spin$.next(false);
+        console.log(`Login sucsess, welcome ${data.user.name}`, data);
+        this.notifierService.showNotification(`Login sucsess, welcome ${data.user.name}`, 'close', 'success');
         this.tokenStorageService.saveAuth(data);
         if (this.isDialog) {
           this.enableCloseButton.emit(true);
           this.returnData.emit({ isSucess: true, data });
         } else {
-          // navigate logic
-          //this.router.navigate([this.returnUrl]);
         }
+        this.router.navigate(['dashboard']);
       },
-      (e) => {
+      error: (e) => {
+        this.spinnerService.spin$.next(false);
         if (this.isDialog) {
           this.enableCloseButton.emit(false);
           this.returnData.emit({ isSucess: false, e });
@@ -123,15 +91,8 @@ export class LoginComponent implements OnInit {
           // error logic
         }
         console.log('login failed', e);
-        this.loginError = e.error.message;
-        this.loading = false;
+        this.notifierService.showNotification(`Login failed, ${e.error.message}`, 'close', 'error');
       }
-    );
-  }
-
-  testLogIn() {
-    this.authService.logInStatus().subscribe((data) => {
-      console.log('log in test:', data);
     });
   }
 

@@ -143,7 +143,7 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
     this.searchFilters.forEach((inputForm: ISearchFilter) => {
       this.inputForm.get(inputForm.name).valueChanges.subscribe(
         (formVlaue: any) => {
-        console.log('formVlaue => ', formVlaue);
+        //console.log('formVlaue => ', formVlaue);
         if(formVlaue !== null){
           this.onInputSearchFilter(inputForm.name, formVlaue);
         }

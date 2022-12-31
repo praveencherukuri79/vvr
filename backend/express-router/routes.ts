@@ -18,6 +18,7 @@ import { CustomRequest, CustomResponse } from 'backend/models/expressTypes';
 // import partner from './child-routes/partner-routes';
 // import product from './child-routes/product-routes';
 import authRoutes from './child-routes/auth/auth-routes';
+import mstcRoutes from './child-routes/mstc/mstc-routes';
 //import stripePayment from './child-routes/stripe-payments';
 
 //import {mongoConnect} from './mongoDB';
@@ -38,7 +39,7 @@ import authRoutes from './child-routes/auth/auth-routes';
 //const partner = require('./child-routes/partner-routes');
 //const product = require('./child-routes/product-routes');
 
-const bodyParser = require('body-parser');
+//const bodyParser = require('body-parser');
 //const jsonParser = bodyParser.json();
 //const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
@@ -68,9 +69,12 @@ export function express_app(): express.Express {
   // compress all responses
   //app.use(compression());
   // parse application/json
-  app.use(bodyParser.json());
+  //app.use(bodyParser.json());
   // parse application/x-www-form-urlencoded
-  app.use(bodyParser.urlencoded({ extended: false }));
+  //app.use(bodyParser.urlencoded({ extended: true }));
+
+  app.use(express.json({limit: '50mb'}));
+  app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
   //child routes (imported express routes)
   // app.use(buyerRequest);
@@ -78,6 +82,7 @@ export function express_app(): express.Express {
   // app.use(partner);
   // app.use(product);
   app.use(authRoutes);
+  app.use(mstcRoutes);
   //app.use(stripePayment);
 
   // app.get('/print-db', async (req: CustomRequest, res: CustomResponse) => {

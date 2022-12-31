@@ -22,15 +22,15 @@ export class TokenStorageService {
 
   verifyLogin() {
     if (this.isUserLoggedIn()) {
-      this.authService.logInStatus().subscribe(
-        (data: any) => {
+      this.authService.logInStatus().subscribe({
+        next: (data: any) => {
           this.saveAuth(data);
         },
-        (error: any) => {
+        error: (error: any) => {
           this.logOut();
           console.log('error in lon in check', error);
         }
-      );
+    });
     }
   }
 

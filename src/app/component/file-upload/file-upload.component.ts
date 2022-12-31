@@ -3,6 +3,7 @@ import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IMstc } from '@app/interface/mstc';
 import { Mstc } from '@app/model/mstc';
+import { MstcService } from '@app/service/mstc-service/mstc.service';
 import { SpinnerService } from '@app/service/spinner.service';
 import { read as xlsxread, utils as xlsxUtils, WorkBook } from 'xlsx';
 
@@ -42,7 +43,7 @@ export class FileUploadComponent {
     'QTY_DENIED_UNITS',
   ];
 
-  constructor(private spinnerService: SpinnerService, private route: ActivatedRoute, private router: Router) {}
+  constructor(private spinnerService: SpinnerService, private route: ActivatedRoute, private router: Router, private mstcService: MstcService) {}
 
   ngOnInit(): void {}
 
@@ -92,6 +93,12 @@ export class FileUploadComponent {
         console.log('jsonData => ', jsonData);
 
         let mstc = jsonData['MSTC'];
+
+        // save to DB
+        // this.mstcService.saveMstc({reportName: 'NOV-2022', reportData: mstc}).subscribe({next: (data)=>{
+        //   console.log('mongo saved data => ',data);
+        //   //this.mstcService.getMstc('NOV-2022');
+        // }});
 
         if (mstc && mstc.length > 0) {
           mstc.forEach((obj: IMstc) => {
@@ -173,4 +180,11 @@ export class FileUploadComponent {
     88235, 88236, 88237, 91314, 91402, 91501, 91526, 91527, 91528, 91531, 91532,
     91551, 91708, 91709,
   ];
+
+  getMstc(){
+    this.mstcService.getMstc('NOV-2022').subscribe({next: (data)=>{
+      console.log('mongo get data => ',data);
+      //this.mstcService.getMstc('NOV-2022');
+    }});;
+  }
 }

@@ -53,6 +53,8 @@ export class AppComponent implements OnInit {
     }
   ];
 
+  loggedinUser: any;
+
   constructor(private router: Router, private authService: AuthService, private tokenStorageService: TokenStorageService) {}
 
   navigateTo(path: string) {
@@ -71,6 +73,9 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.tokenStorageService.loginStatus.subscribe({
       next: (status: boolean) => {
+
+        this.loggedinUser = status ? this.tokenStorageService.getUser() : null;
+        
         this.navData.forEach((nav: INavData) => {
           switch (nav.name) {
             case 'login':

@@ -197,3 +197,13 @@ a {
   //background-color:transparent !important;
   text-decoration: none !important;
 }
+
+.error.mat-mdc-snack-bar-container .mdc-snackbar__surface{
+  background: var(--mdc-theme-error, #c21b1b);
+  color: white;
+}
+
+.success.mat-mdc-snack-bar-container .mdc-snackbar__surface{
+  background: #368f15;
+  color: white;
+}

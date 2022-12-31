@@ -17,6 +17,7 @@ import { DialogComponent } from './component/dialog/dialog.component';
 import { AdminComponent } from './component/admin/admin.component';
 import { authInterceptorProviders } from './service/auth-interceptor/auth.interceptor';
 import { AdminErrorComponent } from './component/admin-error-dialog/admin-error.component';
+import { CustomSnackbarComponent } from './component/custom-snackbar/custom-snackbar.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { AdminErrorComponent } from './component/admin-error-dialog/admin-error.
     FileUploadComponent,
     DialogComponent,
     AdminComponent,
-    AdminErrorComponent
+    AdminErrorComponent,
+    CustomSnackbarComponent
   ],
   imports: [
     BrowserAnimationsModule,
@@ -41,7 +43,7 @@ import { AdminErrorComponent } from './component/admin-error-dialog/admin-error.
     MaterialModule
   ],
   providers: [authInterceptorProviders],
-  entryComponents: [InvoiceDialogComponent, DialogComponent, AdminErrorComponent],
+  entryComponents: [InvoiceDialogComponent, DialogComponent, AdminErrorComponent, CustomSnackbarComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
