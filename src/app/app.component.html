@@ -3,7 +3,7 @@
     </mat-progress-spinner>
 </div> -->
 <h1 class="heading-vvr no-print">Welcome to VVR Project</h1>
-<div *ngIf="loggedinUser" align="right" class="p-10">current User - "{{loggedinUser.name}}"</div>
+<div *ngIf="loggedinUser" align="right" class="no-print p-10">current User - "{{loggedinUser.name}}"</div>
 
 <h1 class="heading-vvr only-print">Invoice of Sales</h1>
 
@@ -28,7 +28,7 @@
         </button>
     </mat-toolbar> -->
 
-    <mat-toolbar color="primary">
+    <mat-toolbar color="primary" class="no-print">
         <ng-container *ngFor="let nav of navData; let i= index">
             <button mat-button (click)="navigateTo(nav.url)" *ngIf="nav.display">
                 <mat-icon [fontIcon]="nav.fontIcon"></mat-icon>{{nav.displayText}}
