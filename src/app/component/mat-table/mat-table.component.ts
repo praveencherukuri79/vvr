@@ -63,7 +63,7 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
     'GROUP_CODE',
     'INDEX_NUM',
     'ITEM_DESC',
-    'STACK_NUM',
+    //'STACK_NUM',
     'CASE_PACK',
     'QTY_OPENING_CASES',
     'QTY_OPENING_UNITS',

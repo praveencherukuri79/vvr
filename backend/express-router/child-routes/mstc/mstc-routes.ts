@@ -2,10 +2,11 @@ import * as express from 'express';
 import { CustomRequest, CustomResponse } from 'backend/models/expressTypes';
 import MstcDataService from 'backend/services/mstc-data.service';
 import { IMstc } from '@app/interface/mstc';
+import { attachCurrentUser, checkRole } from 'backend/express-router/express-middleware/middleware';
 
 const app = express();
 
-app.get('/mstc/:reportName', async (req: CustomRequest, res: CustomResponse) => {
+app.get('/mstc/:reportName',attachCurrentUser, async (req: CustomRequest, res: CustomResponse) => {
   try {
     const reportName: string = req.params.reportName;
     const mstcDataInstance = new MstcDataService();
@@ -17,7 +18,18 @@ app.get('/mstc/:reportName', async (req: CustomRequest, res: CustomResponse) => 
   }
 });
 
-app.post('/mstc/save', async (req: CustomRequest, res: CustomResponse) => {
+app.get('/mstcReportNames',attachCurrentUser, async (req: CustomRequest, res: CustomResponse) => {
+  try {
+    const mstcDataInstance = new MstcDataService();
+    const data = await mstcDataInstance.getMstcReportNames();
+    return res.status(200).send(data);
+  } catch (e) {
+    console.log('Error getting mstc report names list', e.message);
+    return res.status(500).json({ message: e.message });
+  }
+});
+
+app.post('/mstc/save', attachCurrentUser, checkRole('admin'), async (req: CustomRequest, res: CustomResponse) => {
   try {
     const reportName: string = req.body.reportName;
     const reportData: Array<IMstc> = req.body.reportData;

@@ -48,25 +48,6 @@ export const attachCurrentUser = async (req: CustomRequest, res: CustomResponse,
   } catch (e) {
     return res.status(500).json({ message: e.message });
   }
-
-  // const { err, decoded } = await jwt.verify(token, process.env.JWT_SECRET);
-  // if (err) {
-  //   console.log('error in verify', err);
-  //   return res.json(err).status(500);
-  // } else if (decoded) {
-  //   console.log('decoded user', decoded);
-  //   try {
-  //     const decodedUser = decoded;
-  //     const user = await UserModel.findOne({ _id: decodedUser._id });
-  //     if (!user) {
-  //       res.status(401).end();
-  //     }
-  //     req.currentUser = user;
-  //     return next();
-  //   } catch (e) {
-  //     return res.json(e).status(500);
-  //   }
-  // }
 };
 
 // export const isAuth = jwt({
@@ -85,17 +66,3 @@ export const checkRole = (requiredRole) => {
     }
   };
 };
-
-// export const attachCurrentUser = async (req: CustomRequest, res: CustomResponse, next: express.NextFunction) => {
-//   try {
-//     const decodedUser = req.token.data;
-//     const user = await UserModel.findOne({ _id: decodedUser._id });
-//     if (!user) {
-//       res.status(401).end();
-//     }
-//     req.currentUser = user;
-//     return next();
-//   } catch (e) {
-//     return res.json(e).status(500);
-//   }
-// };

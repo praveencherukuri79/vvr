@@ -31,6 +31,19 @@ export default class MstcDataService {
     }
   }
 
+  async getMstcReportNames(): Promise<any> {
+    try {
+      const report = await MstcReportModel.find({}, { 'reportName': 1, '_id': 0 });
+      const reportNames = [];
+      report.forEach((item) => {
+        reportNames.push(item.reportName);
+      });
+      return reportNames;
+    } catch (e) {
+      throw new Error('failed to retrive mstc');
+    }
+  }
+
   returnData(mstcReport) {
     return {
       reportName: mstcReport.reportName,

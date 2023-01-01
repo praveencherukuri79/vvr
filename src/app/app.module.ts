@@ -18,6 +18,8 @@ import { AdminComponent } from './component/admin/admin.component';
 import { authInterceptorProviders } from './service/auth-interceptor/auth.interceptor';
 import { AdminErrorComponent } from './component/admin-error-dialog/admin-error.component';
 import { CustomSnackbarComponent } from './component/custom-snackbar/custom-snackbar.component';
+import { FileSaveComponent } from './component/file-save/file-save.component';
+import { DashboardComponent } from './component/dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,9 @@ import { CustomSnackbarComponent } from './component/custom-snackbar/custom-snac
     DialogComponent,
     AdminComponent,
     AdminErrorComponent,
-    CustomSnackbarComponent
+    CustomSnackbarComponent,
+    FileSaveComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserAnimationsModule,

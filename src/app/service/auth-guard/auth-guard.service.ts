@@ -35,6 +35,7 @@ export class AuthGuardService implements CanActivate {
     } else {
       if (['dashboard'].includes(trimUrl(state.url))) {
         this.notifierService.showNotification(`Please login to continue... !!`, 'close', 'warning', 6000);
+        this.router.navigate(['login']);
         return false;
       } else if (['login', 'signup'].includes(trimUrl(state.url))) {
         return true;

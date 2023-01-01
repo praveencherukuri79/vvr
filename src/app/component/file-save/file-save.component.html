@@ -1,0 +1,21 @@
+<div class="p-10">Save File to Database</div>
+
+<div class="file-select no-print">
+    <form [formGroup]="fileUploadForm">
+        <mat-form-field appearance="outline">
+            <mat-label>File name</mat-label>
+            <input matInput formControlName="fileName" placeholder="File name" type="text" required />
+            <mat-hint>Ex: nov-2022</mat-hint>
+            <mat-error class="error-message">{{ getErrorMessage('fileName') }}</mat-error>
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="onClick($event)"
+            matTooltip="supported files are '.xls' and '.xlsx'">
+            <mat-icon fontIcon="upload"></mat-icon>
+            Choose File</button>
+        <input #fileSave type="file" class="ng-hide" id="input-file-id" (change)="onFileChange($event)"
+            accept=".xls, .xlsx" />
+    </form>
+    <div *ngIf="excelFile" class="selected_file">
+        <span>Selected file is "{{excelFile.name}}"</span>
+    </div>
+</div>

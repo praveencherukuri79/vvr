@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdminComponent } from './component/admin/admin.component';
+import { DashboardComponent } from './component/dashboard/dashboard.component';
 import { FileUploadComponent } from './component/file-upload/file-upload.component';
 import { LoginComponent } from './component/log-in/login.component';
 import { SignupComponent } from './component/sign-up/signup.component';
@@ -20,7 +21,7 @@ const routes: Routes = [
   },
   {
     path: 'dashboard',
-    component: FileUploadComponent,
+    component: DashboardComponent,
     canActivate: [ AuthGuardService ]
   },
   {

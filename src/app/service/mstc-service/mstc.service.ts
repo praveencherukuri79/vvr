@@ -12,6 +12,10 @@ export class MstcService {
     return this.http.get<any>(`mstc/${reportName}`);
   }
 
+  getMstcReportNames(): Observable<any> {
+    return this.http.get<any>('mstcReportNames');
+  }
+
   saveMstc(data): Observable<any> {
     return this.http.post<any>('mstc/save', data);
   }
