@@ -121,6 +121,9 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
   invoiceHeader: Array<string>;
   invoiceFooter: Array<string>;
 
+  invoiceHeader2;
+  invoiceFooter2;
+
   inputForm: FormGroup;
   //invoiceTest = "To,\nThe manager,\nsiyaram ltd,\nhyd-12345\n\ndear sir,\n\nSUb: jddjn jjjjj euhdeuhe edeedne njenedjuejn nxjednxeujnhuuejdneude.\n".split("\n");
 
@@ -297,8 +300,10 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
       console.log(`Dialog result: ${result}`);
       if (result) {
         console.log('form data => ', result);
-        this.invoiceHeader = result.header ? result.header.split('\n') : null;
-        this.invoiceFooter = result.footer ? result.footer.split('\n') : null;
+        // this.invoiceHeader = result.header ? result.header.split('\n') : null;
+        // this.invoiceFooter = result.footer ? result.footer.split('\n') : null;
+        this.invoiceHeader2 = result.header;
+        this.invoiceFooter2 = result.footer;
         setTimeout(() => {
           window.print();
         }, 200);

@@ -1,11 +1,20 @@
 <h2 mat-dialog-title>Provide Invoice Input</h2>
 <mat-dialog-content>
     <div class="dialog-close-icon">
-        <button mat-raised-button align="right" color="primary" (click)="close()"><mat-icon
-                fontIcon="close" class="no-margin"></mat-icon></button>
+        <button mat-raised-button align="right" color="primary" (click)="close()"><mat-icon fontIcon="close"
+                class="no-margin"></mat-icon></button>
     </div>
-    <form class="invoice-form" [formGroup]="invoiceForm">
 
+    <h3>Header</h3>
+    <quill-editor class="quill-header" [(ngModel)]="headerHtml" placeholder="To, Manager, ....."
+    (onContentChanged)="logChange($event, 'header')" [modules]="ngx_quill_config"></quill-editor>
+    <h3>Footer</h3>
+    <quill-editor class="quill-footer" [(ngModel)]="footerHtml" placeholder="Regards, VVR ....."
+        [modules]="ngx_quill_config"></quill-editor>
+
+    <!-- (onContentChanged)="logChange($event, 'header')" -->
+    <!-- (onSelectionChanged)="logChange($event,'onSelectionChanged')" -->
+    <!-- <form class="invoice-form" [formGroup]="invoiceForm">
         <mat-form-field class="full-width">
             <mat-label>Invoice Header</mat-label>
             <textarea matInput placeholder="To, Manager, ....." rows="12" formControlName="header"></textarea>
@@ -15,7 +24,7 @@
             <mat-label>Invoice Footer</mat-label>
             <textarea matInput placeholder="Regards, VVR ....." rows="6" formControlName="footer"></textarea>
         </mat-form-field>
-    </form>
+    </form> -->
 </mat-dialog-content>
 
 <mat-dialog-actions align="center">

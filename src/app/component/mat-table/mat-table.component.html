@@ -4,6 +4,10 @@
   </ng-container>
 </div>
 
+<div class="only-print px-10" *ngIf="invoiceHeader2">
+    <div [innerHtml]="invoiceHeader2"></div>
+</div>
+
 <div class="print-window px-10 no-print">
   <button mat-raised-button color="primary" (click)="printWindow()" matTooltip="use A3 size and landsacpe view">
     <mat-icon fontIcon="print"></mat-icon> Print</button>
@@ -108,4 +112,8 @@
   <ng-container *ngFor="let content of invoiceFooter">
     <div [innerHtml]="content" class="invoice-content"></div>
   </ng-container>
+</div>
+
+<div class="only-print px-10 invoice-footer" *ngIf="invoiceFooter2">
+    <div [innerHtml]="invoiceFooter2"></div>
 </div>

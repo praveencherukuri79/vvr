@@ -30,10 +30,16 @@
               "src/assets"
             ],
             "styles": [
+              "./node_modules/quill/dist/quill.core.css",
+              "./node_modules/quill/dist/quill.bubble.css",
+              "./node_modules/quill/dist/quill.snow.css",
               "src/theme.scss",
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "quill"
+            ]
           },
           "configurations": {
             "production": {
