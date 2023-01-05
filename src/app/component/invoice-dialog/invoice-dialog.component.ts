@@ -29,10 +29,11 @@ export class InvoiceDialogComponent implements OnInit {
     this.dialogRef.close(false);
   }
 
-  submit(): void {
-    const forData: {[key: string]: string} = {
+  submit(isPrint: boolean = false): void {
+    const forData: {[key: string]: any} = {
       header: this.invoiceForm.get('header').value,
-      footer: this.invoiceForm.get('footer').value
+      footer: this.invoiceForm.get('footer').value,
+      isPrint: isPrint
     }
     
     this.dialogRef.close(forData);

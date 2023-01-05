@@ -19,5 +19,7 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="center">
-    <button mat-raised-button color="primary" (click)="submit()">Continue</button>
+    <!-- <button mat-raised-button color="primary" (click)="submit()">Continue</button> -->
+    <button mat-raised-button color="primary" (click)="submit(true)">Print</button>
+    <button mat-raised-button color="primary" (click)="submit(false)">PDF</button>
 </mat-dialog-actions>

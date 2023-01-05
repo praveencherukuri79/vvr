@@ -1,12 +1,14 @@
-<div class="only-print px-10" *ngIf="invoiceHeader">
+<!-- <div class="only-print px-10" *ngIf="invoiceHeader">
   <ng-container *ngFor="let content of invoiceHeader">
     <div [innerHtml]="content" class="invoice-content"></div>
   </ng-container>
-</div>
+</div> -->
 
 <div class="print-window px-10 no-print">
-  <button mat-raised-button color="primary" (click)="printWindow()" matTooltip="use A3 size and landsacpe view">
-    <mat-icon fontIcon="print"></mat-icon> Print</button>
+  <!-- <button mat-raised-button color="primary" (click)="printWindow()" matTooltip="use A3 size and landsacpe view">
+    <mat-icon fontIcon="print"></mat-icon> Print</button> -->
+    <button mat-raised-button color="primary" (click)="savePdfModal()" matTooltip="Save Or Print invoice">
+      <mat-icon fontIcon="download"></mat-icon> Save</button>
 </div>
 
 <div class="example-container mat-elevation-z8" [class.hidden]="!dataSource">
@@ -104,8 +106,8 @@
   </table> -->
 </div>
 
-<div class="only-print px-10 invoice-footer" *ngIf="invoiceFooter">
+<!-- <div class="only-print px-10 invoice-footer" *ngIf="invoiceFooter">
   <ng-container *ngFor="let content of invoiceFooter">
     <div [innerHtml]="content" class="invoice-content"></div>
   </ng-container>
-</div>
+</div> -->
