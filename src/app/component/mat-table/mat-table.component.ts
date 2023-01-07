@@ -92,11 +92,11 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
   ];
 
   printColumnHeaders: Array<{ [key: string]: keyof Mstc }> = [
-    //{ 'Name': 'NAME' },
-    //{ 'Year Month': 'YEAR_MONTH' },
-    //{ 'Group Code': 'GROUP_CODE' },
+    { 'Name': 'NAME' },
+    { 'Year Month': 'YEAR_MONTH' },
+    { 'Group Code': 'GROUP_CODE' },
     { 'Index Number': 'INDEX_NUM' },
-    //{ 'Item Desc': 'ITEM_DESC' },
+    { 'Item Desc': 'ITEM_DESC' },
     { 'Case Pack': 'CASE_PACK' },
     { 'Opening Cases': 'QTY_OPENING_CASES' },
     { 'Opening Units': 'QTY_OPENING_UNITS' },
@@ -133,6 +133,8 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
     QTY_DENIED_CASES: 'Denied Cases',
     QTY_DENIED_UNITS: 'Denied Units'
   };
+
+  nonDefaultColumns = ['NAME','YEAR_MONTH','GROUP_CODE', 'ITEM_DESC'];
 
   totalParams: Array<keyof Mstc> = [
     'QTY_OPENING_CASES',
@@ -355,7 +357,12 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
   savePdfModal() {
     const dialogRef = this.dialog.open(InvoiceDialogComponent, {
       height: '85vh',
-      width: '60vw'
+      width: '60vw',
+      data: {
+        displayNames: this.displayNames,
+        displayedColumns: this.displayedColumns,
+        nonDefaultColumns: this.nonDefaultColumns
+      }
     });
     dialogRef.afterClosed().subscribe((result) => {
       console.log(`Dialog result: ${result}`);
@@ -365,23 +372,40 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
         this.invoiceFooter = result.footer ? result.footer : null;
         setTimeout(() => {
           //window.print();
-          this.savePdf(result.isPrint);
+          this.savePdf(result.isPrint, result.selectedColumns);
         }, 200);
       }
     });
   }
 
-  savePdf(printPreview: boolean = false) {
+  savePdf(printPreview: boolean = false, selectedColumns: Array<keyof Mstc>) {
     let orientation: jsPDFOptions['orientation'] = 'portrait';
     const fillColor = '#1b7056';
     const currentDate = new Date().toLocaleDateString();
+    const selectedColumnHeaders = [];
+    let includeNonDefault: boolean;
+
+    for(let col of selectedColumns){
+      if(this.nonDefaultColumns.indexOf(col) !== -1){
+        includeNonDefault = true;
+        orientation = 'landscape';
+        break;
+      }
+    }
+
+    this.printColumnHeaders.forEach((item: { [key: string]: keyof Mstc })=>{
+      const key = Object.keys(item)[0];
+      if(selectedColumns.indexOf(item[key]) !== -1){
+        selectedColumnHeaders.push(item);
+      }
+    })
     //let orientation = jsPDFOptions.orientation
 
     let doc = new jsPDF(orientation);
 
     const head = [];
     const columnNames = [];
-    this.printColumnHeaders.forEach((item) => {
+    selectedColumnHeaders.forEach((item) => {
       let headerName = Object.keys(item)[0];
       headerName = headerName.replaceAll(' ', '\n');
       head.push(headerName);
@@ -400,7 +424,7 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
     });
 
     let totArr = [];
-    columnNames.forEach((col) => {
+    columnNames.forEach((col, index) => {
       let val = null;
       if (this.totalParams.indexOf(col) === -1) {
         val = null;
@@ -408,7 +432,7 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
         val = this.getTotal(col);
       }
       //
-      if (col == 'NAME') {
+      if (index == 0 && this.totalParams.indexOf(col) === -1) {
         val = 'Total';
       }
       totArr.push(val);
@@ -520,8 +544,11 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
       footStyles: {
         fillColor: fillColor
       },
+      styles: {
+        overflow: 'ellipsize',
+      },
       theme: 'striped',
-      columns: this.printColumnHeaders
+      columns: selectedColumnHeaders
     });
 
     if (this.invoiceFooter) {
