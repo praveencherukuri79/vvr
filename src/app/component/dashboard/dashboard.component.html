@@ -1,24 +1,24 @@
 <div class="no-print">
-<!-- <div class="p-top-10 p-bottom-10">Select a file</div> -->
-<h4 class="p-top-10 p-bottom-10">Select a file</h4>
-    <form>
-        <mat-form-field appearance="fill">
-          <mat-label>Select file</mat-label>
-          <mat-select [(ngModel)]="selectedFileName" name="fileName" (selectionChange)="onSelectFile($event.value)">
-            <mat-option *ngFor="let report of reportList" [value]="report">
-              {{report}}
-            </mat-option>
-          </mat-select>
-          <!-- <mat-hint>Select a file</mat-hint> -->
-        </mat-form-field>
-      </form>
+  <!-- <div class="p-top-10 p-bottom-10">Select a file</div> -->
+  <h4 class="p-top-10 p-bottom-10">Select a file</h4>
+  <form>
+    <mat-form-field appearance="fill">
+      <mat-label>Select file</mat-label>
+      <mat-select [(ngModel)]="selectedFileName" name="fileName" (selectionChange)="onSelectFile($event.value)">
+        <mat-option *ngFor="let report of reportList" [value]="report">
+          {{report}}
+        </mat-option>
+      </mat-select>
+      <!-- <mat-hint>Select a file</mat-hint> -->
+    </mat-form-field>
+  </form>
 </div>
 
 
 <ng-container
-    *ngIf="mstcArrayVVRProducts && mstcArrayVVRProducts.length && mstcArrayVVRProductsGroup && mstcArrayVVRProductsGroup.length">
+  *ngIf="mstcArrayVVRProducts && mstcArrayVVRProducts.length && mstcArrayVVRProductsGroup && mstcArrayVVRProductsGroup.length">
 
-    <div class="px-10 no-print">
+  <!-- <div class="px-10 no-print">
         <h3>Select Product Or Group Table</h3>
         <mat-button-toggle-group name="tableType" aria-label="Table Type" [value]="selectedTableType"
             (change)="onTableTypeChange($event)">
@@ -29,5 +29,14 @@
 
     <app-mat-table *ngIf="selectedTableType == 'product'" [tableData]="mstcArrayVVRProducts"></app-mat-table>
 
-    <app-mat-table *ngIf="selectedTableType == 'group'" [tableData]="mstcArrayVVRProductsGroup"></app-mat-table>
+    <app-mat-table *ngIf="selectedTableType == 'group'" [tableData]="mstcArrayVVRProductsGroup"></app-mat-table> -->
+
+  <mat-tab-group class="tab-custom-overflow">
+    <mat-tab label="Product Table">
+      <app-mat-table [tableData]="mstcArrayVVRProducts"></app-mat-table>
+    </mat-tab>
+    <mat-tab label="Group by Index Table">
+      <app-mat-table [tableData]="mstcArrayVVRProductsGroup"></app-mat-table>
+    </mat-tab>
+  </mat-tab-group>
 </ng-container>

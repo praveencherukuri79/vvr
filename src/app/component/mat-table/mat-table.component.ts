@@ -11,6 +11,7 @@ import jsPDF, { jsPDFOptions } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { MatPaginator } from '@angular/material/paginator';
 import { SpinnerService } from '@app/service/spinner.service';
+import { HeaderFooterService } from '@app/service/header-footer/header-footer.service';
 
 @Component({
   selector: 'app-mat-table',
@@ -151,6 +152,8 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
     'QTY_DENIED_UNITS'
   ];
 
+  headerFooterData: Array<{[key: string]: string}>;
+
   dataSource: MatTableDataSource<Mstc> = new MatTableDataSource<Mstc>();
 
   invoiceHeader: Array<string>;
@@ -163,7 +166,8 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
     private dialog: MatDialog,
     private formBuilder: FormBuilder,
     private spinnerService: SpinnerService,
-    private changeDetection: ChangeDetectorRef
+    private changeDetection: ChangeDetectorRef,
+    private headerFooterService: HeaderFooterService,
   ) {}
 
   ngOnInit(): void {
@@ -188,6 +192,7 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
         }
       });
     });
+    this.getHeaderFooterData();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -195,6 +200,21 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
       this.searchFilterInit();
       //this.setDatasource(this.tableData);
     }
+  }
+
+  getHeaderFooterData() {
+    this.spinnerService.spin$.next(true);
+    this.headerFooterService.getHeaderFooterData().subscribe({
+      next: (res) => {
+        this.spinnerService.spin$.next(false);
+        this.headerFooterData = res;
+        console.log('getHeaderFooterData => ', res);
+      },
+      error: (e) => {
+        this.spinnerService.spin$.next(false);
+        console.log('getHeaderFooterData Error => ', e);
+      }
+    });
   }
 
   searchFilterInit() {
@@ -354,6 +374,15 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
     //window.print();
   }
 
+  getDefaultCompany(): string {
+    let companyName: string;
+    if(this.dataSource.filteredData && this.dataSource.filteredData.length){
+      companyName = this.dataSource.filteredData[0].NAME;
+    }
+
+    return companyName;
+  }
+
   savePdfModal() {
     const dialogRef = this.dialog.open(InvoiceDialogComponent, {
       height: '85vh',
@@ -361,7 +390,9 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
       data: {
         displayNames: this.displayNames,
         displayedColumns: this.displayedColumns,
-        nonDefaultColumns: this.nonDefaultColumns
+        nonDefaultColumns: this.nonDefaultColumns,
+        headerFooterData: this.headerFooterData,
+        defaultCompanyName: this.getDefaultCompany()
       }
     });
     dialogRef.afterClosed().subscribe((result) => {

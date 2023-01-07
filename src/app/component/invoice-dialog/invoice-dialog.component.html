@@ -1,20 +1,44 @@
 <h2 mat-dialog-title>Provide Invoice Input</h2>
 <mat-dialog-content>
     <div class="dialog-close-icon">
-        <button mat-raised-button align="right" color="primary" (click)="close()"><mat-icon
-                fontIcon="close" class="no-margin"></mat-icon></button>
+        <button mat-raised-button align="right" color="primary" (click)="close()"><mat-icon fontIcon="close"
+                class="no-margin"></mat-icon></button>
     </div>
 
     <h4>Select columns for table</h4>
     <div class="p-10">
         <ng-container *ngFor="let column of printColumns">
-            <mat-checkbox class="example-margin" color="primary" [(ngModel)]="column.checked">{{column.displayName}}</mat-checkbox>
+            <mat-checkbox class="example-margin" color="primary"
+                [(ngModel)]="column.checked">{{column.displayName}}</mat-checkbox>
             <!-- <button mat-raised-button color="primary" (click)="close()">{{displayNames[column]}}</button> -->
         </ng-container>
     </div>
 
-    <h4>Provide header and footer data</h4>
+    <!-- <mat-form-field appearance="fill">
+        <mat-label>Select a Company</mat-label>
+        <mat-select [(value)]="selectedFood">
+          <mat-option></mat-option>
+          <mat-option [value]="option.value" *ngFor="let option of foods">{{ option.viewValue }}</mat-option>
+        </mat-select>
+      </mat-form-field> -->
+
+
+    
     <form class="invoice-form" [formGroup]="invoiceForm">
+
+        <mat-form-field>
+            <mat-label>Select a Company</mat-label>
+            <mat-select formControlName="companyName" name="company" (selectionChange)="onSelectCompany($event.value)">
+                <mat-option [value]="null">reset</mat-option>
+                <mat-option *ngFor="let item of headerFooterData" [value]="item">
+                    {{item.name}}
+                </mat-option>
+            </mat-select>
+            <!-- <mat-hint>Select a file</mat-hint> -->
+        </mat-form-field>
+    
+
+        <h4>Provide header and footer data</h4>
 
         <mat-form-field class="full-width">
             <mat-label>Invoice Header</mat-label>

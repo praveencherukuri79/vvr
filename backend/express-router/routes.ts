@@ -19,6 +19,7 @@ import { CustomRequest, CustomResponse } from 'backend/models/expressTypes';
 // import product from './child-routes/product-routes';
 import authRoutes from './child-routes/auth/auth-routes';
 import mstcRoutes from './child-routes/mstc/mstc-routes';
+import headerFooterRoutes from './child-routes/header-footer/header-footer-routes';
 //import stripePayment from './child-routes/stripe-payments';
 
 //import {mongoConnect} from './mongoDB';
@@ -83,6 +84,7 @@ export function express_app(): express.Express {
   // app.use(product);
   app.use(authRoutes);
   app.use(mstcRoutes);
+  app.use(headerFooterRoutes);
   //app.use(stripePayment);
 
   // app.get('/print-db', async (req: CustomRequest, res: CustomResponse) => {

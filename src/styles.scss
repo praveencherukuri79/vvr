@@ -207,3 +207,19 @@ a {
   background: #368f15;
   color: white;
 }
+
+.mat-mdc-tab-body-content { overflow: hidden!important}
+
+.display-flex{
+  display: flex;
+}
+
+.tab-custom-overflow .mat-mdc-tab-body-wrapper {
+  overflow: visible !important;
+}
+.tab-custom-overflow .mat-mdc-tab-body-active {
+  overflow: visible !important;
+}
+.tab-custom-overflow .mat-mdc-tab-body-content {
+  overflow: visible !important;
+}

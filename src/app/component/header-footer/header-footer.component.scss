@@ -1,0 +1,33 @@
+// .header-footer-form{
+//     display: flex;
+//     flex-direction: column;
+// }
+
+.display-flex{
+    flex-direction: column;
+}
+
+
+@media only screen and (min-width: 320px) and (max-width: 479px) {
+    .invoice-text-area {
+        width: 100%;
+    }
+}
+
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+    .invoice-text-area {
+        width: 100%;
+    }
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    .invoice-text-area {
+        width: 50%;
+    }
+}
+
+@media only screen and (min-width: 992px) {
+    .invoice-text-area {
+        width: 50%;
+    }
+}

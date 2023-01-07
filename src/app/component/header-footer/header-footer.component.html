@@ -1,0 +1,37 @@
+<h4 class="p-10">Provide header and footer data</h4>
+<form class="header-footer-form" [formGroup]="headerFooterForm" #formDirective="ngForm" >
+
+    <div class="display-flex invoice-text-area p-10">
+        <!-- <mat-form-field appearance="outline">
+            <mat-label>Company Name</mat-label>
+            <input matInput formControlName="name" placeholder="Company name" type="text" required />
+            <mat-error class="error-message">{{ getErrorMessage('name') }}</mat-error>
+        </mat-form-field> -->
+
+        <mat-form-field class="example-full-width" appearance="fill">
+            <mat-label>Company Name</mat-label>
+            <input type="text" placeholder="Company Name" matInput formControlName="name" [matAutocomplete]="auto">
+            <mat-error class="error-message">{{ getErrorMessage('name') }}</mat-error>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onCompanySelected($event.option.value)">
+                <mat-option *ngFor="let option of headerFooterData" [value]="option">
+                    {{option.name}}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+            <mat-label>Invoice Header</mat-label>
+            <textarea matInput placeholder="To, Manager, ....." rows="8" formControlName="header" required></textarea>
+            <mat-error class="error-message">{{ getErrorMessage('header') }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+            <mat-label>Invoice Footer</mat-label>
+            <textarea matInput placeholder="Regards, VVR ....." rows="4" formControlName="footer" required></textarea>
+            <mat-error class="error-message">{{ getErrorMessage('footer') }}</mat-error>
+        </mat-form-field>
+    </div>
+
+
+    <button mat-raised-button color="primary" (click)="submit()">submit</button>
+</form>

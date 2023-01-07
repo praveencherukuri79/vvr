@@ -20,6 +20,7 @@ import { AdminErrorComponent } from './component/admin-error-dialog/admin-error.
 import { CustomSnackbarComponent } from './component/custom-snackbar/custom-snackbar.component';
 import { FileSaveComponent } from './component/file-save/file-save.component';
 import { DashboardComponent } from './component/dashboard/dashboard.component';
+import { HeaderFooterComponent } from './component/header-footer/header-footer.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { DashboardComponent } from './component/dashboard/dashboard.component';
     AdminErrorComponent,
     CustomSnackbarComponent,
     FileSaveComponent,
-    DashboardComponent
+    DashboardComponent,
+    HeaderFooterComponent
   ],
   imports: [
     BrowserAnimationsModule,
