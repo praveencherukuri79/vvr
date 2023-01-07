@@ -1,4 +1,5 @@
 export interface IMstc {
+    _id?: string;
     NAME?: string;
     YEAR_MONTH?: string;
     GROUP_CODE?: number;

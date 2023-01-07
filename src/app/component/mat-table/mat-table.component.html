@@ -7,9 +7,11 @@
 <div class="print-window px-10 no-print">
   <!-- <button mat-raised-button color="primary" (click)="printWindow()" matTooltip="use A3 size and landsacpe view">
     <mat-icon fontIcon="print"></mat-icon> Print</button> -->
-    <button mat-raised-button color="primary" (click)="savePdfModal()" matTooltip="Save Or Print invoice">
-      <mat-icon fontIcon="download"></mat-icon> Save</button>
+  <button mat-raised-button color="primary" (click)="savePdfModal()" matTooltip="Save Or Print invoice">
+    <mat-icon fontIcon="download"></mat-icon> Save</button>
 </div>
+
+<!-- [class.hidden]="!dataSource" -->
 
 <div class="example-container mat-elevation-z8" [class.hidden]="!dataSource">
 
@@ -17,14 +19,16 @@
     <ng-container *ngFor="let filter of searchFilters">
       <mat-form-field class="no-print">
         <mat-label>{{filter.label}}</mat-label>
-        <mat-select (selectionChange)="onSelectFilter($event.value, filter.name)" [(value)]="filter.matSelectDefaultValue">
+        <mat-select (selectionChange)="onSelectFilter($event.value, filter.name)"
+          [(value)]="filter.matSelectDefaultValue">
           <!-- <mat-option> <input #matInputSearch matInput [formControlName]="filter.name"
               placeholder="{{filter.placeHolder}}" [(ngModel)]="filter.inputValue"></mat-option> -->
-              <div class="search-input-flex">
-                <input #matInputSearch matInput [formControlName]="filter.name"
-                placeholder="{{filter.placeHolder}}" [(ngModel)]="filter.inputValue">
-                <button mat-raised-button color="primary" (click)="filter.inputValue = '';filter.matSelectDefaultValue='';onSelectFilter(null, filter.name)">{{filter.defaultValue}}</button>
-              </div>
+          <div class="search-input-flex">
+            <input #matInputSearch matInput [formControlName]="filter.name" placeholder="{{filter.placeHolder}}"
+              [(ngModel)]="filter.inputValue">
+            <button mat-raised-button color="primary"
+              (click)="filter.inputValue = '';filter.matSelectDefaultValue='';onSelectFilter(null, filter.name)">{{filter.defaultValue}}</button>
+          </div>
           <!-- <input #matInputSearch matInput [formControlName]="filter.name"
             placeholder="{{filter.placeHolder}}" [(ngModel)]="filter.inputValue">
           <mat-option (click)="filter.inputValue = ''" class="reset-mat-option">{{filter.defaultValue}}</mat-option> -->
@@ -52,14 +56,14 @@
 
   <!--MAT TABLE 1-->
   <mat-table id="vvr-mat-table" [dataSource]="dataSource" matSort matSortDirection="asc" matSortActive="indexNumber"
-    matSortDisableClear>
+    matSortDisableClear [trackBy]="trackBy">
 
     <ng-container *ngFor="let column of displayedColumns">
       <ng-container [matColumnDef]="column">
         <mat-header-cell *matHeaderCellDef [mat-sort-header]="column"> {{displayNames[column]}} </mat-header-cell>
         <mat-cell *matCellDef="let element"><span class="mobile-label">{{displayNames[column]}}:</span>
           {{element[column]}} </mat-cell>
-        <mat-footer-cell *matFooterCellDef> {{column == 'NAME' ? 'Total' : getTotal(column)}} </mat-footer-cell>
+        <mat-footer-cell *matFooterCellDef> {{column == 'NAME' ? 'Total' : dataSource.data.length ? getTotal(column): ''}} </mat-footer-cell>
       </ng-container>
     </ng-container>
 
@@ -67,10 +71,13 @@
     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
     <mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></mat-footer-row>
   </mat-table>
+  <mat-paginator [pageSizeOptions]="[10, 50, 100, 500]" [pageSize]="50" aria-label="Select page of mstc data"
+    showFirstLastButtons></mat-paginator>
+
   <!--MAT TABLE 1-->
 
-    <!--MAT TABLE 2-->
-    <!-- <table mat-table id="vvr-mat-table" [dataSource]="dataSource" matSort matSortDirection="asc" matSortActive="indexNumber"
+  <!--MAT TABLE 2-->
+  <!-- <table mat-table id="vvr-mat-table" [dataSource]="dataSource" matSort matSortDirection="asc" matSortActive="indexNumber"
     matSortDisableClear>
 
     <ng-container *ngFor="let column of displayedColumns">

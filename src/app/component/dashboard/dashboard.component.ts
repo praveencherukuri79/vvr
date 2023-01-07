@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IMstc } from '@app/interface/mstc';
@@ -7,6 +7,7 @@ import { MstcService } from '@app/service/mstc-service/mstc.service';
 import { SpinnerService } from '@app/service/spinner.service';
 
 @Component({
+  //changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
@@ -42,7 +43,8 @@ export class DashboardComponent {
     private route: ActivatedRoute,
     private router: Router,
     private mstcService: MstcService
-  ) {}
+  ) //private changeDetection: ChangeDetectorRef,
+  {}
 
   ngOnInit(): void {
     this.spinnerService.spin$.next(true);
@@ -77,22 +79,34 @@ export class DashboardComponent {
   }
 
   onTableTypeChange(event: MatButtonToggleChange) {
-    this.selectedTableType = event.value;
+    console.log('type change', Date.now());
+    this.spinnerService.spin$.next(true);
+    setTimeout(() => {
+      this.selectedTableType = event.value;
+    }, 100);
   }
 
   prepareDataSource(mstc) {
+    console.log('prepare start', Date.now());
+    //this.spinnerService.spin$.next(true);
     if (mstc && mstc.length > 0) {
       mstc.forEach((obj: IMstc) => {
         this.mstcArray.push(new Mstc(obj));
       });
     }
-    this.mstcArrayVVRProducts = this.mstcArray.filter((mstc: Mstc) => this.myProductIds.indexOf(mstc.INDEX_NUM) !== -1);
+    //this.mstcArrayVVRProducts = this.mstcArray.filter((mstc: Mstc) => this.myProductIds.indexOf(mstc.INDEX_NUM) !== -1);
+
+    this.mstcArrayVVRProducts = this.mstcArray;
 
     this.mstcArrayVVRProductsGroup = this.prepareDataGroup(JSON.parse(JSON.stringify(this.mstcArrayVVRProducts)));
 
     console.log('mstcArray => ', this.mstcArray);
     console.log('mstcArrayVVRProducts => ', this.mstcArrayVVRProducts);
     console.log('mstcArrayVVRProductsGroup => ', this.mstcArrayVVRProductsGroup);
+    //this.changeDetection.markForCheck();
+    //this.changeDetection.detectChanges();
+    //this.spinnerService.spin$.next(false);
+    console.log('prepare end', Date.now());
   }
 
   resetTableData() {
@@ -110,7 +124,7 @@ export class DashboardComponent {
       if (existingObj) {
         existingObj = this.mergeMstcObj(existingObj, obj);
       } else {
-        delete obj.STACK_NUM;
+        //delete obj.STACK_NUM;
         group.push(obj);
       }
     });

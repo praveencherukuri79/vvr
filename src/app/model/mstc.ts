@@ -1,6 +1,7 @@
 import { IMstc } from '../interface/mstc';
 
 export class Mstc implements IMstc {
+  _id: string;
   NAME: string;
   YEAR_MONTH: string;
   GROUP_CODE: number;
@@ -22,6 +23,7 @@ export class Mstc implements IMstc {
   QTY_DENIED_UNITS: number;
 
   constructor(MstcObject: IMstc) {
+    this._id = MstcObject._id;
     this.NAME = MstcObject.NAME;
     this.YEAR_MONTH = MstcObject.YEAR_MONTH;
     this.GROUP_CODE = MstcObject.GROUP_CODE;

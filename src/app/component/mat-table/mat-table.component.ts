@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
@@ -9,6 +9,8 @@ import { InvoiceDialogComponent } from '../invoice-dialog/invoice-dialog.compone
 //import { jsPDF } from 'jspdf';
 import jsPDF, { jsPDFOptions } from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { MatPaginator } from '@angular/material/paginator';
+import { SpinnerService } from '@app/service/spinner.service';
 
 @Component({
   selector: 'app-mat-table',
@@ -16,11 +18,13 @@ import autoTable from 'jspdf-autotable';
   styleUrls: ['./mat-table.component.scss']
 })
 export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
-  @ViewChild(MatSort, { static: false }) sort: MatSort;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
   //@ViewChildren('matInputSearch') matInputSearch: QueryList<MatInput>;
 
   @Input() tableData: Mstc[];
   //@Input() displayGroup: boolean;
+
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   searchFilters: Array<ISearchFilter> = [
     {
@@ -145,7 +149,7 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
     'QTY_DENIED_UNITS'
   ];
 
-  dataSource: MatTableDataSource<Mstc>;
+  dataSource: MatTableDataSource<Mstc> = new MatTableDataSource<Mstc>();
 
   invoiceHeader: Array<string>;
   invoiceFooter: Array<string>;
@@ -153,9 +157,15 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
   inputForm: FormGroup;
   //invoiceTest = "To,\nThe manager,\nsiyaram ltd,\nhyd-12345\n\ndear sir,\n\nSUb: jddjn jjjjj euhdeuhe edeedne njenedjuejn nxjednxeujnhuuejdneude.\n".split("\n");
 
-  constructor(private dialog: MatDialog, private formBuilder: FormBuilder) {}
+  constructor(
+    private dialog: MatDialog,
+    private formBuilder: FormBuilder,
+    private spinnerService: SpinnerService,
+    private changeDetection: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
+    console.log('mat on in it', Date.now());
     this.inputForm = this.formBuilder.group({});
     this.searchFilters.forEach((inputForm: ISearchFilter) => {
       this.inputForm.addControl(inputForm.name, new FormControl());
@@ -181,7 +191,7 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
   ngOnChanges(changes: SimpleChanges) {
     if (changes && changes.tableData) {
       this.searchFilterInit();
-      this.setDatasource(this.tableData);
+      //this.setDatasource(this.tableData);
     }
   }
 
@@ -192,10 +202,17 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
   }
 
   ngAfterViewInit(): void {
-    if (this.dataSource) {
-      this.dataSource.sort = this.sort;
-      this.setFilterPredictate();
-    }
+    console.log('mat after view', Date.now());
+    //if (this.dataSource) {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+
+    this.setFilterPredictate();
+    this.setDatasource(this.tableData);
+    this.changeDetection.markForCheck();
+    this.changeDetection.detectChanges();
+    this.spinnerService.spin$.next(false);
+    //}
   }
 
   onlyUnique(value: string | number, index: number, self: Array<any>): boolean {
@@ -254,6 +271,9 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
 
     filterValue = filterName + '||' + filterValue;
     this.dataSource.filter = filterValue;
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
   // filterSelection(value: string|number, filterName: keyof Mstc){
@@ -261,8 +281,15 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
   //   return this.tableData.map((item) => item[filterName]).filter(item => item.toString().startsWith(filter));
   // }
 
-  setDatasource(tableData: Mstc[]) {
-    this.dataSource = new MatTableDataSource<Mstc>(tableData);
+  setDatasource(tableData: Mstc[], reset: boolean = false) {
+    //this.spinnerService.spin$.next(true);
+    if (reset) {
+      this.dataSource = new MatTableDataSource<Mstc>(tableData);
+    } else {
+      this.dataSource.data = tableData;
+    }
+
+    //this.spinnerService.spin$.next(false);
   }
 
   setFilterPredictate() {
@@ -293,6 +320,10 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
       return data.map((t: Mstc) => t[param] as number).reduce((acc, value) => acc + value, 0);
     }
     return null;
+  }
+
+  trackBy(index: number, item: Mstc) {
+    return item._id;
   }
 
   // applyFilter(event: Event, column: string) {
@@ -509,7 +540,6 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
         theme: 'plain'
       });
     }
-
 
     if (printPreview) {
       doc.autoPrint();
