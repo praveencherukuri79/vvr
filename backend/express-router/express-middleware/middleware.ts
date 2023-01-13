@@ -40,13 +40,14 @@ export const attachCurrentUser = async (req: CustomRequest, res: CustomResponse,
         res.status(401).end();
       }
       req.currentUser = user;
+      console.log(`User is authenticated and add to req, going to next middleware`);
       return next();
     } catch (e) {
       //return res.json(e).status(500);
       return res.status(500).json({ message: e.message });
     }
   } catch (e) {
-    return res.status(500).json({ message: e.message });
+    return res.status(400).json({ message: e.message });
   }
 };
 
@@ -61,7 +62,7 @@ export const checkRole = (requiredRole) => {
     if (req.currentUser.role !== requiredRole) {
       return res.status(401).end();
     } else {
-      console.log('User meet required role, going to next middleware');
+      console.log(`User meet required role - ${requiredRole}, going to next middleware`);
       return next();
     }
   };

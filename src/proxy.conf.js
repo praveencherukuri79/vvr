@@ -7,7 +7,19 @@ const staticRoute = 'static';
 
 const PROXY_CONFIG = [
   {
-    context: ['/buyerrequest', '/farmerlotrequest', '/partner', '/product', '/create-payment-intent', '/print-db', '/user','/mstc','/mstcReportNames','/header-footer'],
+    context: [
+      '/buyerrequest',
+      '/farmerlotrequest',
+      '/partner',
+      '/product',
+      '/create-payment-intent',
+      '/print-db',
+      '/user',
+      '/mstc',
+      '/mstcReportNames',
+      '/header-footer',
+      '/rate'
+    ],
     target: target_server,
     secure: false,
     changeOrigin: true,

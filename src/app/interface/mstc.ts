@@ -1,5 +1,7 @@
 export interface IMstc {
     _id?: string;
+    rate?: number;
+    totalAmount?: number;
     NAME?: string;
     YEAR_MONTH?: string;
     GROUP_CODE?: number;

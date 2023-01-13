@@ -1,0 +1,31 @@
+<h4 class="p-10">Add or Update Rates</h4>
+
+<form class="index-rate-form" [formGroup]="indexRateForm" #formDirective="ngForm">
+
+    <div class="display-flex p-10 index-rate-input-area">
+        <mat-form-field class="example-full-width p-5" appearance="fill">
+            <mat-label>Index Number</mat-label>
+            <input type="number" placeholder="Index Rate" matInput formControlName="index" [matAutocomplete]="indexRateAuto">
+            <button [hidden]="!formData.index.value" matSuffix mat-icon-button aria-label="clear" (click)="resetInput()">
+                <mat-icon>close</mat-icon>
+              </button>
+            <mat-error class="error-message">{{ getErrorMessage('index') }}</mat-error>
+            <mat-autocomplete #indexRateAuto="matAutocomplete" (optionSelected)="onIndexSelected($event.option.value)">
+                <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                    {{option.INDEX_NUM}}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="p-5">
+            <mat-label>Rate</mat-label>
+            <input matInput formControlName="rate" placeholder="rate" type="number" required />
+            <mat-error class="error-message">{{ getErrorMessage('rate') }}</mat-error>
+        </mat-form-field>
+
+    </div>
+
+    <button class="p-10" mat-raised-button color="primary" (click)="submit()">submit</button>
+</form>
+
+<!-- <button mat-raised-button color="primary" (click)="submitOverride()">submit override</button> -->

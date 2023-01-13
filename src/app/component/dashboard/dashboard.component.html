@@ -33,10 +33,10 @@
 
   <mat-tab-group class="tab-custom-overflow">
     <mat-tab label="Product Table">
-      <app-mat-table [tableData]="mstcArrayVVRProducts"></app-mat-table>
+      <app-mat-table [tableData]="mstcArrayVVRProducts" [headerFooterData]="headerFooterData" [indexRateData]="indexRateData"></app-mat-table>
     </mat-tab>
     <mat-tab label="Group by Index Table">
-      <app-mat-table [tableData]="mstcArrayVVRProductsGroup"></app-mat-table>
+      <app-mat-table [tableData]="mstcArrayVVRProductsGroup" [headerFooterData]="headerFooterData" [indexRateData]="indexRateData"></app-mat-table>
     </mat-tab>
   </mat-tab-group>
 </ng-container>

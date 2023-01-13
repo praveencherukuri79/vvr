@@ -3,8 +3,12 @@ import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IMstc } from '@app/interface/mstc';
 import { Mstc } from '@app/model/mstc';
+import { HeaderFooterService } from '@app/service/header-footer/header-footer.service';
+import { IndexRateService } from '@app/service/index-rate/index-rate.service';
 import { MstcService } from '@app/service/mstc-service/mstc.service';
+import { NotifierService } from '@app/service/notification-service/notification.service';
 import { SpinnerService } from '@app/service/spinner.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   //changeDetection: ChangeDetectionStrategy.OnPush,
@@ -20,6 +24,8 @@ export class DashboardComponent {
   mstcArrayVVRProductsGroup: Mstc[] = [];
 
   selectedTableType: string = 'product';
+  headerFooterData: Array<{ [key: string]: string }>;
+  indexRateData: Array<{ INDEX_NUM: number, rate: number }>;
 
   //showSpinner: boolean = false;
 
@@ -35,30 +41,54 @@ export class DashboardComponent {
     'QTY_STOCKED_CASES',
     'QTY_STOCKED_UNITS',
     'QTY_DENIED_CASES',
-    'QTY_DENIED_UNITS'
+    'QTY_DENIED_UNITS',
+    'TOTAL_AMOUNT'
   ];
 
   constructor(
     private spinnerService: SpinnerService,
     private route: ActivatedRoute,
     private router: Router,
-    private mstcService: MstcService
-  ) //private changeDetection: ChangeDetectorRef,
-  {}
+    private mstcService: MstcService,
+    private headerFooterService: HeaderFooterService,
+    private indexRateService: IndexRateService,
+    private notifierService: NotifierService //private changeDetection: ChangeDetectorRef,
+  ) {}
 
   ngOnInit(): void {
-    this.spinnerService.spin$.next(true);
-    this.mstcService.getMstcReportNames().subscribe({
-      next: (data) => {
+    
+    const initObservables = {
+      reportList: this.mstcService.getMstcReportNames(),
+      headerFooterData: this.headerFooterService.getHeaderFooterData(),
+      indexRateData: this.indexRateService.geRates()
+    };
+
+    forkJoin(initObservables).subscribe({
+      next: (res) => {
         this.spinnerService.spin$.next(false);
-        this.reportList = data;
-        console.log('mongo Mstc ReportNames => ', data);
-        //this.mstcService.getMstc('NOV-2022');
+        this.reportList = res.reportList;
+        this.headerFooterData = res.headerFooterData;
+        this.indexRateData = res.indexRateData;
+        console.log('init res => ', res);
       },
-      error: (error) => {
+      error: (e) => {
         this.spinnerService.spin$.next(false);
+        this.notifierService.showNotification(`Error occured while retirving init data`, 'close', 'error', 3000);
       }
     });
+
+    //this.spinnerService.spin$.next(true);
+    // this.mstcService.getMstcReportNames().subscribe({
+    //   next: (data) => {
+    //     this.spinnerService.spin$.next(false);
+    //     this.reportList = data;
+    //     console.log('mongo Mstc ReportNames => ', data);
+    //     //this.mstcService.getMstc('NOV-2022');
+    //   },
+    //   error: (error) => {
+    //     this.spinnerService.spin$.next(false);
+    //   }
+    // });
   }
 
   onSelectFile(reportName: string) {
@@ -86,11 +116,23 @@ export class DashboardComponent {
     }, 100);
   }
 
+  getRate(obj: IMstc): number{
+    const rateObj = this.indexRateData.find(item=> item.INDEX_NUM === obj.INDEX_NUM);
+    return rateObj ? rateObj.rate : 0;
+  }
+
+  getTotalAmount(obj: IMstc): number{
+    const totalSold = (obj.QTY_SOLD_CASES * obj.CASE_PACK) + (obj.QTY_SOLD_UNITS);
+    return totalSold? totalSold * obj.rate: 0;
+  }
+
   prepareDataSource(mstc) {
     console.log('prepare start', Date.now());
     //this.spinnerService.spin$.next(true);
     if (mstc && mstc.length > 0) {
       mstc.forEach((obj: IMstc) => {
+        obj.rate = this.getRate(obj);
+        obj.totalAmount = this.getTotalAmount(obj);
         this.mstcArray.push(new Mstc(obj));
       });
     }

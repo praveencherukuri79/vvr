@@ -12,6 +12,7 @@ import autoTable from 'jspdf-autotable';
 import { MatPaginator } from '@angular/material/paginator';
 import { SpinnerService } from '@app/service/spinner.service';
 import { HeaderFooterService } from '@app/service/header-footer/header-footer.service';
+import { CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'app-mat-table',
@@ -76,24 +77,26 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
     'QTY_STOCKED_CASES',
     'QTY_STOCKED_UNITS',
     'QTY_DENIED_CASES',
-    'QTY_DENIED_UNITS'
+    'QTY_DENIED_UNITS',
+    'RATE',
+    'TOTAL_AMOUNT'
   ];
 
-  printColumns: Array<keyof Mstc> = [
-    'NAME',
-    'INDEX_NUM',
-    'ITEM_DESC',
-    'CASE_PACK',
-    'QTY_OPENING_CASES',
-    'QTY_OPENING_UNITS',
-    'QTY_RECEIVED_CASES',
-    'QTY_RECEIVED_UNITS',
-    'QTY_SOLD_CASES',
-    'QTY_SOLD_UNITS'
-  ];
+  // printColumns: Array<keyof Mstc> = [
+  //   'NAME',
+  //   'INDEX_NUM',
+  //   'ITEM_DESC',
+  //   'CASE_PACK',
+  //   'QTY_OPENING_CASES',
+  //   'QTY_OPENING_UNITS',
+  //   'QTY_RECEIVED_CASES',
+  //   'QTY_RECEIVED_UNITS',
+  //   'QTY_SOLD_CASES',
+  //   'QTY_SOLD_UNITS'
+  // ];
 
   printColumnHeaders: Array<{ [key: string]: keyof Mstc }> = [
-    { 'Name': 'NAME' },
+    { Name: 'NAME' },
     { 'Year Month': 'YEAR_MONTH' },
     { 'Group Code': 'GROUP_CODE' },
     { 'Index Number': 'INDEX_NUM' },
@@ -110,7 +113,9 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
     { 'Stocked Cases (closed)': 'QTY_STOCKED_CASES' },
     { 'Stocked Units (closed)': 'QTY_STOCKED_UNITS' },
     { 'Denied Cases': 'QTY_DENIED_CASES' },
-    { 'Denied Units': 'QTY_DENIED_UNITS' }
+    { 'Denied Units': 'QTY_DENIED_UNITS' },
+    { Rate: 'RATE' },
+    { 'Total Amount': 'TOTAL_AMOUNT' }
   ];
 
   displayNames: { [key: string]: string } = {
@@ -132,10 +137,12 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
     QTY_STOCKED_CASES: 'Stocked Cases (closed)',
     QTY_STOCKED_UNITS: 'Stocked Units (closed)',
     QTY_DENIED_CASES: 'Denied Cases',
-    QTY_DENIED_UNITS: 'Denied Units'
+    QTY_DENIED_UNITS: 'Denied Units',
+    RATE: 'Rate',
+    TOTAL_AMOUNT: 'Total Amount'
   };
 
-  nonDefaultColumns = ['NAME','YEAR_MONTH','GROUP_CODE', 'ITEM_DESC'];
+  nonDefaultColumns = ['NAME', 'YEAR_MONTH', 'GROUP_CODE', 'ITEM_DESC'];
 
   totalParams: Array<keyof Mstc> = [
     'QTY_OPENING_CASES',
@@ -149,10 +156,17 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
     'QTY_STOCKED_CASES',
     'QTY_STOCKED_UNITS',
     'QTY_DENIED_CASES',
-    'QTY_DENIED_UNITS'
+    'QTY_DENIED_UNITS',
+    'TOTAL_AMOUNT'
   ];
 
-  headerFooterData: Array<{[key: string]: string}>;
+  currencyFields = ['RATE', 'TOTAL_AMOUNT'];
+
+  @Input()
+  headerFooterData: Array<{ [key: string]: string }>;
+
+  @Input()
+  indexRateData: Array<{ INDEX_NUM: number; rate: number }>;
 
   dataSource: MatTableDataSource<Mstc> = new MatTableDataSource<Mstc>();
 
@@ -167,7 +181,7 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
     private formBuilder: FormBuilder,
     private spinnerService: SpinnerService,
     private changeDetection: ChangeDetectorRef,
-    private headerFooterService: HeaderFooterService,
+    private currencyPipe: CurrencyPipe //private headerFooterService: HeaderFooterService,
   ) {}
 
   ngOnInit(): void {
@@ -192,7 +206,7 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
         }
       });
     });
-    this.getHeaderFooterData();
+    //this.getHeaderFooterData();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -202,20 +216,20 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
     }
   }
 
-  getHeaderFooterData() {
-    this.spinnerService.spin$.next(true);
-    this.headerFooterService.getHeaderFooterData().subscribe({
-      next: (res) => {
-        this.spinnerService.spin$.next(false);
-        this.headerFooterData = res;
-        console.log('getHeaderFooterData => ', res);
-      },
-      error: (e) => {
-        this.spinnerService.spin$.next(false);
-        console.log('getHeaderFooterData Error => ', e);
-      }
-    });
-  }
+  // getHeaderFooterData() {
+  //   this.spinnerService.spin$.next(true);
+  //   this.headerFooterService.getHeaderFooterData().subscribe({
+  //     next: (res) => {
+  //       this.spinnerService.spin$.next(false);
+  //       this.headerFooterData = res;
+  //       console.log('getHeaderFooterData => ', res);
+  //     },
+  //     error: (e) => {
+  //       this.spinnerService.spin$.next(false);
+  //       console.log('getHeaderFooterData Error => ', e);
+  //     }
+  //   });
+  // }
 
   searchFilterInit() {
     this.searchFilters.forEach((filter: ISearchFilter) => {
@@ -376,7 +390,7 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
 
   getDefaultCompany(): string {
     let companyName: string;
-    if(this.dataSource.filteredData && this.dataSource.filteredData.length){
+    if (this.dataSource.filteredData && this.dataSource.filteredData.length) {
       companyName = this.dataSource.filteredData[0].NAME;
     }
 
@@ -416,20 +430,24 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
     const selectedColumnHeaders = [];
     let includeNonDefault: boolean;
 
-    for(let col of selectedColumns){
-      if(this.nonDefaultColumns.indexOf(col) !== -1){
+    for (let col of selectedColumns) {
+      if (this.nonDefaultColumns.indexOf(col) !== -1) {
         includeNonDefault = true;
         orientation = 'landscape';
         break;
       }
     }
 
-    this.printColumnHeaders.forEach((item: { [key: string]: keyof Mstc })=>{
+    if (selectedColumns.length > 14) {
+      orientation = 'landscape';
+    }
+
+    this.printColumnHeaders.forEach((item: { [key: string]: keyof Mstc }) => {
       const key = Object.keys(item)[0];
-      if(selectedColumns.indexOf(item[key]) !== -1){
+      if (selectedColumns.indexOf(item[key]) !== -1) {
         selectedColumnHeaders.push(item);
       }
-    })
+    });
     //let orientation = jsPDFOptions.orientation
 
     let doc = new jsPDF(orientation);
@@ -450,6 +468,11 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
       let arr = [];
       columnNames.forEach((col) => {
         arr.push(obj[col]);
+        // if (this.currencyFields.indexOf(col) !== -1) {
+        //   arr.push(this.currencyPipe.transform(obj[col], 'INR'));
+        // } else {
+        //   arr.push(obj[col]);
+        // }
       });
       data.push(arr);
     });
@@ -461,6 +484,11 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
         val = null;
       } else {
         val = this.getTotal(col);
+        // if (this.currencyFields.indexOf(col) !== -1) {
+        //   val = this.currencyPipe.transform(this.getTotal(col), 'INR');
+        // } else {
+        //   val = this.getTotal(col);
+        // }
       }
       //
       if (index == 0 && this.totalParams.indexOf(col) === -1) {
@@ -576,7 +604,7 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
         fillColor: fillColor
       },
       styles: {
-        overflow: 'ellipsize',
+        overflow: 'linebreak'
       },
       theme: 'striped',
       columns: selectedColumnHeaders

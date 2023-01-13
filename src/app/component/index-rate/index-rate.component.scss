@@ -1,0 +1,29 @@
+@media only screen and (max-width: 479px) {
+    .display-flex{
+        flex-direction: column;
+    }
+    .index-rate-input-area {
+        width: 90%;
+    }
+}
+
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+    .display-flex{
+        flex-direction: column;
+    }
+    .index-rate-input-area {
+        width: 90%;
+    }
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    // .index-rate-input-area {
+    //     width: 50%;
+    // }
+}
+
+@media only screen and (min-width: 992px) {
+    // .index-rate-input-area {
+    //     width: 50%;
+    // }
+}

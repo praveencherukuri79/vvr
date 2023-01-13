@@ -21,9 +21,13 @@ export class Mstc implements IMstc {
   QTY_STOCKED_UNITS: number;
   QTY_DENIED_CASES: number;
   QTY_DENIED_UNITS: number;
+  RATE: number;
+  TOTAL_AMOUNT: number;
 
   constructor(MstcObject: IMstc) {
     this._id = MstcObject._id;
+    this.RATE = MstcObject.rate;
+    this.TOTAL_AMOUNT = MstcObject.totalAmount;
     this.NAME = MstcObject.NAME;
     this.YEAR_MONTH = MstcObject.YEAR_MONTH;
     this.GROUP_CODE = MstcObject.GROUP_CODE;

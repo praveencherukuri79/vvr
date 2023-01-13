@@ -60,10 +60,11 @@
 
     <ng-container *ngFor="let column of displayedColumns">
       <ng-container [matColumnDef]="column">
-        <mat-header-cell *matHeaderCellDef [mat-sort-header]="column"> {{displayNames[column]}} </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef [mat-sort-header]="column">{{displayNames[column]}} </mat-header-cell>
         <mat-cell *matCellDef="let element"><span class="mobile-label">{{displayNames[column]}}:</span>
-          {{element[column]}} </mat-cell>
-        <mat-footer-cell *matFooterCellDef> {{column == 'NAME' ? 'Total' : dataSource.data.length ? getTotal(column): ''}} </mat-footer-cell>
+          {{currencyFields.indexOf(column) !== -1 ? (element[column] | currency :'INR') : element[column]}} </mat-cell>
+        <mat-footer-cell *matFooterCellDef> {{column == 'NAME' ? 'Total' : currencyFields.indexOf(column) !== -1 ?
+          (getTotal(column) | currency :'INR') : getTotal(column)}} </mat-footer-cell>
       </ng-container>
     </ng-container>
 

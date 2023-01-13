@@ -4,6 +4,7 @@ import { HeaderFooterService } from '@app/service/header-footer/header-footer.se
 import { NotifierService } from '@app/service/notification-service/notification.service';
 import { SpinnerService } from '@app/service/spinner.service';
 import { getFieldErrorMessage } from '@app/utils/utilities';
+import { map, Observable, startWith } from 'rxjs';
 import { Custom_Validation_Messages } from './validation-messages';
 
 @Component({
@@ -17,6 +18,7 @@ export class HeaderFooterComponent implements OnInit {
   
   headerFooterForm: FormGroup;
   headerFooterData: Array<{[key: string]: string}>;
+  filteredOptions: Observable<Array<{[key: string]: string}>>;
 
   constructor(private formBuilder: FormBuilder, 
     private headerFooterService: HeaderFooterService,
@@ -34,8 +36,32 @@ export class HeaderFooterComponent implements OnInit {
     });
   }
 
+  resetInput(){
+    //this.formDirective.resetForm();
+    this.headerFooterForm.patchValue({
+      name: '',
+      header: '',
+      footer: '',
+    });
+  }
+
   get formData() {
     return this.headerFooterForm.controls;
+  }
+
+  initFilter(){
+    this.filteredOptions = this.headerFooterForm.get('name').valueChanges.pipe(
+      startWith(''),
+      map((value) => {
+        const filetVal = typeof value === 'string' ? value : value?.name;
+        return this.filterAutoComplete(filetVal || '')
+      })
+    );
+  }
+
+  filterAutoComplete(value: string): Array<{ [key: string]: string }> {
+    const filterValue = value ? value.toLowerCase(): '';
+    return this.headerFooterData.filter((option) => option.name.toLowerCase().includes(filterValue));
   }
 
   onCompanySelected(company) {
@@ -52,6 +78,7 @@ export class HeaderFooterComponent implements OnInit {
       next: (res) => {
         this.spinnerService.spin$.next(false);
         this.headerFooterData = res;
+        this.initFilter();
         console.log('getHeaderFooterData => ', res);
       },
       error: (e) => {
