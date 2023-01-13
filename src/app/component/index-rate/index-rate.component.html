@@ -11,8 +11,8 @@
               </button>
             <mat-error class="error-message">{{ getErrorMessage('index') }}</mat-error>
             <mat-autocomplete #indexRateAuto="matAutocomplete" (optionSelected)="onIndexSelected($event.option.value)">
-                <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-                    {{option.INDEX_NUM}}
+                <mat-option *ngFor="let option of filteredOptions | async; let i=index" [value]="option" [ngClass]="i % 2 == 0 ? 'item-even':'item-odd'">
+                    {{option.INDEX_NUM}} - {{option.rate | currency: 'INR'}}
                 </mat-option>
             </mat-autocomplete>
         </mat-form-field>
