@@ -13,7 +13,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { SpinnerService } from '@app/service/spinner.service';
 import { HeaderFooterService } from '@app/service/header-footer/header-footer.service';
 import { CurrencyPipe } from '@angular/common';
-import { utils as xlsxUtils, writeFileXLSX } from 'xlsx';
+import { utils as xlsxUtils, writeFileXLSX, writeFile } from 'xlsx';
 
 @Component({
   selector: 'app-mat-table',
@@ -398,7 +398,7 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
     return companyName;
   }
 
-  getXlsxTotObj(){
+  getXlsxTotObj() {
     let totArr = {};
     this.displayedColumns.forEach((col, index) => {
       let val = null;
@@ -447,15 +447,22 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
     });
   }
 
-  saveXlsx(){
-    const data = this.dataSource.filteredData.map(obj => Object.fromEntries(this.displayedColumns.map(header => ([header, obj[header]]))));
+  saveXlsx(fileType) {
+    const data = this.dataSource.filteredData.map((obj) =>
+      Object.fromEntries(this.displayedColumns.map((header) => [header, obj[header]]))
+    );
     const totRow = this.getXlsxTotObj();
     data.push(totRow);
-    const worksheet = xlsxUtils.json_to_sheet(data,{header: this.displayedColumns});
-    const workbook  = xlsxUtils.book_new();
-    xlsxUtils.book_append_sheet(workbook , worksheet, "Invoice");
+    const worksheet = xlsxUtils.json_to_sheet(data, { header: this.displayedColumns });
+    const workbook = xlsxUtils.book_new();
+    xlsxUtils.book_append_sheet(workbook, worksheet, 'Invoice');
     //xlsxUtils.sheet_add_aoa(worksheet, [this.displayedColumns], { origin: "NAME" });
-    writeFileXLSX(workbook, "mstcReport.xlsx");
+
+    if (fileType == 'excel') {
+      writeFileXLSX(workbook, 'Invoice.xlsx');
+    } else if (fileType == 'csv') {
+      writeFile(workbook, 'Invoice.csv');
+    }
   }
 
   savePdf(printPreview: boolean = false, selectedColumns: Array<keyof Mstc>) {
