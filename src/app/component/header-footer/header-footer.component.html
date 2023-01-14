@@ -10,7 +10,7 @@
 
         <mat-form-field class="example-full-width" appearance="fill">
             <mat-label>Company Name</mat-label>
-            <input type="text" placeholder="Company Name" matInput formControlName="name" [matAutocomplete]="auto">
+            <input type="text" placeholder="Company Name" matInput formControlName="name" [matAutocomplete]="auto" required>
             <button [hidden]="!formData.name.value" matSuffix mat-icon-button aria-label="clear" (click)="resetInput()">
                 <mat-icon>close</mat-icon>
               </button>

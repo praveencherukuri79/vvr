@@ -13,6 +13,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { SpinnerService } from '@app/service/spinner.service';
 import { HeaderFooterService } from '@app/service/header-footer/header-footer.service';
 import { CurrencyPipe } from '@angular/common';
+import { utils as xlsxUtils, writeFileXLSX } from 'xlsx';
 
 @Component({
   selector: 'app-mat-table',
@@ -397,6 +398,29 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
     return companyName;
   }
 
+  getXlsxTotObj(){
+    let totArr = {};
+    this.displayedColumns.forEach((col, index) => {
+      let val = null;
+      if (this.totalParams.indexOf(col) === -1) {
+        val = null;
+      } else {
+        val = this.getTotal(col);
+        // if (this.currencyFields.indexOf(col) !== -1) {
+        //   val = this.currencyPipe.transform(this.getTotal(col), 'INR');
+        // } else {
+        //   val = this.getTotal(col);
+        // }
+      }
+      //
+      if (index == 0 && this.totalParams.indexOf(col) === -1) {
+        val = 'Total';
+      }
+      totArr[col] = val;
+    });
+    return totArr;
+  }
+
   savePdfModal() {
     const dialogRef = this.dialog.open(InvoiceDialogComponent, {
       height: '85vh',
@@ -421,6 +445,17 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
         }, 200);
       }
     });
+  }
+
+  saveXlsx(){
+    const data = this.dataSource.filteredData.map(obj => Object.fromEntries(this.displayedColumns.map(header => ([header, obj[header]]))));
+    const totRow = this.getXlsxTotObj();
+    data.push(totRow);
+    const worksheet = xlsxUtils.json_to_sheet(data,{header: this.displayedColumns});
+    const workbook  = xlsxUtils.book_new();
+    xlsxUtils.book_append_sheet(workbook , worksheet, "Invoice");
+    //xlsxUtils.sheet_add_aoa(worksheet, [this.displayedColumns], { origin: "NAME" });
+    writeFileXLSX(workbook, "mstcReport.xlsx");
   }
 
   savePdf(printPreview: boolean = false, selectedColumns: Array<keyof Mstc>) {

@@ -5,7 +5,7 @@
     <div class="display-flex p-10 index-rate-input-area">
         <mat-form-field class="example-full-width p-5" appearance="fill">
             <mat-label>Index Number</mat-label>
-            <input type="number" placeholder="Index Rate" matInput formControlName="index" [matAutocomplete]="indexRateAuto">
+            <input type="number" placeholder="Index Rate" matInput formControlName="index" [matAutocomplete]="indexRateAuto" required>
             <button [hidden]="!formData.index.value" matSuffix mat-icon-button aria-label="clear" (click)="resetInput()">
                 <mat-icon>close</mat-icon>
               </button>
