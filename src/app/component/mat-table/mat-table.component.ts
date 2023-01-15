@@ -172,8 +172,8 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
 
   dataSource: MatTableDataSource<Mstc> = new MatTableDataSource<Mstc>();
 
-  invoiceHeader: Array<string>;
-  invoiceFooter: Array<string>;
+  invoiceHeader: string;
+  invoiceFooter: string;
 
   inputForm: FormGroup;
   //invoiceTest = "To,\nThe manager,\nsiyaram ltd,\nhyd-12345\n\ndear sir,\n\nSUb: jddjn jjjjj euhdeuhe edeedne njenedjuejn nxjednxeujnhuuejdneude.\n".split("\n");
@@ -417,7 +417,8 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
       if (index == 0 && this.totalParams.indexOf(col) === -1) {
         val = 'Total';
       }
-      totArr[col] = val;
+      //totArr[col] = val;
+      totArr[this.displayNames[col]] = val;
     });
     return totArr;
   }
@@ -452,16 +453,88 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
     });
   }
 
+  // saveXlsx1(downLoadType: DownLoadType, selectedColumns: Array<keyof Mstc>) {
+  //   const data = this.dataSource.filteredData.map((obj) =>
+  //     Object.fromEntries(selectedColumns.map((header) => [header, obj[header]]))
+  //   );
+  //   const totRow = this.getXlsxTotObj(selectedColumns);
+  //   data.push(totRow);
+  //   const worksheet = xlsxUtils.json_to_sheet(data, { header: selectedColumns });
+
+  //   // header
+  //   const header: Array<string> = this.invoiceHeader.split('\n');
+  //   const footer: Array<string> = this.invoiceFooter.split('\n');
+
+  //   header.forEach((item, index)=>{
+  //    const rowNumber = index+2;
+  //     xlsxUtils.sheet_add_aoa(worksheet, [[item]], { origin: `A${rowNumber}` });
+  //   })
+
+  //   footer.forEach((item, index)=>{
+  //     if(index == 0){
+  //       xlsxUtils.sheet_add_aoa(worksheet, [['']], { origin: -1 });
+  //       xlsxUtils.sheet_add_aoa(worksheet, [['']], { origin: -1 });
+  //     }
+  //      xlsxUtils.sheet_add_aoa(worksheet, [[item]], { origin: -1 });
+  //    })
+ 
+
+  //   const workbook = xlsxUtils.book_new();
+  //   xlsxUtils.book_append_sheet(workbook, worksheet, 'Invoice');
+    
+
+  //   if (downLoadType == DownLoadType.excel) {
+  //     writeFileXLSX(workbook, 'Invoice.xlsx');
+  //   } else if (downLoadType == DownLoadType.csv) {
+  //     writeFile(workbook, 'Invoice.csv');
+  //   }
+  // }
+
   saveXlsx(downLoadType: DownLoadType, selectedColumns: Array<keyof Mstc>) {
     const data = this.dataSource.filteredData.map((obj) =>
-      Object.fromEntries(selectedColumns.map((header) => [header, obj[header]]))
+      // Object.fromEntries(selectedColumns.map((header) => [header, obj[header]]))
+      Object.fromEntries(selectedColumns.map((header) => [this.displayNames[header], obj[header]]))
     );
     const totRow = this.getXlsxTotObj(selectedColumns);
     data.push(totRow);
-    const worksheet = xlsxUtils.json_to_sheet(data, { header: selectedColumns });
+
+    // empty sheet
+    const worksheet = xlsxUtils.json_to_sheet([]);
+
+    
+    const header: Array<string> = this.invoiceHeader.split('\n');
+    const footer: Array<string> = this.invoiceFooter.split('\n');
+
+    // header
+    let rowNumber = 0;
+    header.forEach((item, index)=>{
+     rowNumber = index+2;
+      xlsxUtils.sheet_add_aoa(worksheet, [[item]], { origin: `A${rowNumber}` });
+    })
+
+    //disp names
+    const selectedDisplayNames = [];
+    selectedColumns.forEach(item=>{
+      selectedDisplayNames.push(this.displayNames[item]);
+    })
+
+    // table
+    // xlsxUtils.sheet_add_json(worksheet, data, { header: selectedColumns, origin: `A${rowNumber + 3}` });
+    xlsxUtils.sheet_add_json(worksheet, data, { header: selectedDisplayNames, origin: `A${rowNumber + 3}` });
+
+    //footer
+    footer.forEach((item, index)=>{
+      if(index == 0){
+        xlsxUtils.sheet_add_aoa(worksheet, [['']], { origin: -1 });
+        xlsxUtils.sheet_add_aoa(worksheet, [['']], { origin: -1 });
+      }
+       xlsxUtils.sheet_add_aoa(worksheet, [[item]], { origin: -1 });
+     })
+ 
+
     const workbook = xlsxUtils.book_new();
     xlsxUtils.book_append_sheet(workbook, worksheet, 'Invoice');
-    //xlsxUtils.sheet_add_aoa(worksheet, [this.displayedColumns], { origin: "NAME" });
+    
 
     if (downLoadType == DownLoadType.excel) {
       writeFileXLSX(workbook, 'Invoice.xlsx');
