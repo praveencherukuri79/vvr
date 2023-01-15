@@ -23,20 +23,27 @@
       </mat-form-field> -->
 
 
-    
+
     <form class="invoice-form" [formGroup]="invoiceForm">
 
-        <mat-form-field>
-            <mat-label>Select a Company</mat-label>
-            <mat-select formControlName="companyName" name="company" (selectionChange)="onSelectCompany($event.value)">
-                <mat-option [value]="null">reset</mat-option>
-                <mat-option *ngFor="let item of headerFooterData" [value]="item">
-                    {{item.name}}
-                </mat-option>
-            </mat-select>
-            <!-- <mat-hint>Select a file</mat-hint> -->
-        </mat-form-field>
-    
+        <div class="display-flex">
+            <mat-form-field appearance="outline" class="half-width p-10">
+                <mat-label>Invoice name</mat-label>
+                <input matInput formControlName="invoiceName" placeholder="Invoice name" type="text" />
+            </mat-form-field>
+
+            <mat-form-field class="half-width p-10">
+                <mat-label>Select a Company</mat-label>
+                <mat-select formControlName="companyName" name="company"
+                    (selectionChange)="onSelectCompany($event.value)">
+                    <mat-option [value]="null">reset</mat-option>
+                    <mat-option *ngFor="let item of headerFooterData" [value]="item">
+                        {{item.name}}
+                    </mat-option>
+                </mat-select>
+                <!-- <mat-hint>Select a file</mat-hint> -->
+            </mat-form-field>
+        </div>
 
         <h4>Provide header and footer data</h4>
 

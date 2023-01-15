@@ -44,7 +44,8 @@ export class InvoiceDialogComponent implements OnInit {
     this.invoiceForm = this.formBuilder.group({
       header: '',
       footer: '',
-      companyName: ''
+      companyName: '',
+      invoiceName: 'Invoice'
     });
 
     let defaultOption: { [key: string]: string };
@@ -90,7 +91,8 @@ export class InvoiceDialogComponent implements OnInit {
       header: this.invoiceForm.get('header').value,
       footer: this.invoiceForm.get('footer').value,
       selectedColumns: selectedColumns,
-      downLoadType: downLoadType
+      downLoadType: downLoadType,
+      invoiceName: this.invoiceForm.get('invoiceName').value ? this.invoiceForm.get('invoiceName').value : 'Invoice',
     };
 
     this.dialogRef.close(forData);

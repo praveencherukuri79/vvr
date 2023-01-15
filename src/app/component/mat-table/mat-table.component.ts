@@ -443,54 +443,17 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
         this.invoiceFooter = result.footer ? result.footer : null;
         setTimeout(() => {
           //window.print();
-          if(result.downLoadType == DownLoadType.print || result.downLoadType == DownLoadType.pdf){
-            this.savePdf(result.downLoadType, result.selectedColumns);
-          }else if(result.downLoadType == DownLoadType.csv || result.downLoadType == DownLoadType.excel){
-           this.saveXlsx(result.downLoadType, result.selectedColumns);
+          if (result.downLoadType == DownLoadType.print || result.downLoadType == DownLoadType.pdf) {
+            this.savePdf(result.downLoadType, result.selectedColumns, result.invoiceName);
+          } else if (result.downLoadType == DownLoadType.csv || result.downLoadType == DownLoadType.excel) {
+            this.saveXlsx(result.downLoadType, result.selectedColumns, result.invoiceName);
           }
         }, 200);
       }
     });
   }
 
-  // saveXlsx1(downLoadType: DownLoadType, selectedColumns: Array<keyof Mstc>) {
-  //   const data = this.dataSource.filteredData.map((obj) =>
-  //     Object.fromEntries(selectedColumns.map((header) => [header, obj[header]]))
-  //   );
-  //   const totRow = this.getXlsxTotObj(selectedColumns);
-  //   data.push(totRow);
-  //   const worksheet = xlsxUtils.json_to_sheet(data, { header: selectedColumns });
-
-  //   // header
-  //   const header: Array<string> = this.invoiceHeader.split('\n');
-  //   const footer: Array<string> = this.invoiceFooter.split('\n');
-
-  //   header.forEach((item, index)=>{
-  //    const rowNumber = index+2;
-  //     xlsxUtils.sheet_add_aoa(worksheet, [[item]], { origin: `A${rowNumber}` });
-  //   })
-
-  //   footer.forEach((item, index)=>{
-  //     if(index == 0){
-  //       xlsxUtils.sheet_add_aoa(worksheet, [['']], { origin: -1 });
-  //       xlsxUtils.sheet_add_aoa(worksheet, [['']], { origin: -1 });
-  //     }
-  //      xlsxUtils.sheet_add_aoa(worksheet, [[item]], { origin: -1 });
-  //    })
- 
-
-  //   const workbook = xlsxUtils.book_new();
-  //   xlsxUtils.book_append_sheet(workbook, worksheet, 'Invoice');
-    
-
-  //   if (downLoadType == DownLoadType.excel) {
-  //     writeFileXLSX(workbook, 'Invoice.xlsx');
-  //   } else if (downLoadType == DownLoadType.csv) {
-  //     writeFile(workbook, 'Invoice.csv');
-  //   }
-  // }
-
-  saveXlsx(downLoadType: DownLoadType, selectedColumns: Array<keyof Mstc>) {
+  saveXlsx(downLoadType: DownLoadType, selectedColumns: Array<keyof Mstc>, invoiceName: string = 'Invoice') {
     const data = this.dataSource.filteredData.map((obj) =>
       // Object.fromEntries(selectedColumns.map((header) => [header, obj[header]]))
       Object.fromEntries(selectedColumns.map((header) => [this.displayNames[header], obj[header]]))
@@ -498,52 +461,39 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
     const totRow = this.getXlsxTotObj(selectedColumns);
     data.push(totRow);
 
+    //disp names
+    const selectedDisplayNames = [];
+    selectedColumns.forEach((item) => {
+      selectedDisplayNames.push(this.displayNames[item]);
+    });
+
     // empty sheet
     const worksheet = xlsxUtils.json_to_sheet([]);
 
-    
-    const header: Array<string> = this.invoiceHeader.split('\n');
-    const footer: Array<string> = this.invoiceFooter.split('\n');
+    const header: Array<string[]> = this.invoiceHeader.split('\n').map((item) => [item]);
+    const footer: Array<string[]> = this.invoiceFooter.split('\n').map((item) => [item]);
 
     // header
-    let rowNumber = 0;
-    header.forEach((item, index)=>{
-     rowNumber = index+2;
-      xlsxUtils.sheet_add_aoa(worksheet, [[item]], { origin: `A${rowNumber}` });
-    })
-
-    //disp names
-    const selectedDisplayNames = [];
-    selectedColumns.forEach(item=>{
-      selectedDisplayNames.push(this.displayNames[item]);
-    })
+    xlsxUtils.sheet_add_aoa(worksheet, header, { origin: `A2` });
 
     // table
-    // xlsxUtils.sheet_add_json(worksheet, data, { header: selectedColumns, origin: `A${rowNumber + 3}` });
-    xlsxUtils.sheet_add_json(worksheet, data, { header: selectedDisplayNames, origin: `A${rowNumber + 3}` });
+    xlsxUtils.sheet_add_json(worksheet, data, { header: selectedDisplayNames, origin: `A${header.length + 4}` });
 
     //footer
-    footer.forEach((item, index)=>{
-      if(index == 0){
-        xlsxUtils.sheet_add_aoa(worksheet, [['']], { origin: -1 });
-        xlsxUtils.sheet_add_aoa(worksheet, [['']], { origin: -1 });
-      }
-       xlsxUtils.sheet_add_aoa(worksheet, [[item]], { origin: -1 });
-     })
- 
+    xlsxUtils.sheet_add_aoa(worksheet, [[''], ['']], { origin: -1 });
+    xlsxUtils.sheet_add_aoa(worksheet, footer, { origin: -1 });
 
     const workbook = xlsxUtils.book_new();
     xlsxUtils.book_append_sheet(workbook, worksheet, 'Invoice');
-    
 
     if (downLoadType == DownLoadType.excel) {
-      writeFileXLSX(workbook, 'Invoice.xlsx');
+      writeFileXLSX(workbook, `${invoiceName}.xlsx`);
     } else if (downLoadType == DownLoadType.csv) {
-      writeFile(workbook, 'Invoice.csv');
+      writeFile(workbook, `${invoiceName}.csv`);
     }
   }
 
-  savePdf(downLoadType: DownLoadType, selectedColumns: Array<keyof Mstc>) {
+  savePdf(downLoadType: DownLoadType, selectedColumns: Array<keyof Mstc>, invoiceName: string = 'Invoice') {
     let orientation: jsPDFOptions['orientation'] = 'portrait';
     const fillColor = '#1b7056';
     const currentDate = new Date().toLocaleDateString();
@@ -750,8 +700,8 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
     if (downLoadType == DownLoadType.print) {
       doc.autoPrint();
       doc.output('dataurlnewwindow');
-    } else if(downLoadType == DownLoadType.pdf) {
-      doc.save();
+    } else if (downLoadType == DownLoadType.pdf) {
+      doc.save(invoiceName);
     }
   }
 }
