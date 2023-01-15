@@ -22,7 +22,7 @@ import { FileSaveComponent } from './component/file-save/file-save.component';
 import { DashboardComponent } from './component/dashboard/dashboard.component';
 import { HeaderFooterComponent } from './component/header-footer/header-footer.component';
 import { IndexRateComponent } from './component/index-rate/index-rate.component';
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, DecimalPipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -51,7 +51,7 @@ import { CurrencyPipe } from '@angular/common';
     FormsModule,
     MaterialModule
   ],
-  providers: [authInterceptorProviders, CurrencyPipe],
+  providers: [authInterceptorProviders, CurrencyPipe, DecimalPipe],
   entryComponents: [InvoiceDialogComponent, DialogComponent, AdminErrorComponent, CustomSnackbarComponent],
   bootstrap: [AppComponent]
 })

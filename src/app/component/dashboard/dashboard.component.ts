@@ -122,8 +122,13 @@ export class DashboardComponent {
   }
 
   getTotalAmount(obj: IMstc): number{
-    const totalSold = (obj.QTY_SOLD_CASES * obj.CASE_PACK) + (obj.QTY_SOLD_UNITS);
-    return totalSold? totalSold * obj.rate: 0;
+    //const totalSold = (obj.QTY_SOLD_CASES * obj.CASE_PACK) + (obj.QTY_SOLD_UNITS);
+    let totalAmount: number = 0;
+    if(obj.rate){
+      totalAmount = (obj.QTY_SOLD_CASES * obj.rate) + ((obj.rate/obj.CASE_PACK) * obj.QTY_SOLD_UNITS);
+    }
+
+    return Math.round((totalAmount + Number.EPSILON) * 100) / 100
   }
 
   prepareDataSource(mstc) {
