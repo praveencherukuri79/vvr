@@ -1,14 +1,47 @@
-.dialog-close-icon{
-    display: flex;
-    justify-content: right;
-    padding: 5px;
+.dialog-close-icon {
+  display: flex;
+  justify-content: right;
+  padding: 5px;
 }
 
 .invoice-form {
-    min-width: 150px;
-    width: 100%;
+  min-width: 150px;
+  width: 100%;
+}
+
+.full-width {
+  width: 100%;
+}
+
+
+@media only screen and (max-width: 479px) {
+  .display-flex {
+    flex-direction: column;
   }
-  
-  .full-width {
-    width: 100%;
-  }
+
+  // .index-rate-input-area {
+  //   width: 90%;
+  // }
+}
+
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+  // .display-flex {
+  //   flex-direction: column;
+  // }
+
+  // .index-rate-input-area {
+  //   width: 90%;
+  // }
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+  // .index-rate-input-area {
+  //     width: 50%;
+  // }
+}
+
+@media only screen and (min-width: 992px) {
+  // .index-rate-input-area {
+  //     width: 50%;
+  // }
+}
