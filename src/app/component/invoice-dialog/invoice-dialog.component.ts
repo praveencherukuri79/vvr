@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { DownLoadType } from '@app/model/downlaod';
 import { Mstc } from '@app/model/mstc';
 
 @Component({
@@ -16,6 +17,7 @@ export class InvoiceDialogComponent implements OnInit {
   nonDefaultColumns: Array<keyof Mstc>;
   headerFooterData: Array<{ [key: string]: string }>;
   defaultCompanyName: string;
+  downLoadTypeEnum = DownLoadType;
   //selectedCompany: string;
 
   constructor(
@@ -82,13 +84,13 @@ export class InvoiceDialogComponent implements OnInit {
     this.dialogRef.close(false);
   }
 
-  submit(isPrint: boolean = false): void {
+  submit(downLoadType: DownLoadType): void {
     const selectedColumns: Array<keyof Mstc> = this.printColumns.filter((col) => col.checked).map((item) => item.columnName);
     const forData: { [key: string]: any } = {
       header: this.invoiceForm.get('header').value,
       footer: this.invoiceForm.get('footer').value,
       selectedColumns: selectedColumns,
-      isPrint: isPrint
+      downLoadType: downLoadType
     };
 
     this.dialogRef.close(forData);

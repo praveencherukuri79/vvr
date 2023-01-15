@@ -14,6 +14,7 @@ import { SpinnerService } from '@app/service/spinner.service';
 import { HeaderFooterService } from '@app/service/header-footer/header-footer.service';
 import { CurrencyPipe } from '@angular/common';
 import { utils as xlsxUtils, writeFileXLSX, writeFile } from 'xlsx';
+import { DownLoadType } from '@app/model/downlaod';
 
 @Component({
   selector: 'app-mat-table',
@@ -370,24 +371,24 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
   //   this.dataSource.filter = filterValue;
   // }
 
-  printWindow() {
-    const dialogRef = this.dialog.open(InvoiceDialogComponent, {
-      height: '85vh',
-      width: '60vw'
-    });
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}`);
-      if (result) {
-        console.log('form data => ', result);
-        this.invoiceHeader = result.header ? result.header.split('\n') : null;
-        this.invoiceFooter = result.footer ? result.footer.split('\n') : null;
-        setTimeout(() => {
-          window.print();
-        }, 200);
-      }
-    });
-    //window.print();
-  }
+  // printWindow() {
+  //   const dialogRef = this.dialog.open(InvoiceDialogComponent, {
+  //     height: '85vh',
+  //     width: '60vw'
+  //   });
+  //   dialogRef.afterClosed().subscribe((result) => {
+  //     console.log(`Dialog result: ${result}`);
+  //     if (result) {
+  //       console.log('form data => ', result);
+  //       this.invoiceHeader = result.header ? result.header.split('\n') : null;
+  //       this.invoiceFooter = result.footer ? result.footer.split('\n') : null;
+  //       setTimeout(() => {
+  //         window.print();
+  //       }, 200);
+  //     }
+  //   });
+  //   //window.print();
+  // }
 
   getDefaultCompany(): string {
     let companyName: string;
@@ -398,9 +399,9 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
     return companyName;
   }
 
-  getXlsxTotObj() {
+  getXlsxTotObj(selectedColumns) {
     let totArr = {};
-    this.displayedColumns.forEach((col, index) => {
+    selectedColumns.forEach((col, index) => {
       let val = null;
       if (this.totalParams.indexOf(col) === -1) {
         val = null;
@@ -441,31 +442,35 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
         this.invoiceFooter = result.footer ? result.footer : null;
         setTimeout(() => {
           //window.print();
-          this.savePdf(result.isPrint, result.selectedColumns);
+          if(result.downLoadType == DownLoadType.print || result.downLoadType == DownLoadType.pdf){
+            this.savePdf(result.downLoadType, result.selectedColumns);
+          }else if(result.downLoadType == DownLoadType.csv || result.downLoadType == DownLoadType.excel){
+           this.saveXlsx(result.downLoadType, result.selectedColumns);
+          }
         }, 200);
       }
     });
   }
 
-  saveXlsx(fileType) {
+  saveXlsx(downLoadType: DownLoadType, selectedColumns: Array<keyof Mstc>) {
     const data = this.dataSource.filteredData.map((obj) =>
-      Object.fromEntries(this.displayedColumns.map((header) => [header, obj[header]]))
+      Object.fromEntries(selectedColumns.map((header) => [header, obj[header]]))
     );
-    const totRow = this.getXlsxTotObj();
+    const totRow = this.getXlsxTotObj(selectedColumns);
     data.push(totRow);
-    const worksheet = xlsxUtils.json_to_sheet(data, { header: this.displayedColumns });
+    const worksheet = xlsxUtils.json_to_sheet(data, { header: selectedColumns });
     const workbook = xlsxUtils.book_new();
     xlsxUtils.book_append_sheet(workbook, worksheet, 'Invoice');
     //xlsxUtils.sheet_add_aoa(worksheet, [this.displayedColumns], { origin: "NAME" });
 
-    if (fileType == 'excel') {
+    if (downLoadType == DownLoadType.excel) {
       writeFileXLSX(workbook, 'Invoice.xlsx');
-    } else if (fileType == 'csv') {
+    } else if (downLoadType == DownLoadType.csv) {
       writeFile(workbook, 'Invoice.csv');
     }
   }
 
-  savePdf(printPreview: boolean = false, selectedColumns: Array<keyof Mstc>) {
+  savePdf(downLoadType: DownLoadType, selectedColumns: Array<keyof Mstc>) {
     let orientation: jsPDFOptions['orientation'] = 'portrait';
     const fillColor = '#1b7056';
     const currentDate = new Date().toLocaleDateString();
@@ -669,10 +674,10 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
       });
     }
 
-    if (printPreview) {
+    if (downLoadType == DownLoadType.print) {
       doc.autoPrint();
       doc.output('dataurlnewwindow');
-    } else {
+    } else if(downLoadType == DownLoadType.pdf) {
       doc.save();
     }
   }

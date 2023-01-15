@@ -54,6 +54,8 @@
 
 <mat-dialog-actions align="center">
     <!-- <button mat-raised-button color="primary" (click)="submit()">Continue</button> -->
-    <button mat-raised-button color="primary" (click)="submit(true)">Print</button>
-    <button mat-raised-button color="primary" (click)="submit(false)">PDF</button>
+    <button mat-raised-button color="primary" (click)="submit(downLoadTypeEnum.print)">Print</button>
+    <button mat-raised-button color="primary" (click)="submit(downLoadTypeEnum.pdf)">PDF</button>
+    <button mat-raised-button color="primary" (click)="submit(downLoadTypeEnum.excel)">Excel</button>
+    <button mat-raised-button color="primary" (click)="submit(downLoadTypeEnum.csv)">CSV</button>
 </mat-dialog-actions>

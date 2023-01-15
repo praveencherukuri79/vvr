@@ -128,7 +128,7 @@ export class DashboardComponent {
       totalAmount = (obj.QTY_SOLD_CASES * obj.rate) + ((obj.rate/obj.CASE_PACK) * obj.QTY_SOLD_UNITS);
     }
 
-    return Math.round((totalAmount + Number.EPSILON) * 100) / 100
+    return Math.round((totalAmount + Number.EPSILON) * 100) / 100;
   }
 
   prepareDataSource(mstc) {
@@ -181,7 +181,9 @@ export class DashboardComponent {
 
   mergeMstcObj(existingObj: Mstc, obj: Mstc): Mstc {
     this.mergeColumns.forEach((col: keyof Mstc) => {
-      (existingObj[col] as number) = (existingObj[col] as number) + (obj[col] as number);
+      //(existingObj[col] as number) = (existingObj[col] as number) + (obj[col] as number);
+      const mergedData = (existingObj[col] as number) + (obj[col] as number);
+      (existingObj[col] as number) = Math.round((mergedData + Number.EPSILON) * 100) / 100;
     });
     return existingObj;
   }
