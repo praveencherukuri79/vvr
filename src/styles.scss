@@ -239,3 +239,7 @@ input[type=number] {
 .item-even{
   background-color: #f5f5f5 !important; // whitesmoke
 }
+
+.mat-mdc-standard-chip .mdc-evolution-chip__cell--primary, .mat-mdc-standard-chip .mdc-evolution-chip__action--primary, .mat-mdc-standard-chip .mat-mdc-chip-action-label {
+  overflow: hidden !important;
+}

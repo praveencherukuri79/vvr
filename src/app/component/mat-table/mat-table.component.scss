@@ -43,14 +43,25 @@
 
 .input-form {
     display: flex;
+    flex-direction: column;
 
     .mat-mdc-form-field {
-        width: 100%;
+        width: 60%;
     }
 }
 
 
 @media(max-width: 600px) {
+
+    .input-form {
+        display: flex;
+        flex-direction: column;
+    
+        .mat-mdc-form-field {
+            width: 99%;
+        }
+    }
+
     .mobile-label {
         width: 80px;
         display: inline-block;
@@ -121,3 +132,22 @@
         opacity: 1 !important;
     }
 }
+
+//.example-chip-list {
+    //width: 100%;
+    //margin-right: 5px;
+    //border: 1px solid grey;
+  //}
+
+//   .example-chip-list .mat-mdc-form-field-flex {
+//     border-right: 1px solid grey;
+//   }
+  
+  // mat chip responsive
+// .mat-mdc-standard-chip .mdc-evolution-chip__cell--primary, .mat-mdc-standard-chip .mdc-evolution-chip__action--primary, .mat-mdc-standard-chip .mat-mdc-chip-action-label {
+//     overflow: hidden !important;
+//   }
+
+// .mat-mdc-standard-chip .mat-mdc-chip-action-label {
+//     overflow: hidden !important;
+//   }

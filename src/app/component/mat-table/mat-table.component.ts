@@ -1,9 +1,9 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ISearchFilter } from 'src/app/interface/searchFilter';
+//import { ISearchFilter } from 'src/app/interface/searchFilter';
 import { Mstc } from 'src/app/model/mstc';
 import { InvoiceDialogComponent } from '../invoice-dialog/invoice-dialog.component';
 //import { jsPDF } from 'jspdf';
@@ -11,10 +11,13 @@ import jsPDF, { jsPDFOptions } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { MatPaginator } from '@angular/material/paginator';
 import { SpinnerService } from '@app/service/spinner.service';
-import { HeaderFooterService } from '@app/service/header-footer/header-footer.service';
+//import { HeaderFooterService } from '@app/service/header-footer/header-footer.service';
 import { CurrencyPipe } from '@angular/common';
 import { utils as xlsxUtils, writeFileXLSX, writeFile } from 'xlsx';
 import { DownLoadType } from '@app/model/downlaod';
+import { map, Observable, startWith } from 'rxjs';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+//import { MatChipInputEvent } from '@angular/material/chips';
 
 @Component({
   selector: 'app-mat-table',
@@ -30,35 +33,19 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
-  searchFilters: Array<ISearchFilter> = [
-    {
-      label: 'Filter By Index Number:',
-      name: 'INDEX_NUM',
-      defaultValue: 'Reset',
-      placeHolder: 'Enter Index Number',
-      inputValue: null,
-      matSelectDefaultValue: '',
-      data: []
-    },
-    {
-      label: 'Filter By Name:',
-      name: 'NAME',
-      defaultValue: 'Reset',
-      placeHolder: 'Enter Name',
-      inputValue: null,
-      matSelectDefaultValue: '',
-      data: []
-    },
-    {
-      label: 'Filter By Description:',
-      name: 'ITEM_DESC',
-      defaultValue: 'Reset',
-      placeHolder: 'Enter Description',
-      inputValue: null,
-      matSelectDefaultValue: '',
-      data: []
-    }
-  ];
+  @ViewChild('indexInput', { static: true }) indexInput: ElementRef<HTMLInputElement>;
+  @ViewChild('nameInput', { static: true }) nameInput: ElementRef<HTMLInputElement>;
+
+  allIndexList: Array<string> = [];
+  allNameList: Array<string> = [];
+
+  SelectedIndexes: Array<string> = [];
+  SelectedNames: Array<string> = [];
+
+  filterForm: FormGroup;
+
+  filteredIndex: Observable<string[]>;
+  filteredName: Observable<string[]>;
 
   displayedColumns: Array<keyof Mstc> = [
     'NAME',
@@ -186,161 +173,137 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
     private currencyPipe: CurrencyPipe //private headerFooterService: HeaderFooterService,
   ) {}
 
-  ngOnInit(): void {
-    console.log('mat on in it', Date.now());
-    this.inputForm = this.formBuilder.group({});
-    this.searchFilters.forEach((inputForm: ISearchFilter) => {
-      this.inputForm.addControl(inputForm.name, new FormControl());
-    });
-
-    // this.inputForm.valueChanges.subscribe(
-    //   (formVlaue: any) => {
-    //   console.log('formVlaue => ', formVlaue);
-    //   //this.onInputSearchFilter();
-    //   }
-    // )
-
-    this.searchFilters.forEach((inputForm: ISearchFilter) => {
-      this.inputForm.get(inputForm.name).valueChanges.subscribe((formVlaue: any) => {
-        //console.log('formVlaue => ', formVlaue);
-        if (formVlaue !== null) {
-          this.onInputSearchFilter(inputForm.name, formVlaue);
-        }
-      });
-    });
-    //this.getHeaderFooterData();
-  }
-
   ngOnChanges(changes: SimpleChanges) {
     if (changes && changes.tableData) {
-      this.searchFilterInit();
-      //this.setDatasource(this.tableData);
+      this.initFilterData();
     }
   }
 
-  // getHeaderFooterData() {
-  //   this.spinnerService.spin$.next(true);
-  //   this.headerFooterService.getHeaderFooterData().subscribe({
-  //     next: (res) => {
-  //       this.spinnerService.spin$.next(false);
-  //       this.headerFooterData = res;
-  //       console.log('getHeaderFooterData => ', res);
-  //     },
-  //     error: (e) => {
-  //       this.spinnerService.spin$.next(false);
-  //       console.log('getHeaderFooterData Error => ', e);
-  //     }
-  //   });
-  // }
+  ngOnInit(): void {
+    console.log('mat on in it', Date.now());
 
-  searchFilterInit() {
-    this.searchFilters.forEach((filter: ISearchFilter) => {
-      filter.data = this.tableData.map((item) => item[filter.name]).filter(this.onlyUnique);
+    this.filterForm = this.formBuilder.group({
+      indexCtrl: [null],
+      nameCtrl: [null]
     });
+
+    this.filteredIndex = this.filterForm.get('indexCtrl').valueChanges.pipe(
+      startWith(null),
+      map((index: string | null) =>
+        index
+          ? this.searchFilter(index, this.allIndexList, this.SelectedIndexes)
+          : this.allIndexList.slice().filter((item) => this.SelectedIndexes.indexOf(item) == -1)
+      )
+    );
+
+    this.filteredName = this.filterForm.get('nameCtrl').valueChanges.pipe(
+      startWith(null),
+      map((index: string | null) =>
+        index
+          ? this.searchFilter(index, this.allNameList, this.SelectedNames)
+          : this.allNameList.slice().filter((item) => this.SelectedNames.indexOf(item) == -1)
+      )
+    );
   }
 
-  ngAfterViewInit(): void {
-    console.log('mat after view', Date.now());
-    //if (this.dataSource) {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-
-    this.setFilterPredictate();
-    this.setDatasource(this.tableData);
-    this.changeDetection.markForCheck();
-    this.changeDetection.detectChanges();
-    this.spinnerService.spin$.next(false);
-    //}
+  searchFilter(value: string, list: string[], selectedList: string[]): string[] {
+    const filterValue = value.toLowerCase();
+    return list.filter((item) => item.toLowerCase().includes(filterValue) && selectedList.indexOf(item) == -1);
   }
 
-  onlyUnique(value: string | number, index: number, self: Array<any>): boolean {
-    return self.indexOf(value) === index;
-  }
-
-  // identity<T>(value: T): T {
-  //   return value;
-  // }
-
-  // onSearchFilter(event: Event, filterName: keyof Mstc) {
-  //   const target = event.target as HTMLInputElement;
-  //   let value: string = target.value;
-  //   const filterValue = value ? value.toLowerCase() : '';
-  //   this.searchFilters.forEach((filter: ISearchFilter) => {
-  //     if (filter.name === filterName) {
-  //       filter.data = this.tableData
-  //         .map((item) => item[filterName])
-  //         .filter(this.onlyUnique)
-  //         .filter((item) =>
-  //           item.toString().toLowerCase().includes(filterValue)
-  //         );
-  //     }
-  //   });
-  // }
-
-  onInputSearchFilter(filterName: keyof Mstc, value: string) {
-    const filterValue = value ? value.toLowerCase() : '';
-    this.searchFilters.forEach((filter: ISearchFilter) => {
-      if (filter.name === filterName) {
-        filter.data = this.tableData
-          .map((item) => item[filterName])
-          .filter(this.onlyUnique)
-          .filter((item) => item.toString().toLowerCase().includes(filterValue));
+  remove(item: string, filterType: string): void {
+    if (filterType == 'index') {
+      const index = this.SelectedIndexes.indexOf(item);
+      if (index >= 0) {
+        this.SelectedIndexes.splice(index, 1);
       }
-    });
+    } else if (filterType == 'name') {
+      const index = this.SelectedNames.indexOf(item);
+      if (index >= 0) {
+        this.SelectedNames.splice(index, 1);
+      }
+    }
+    this.onSelectFilter();
   }
 
-  resetInput(value: string, filterName: keyof Mstc) {
-    if (value) {
-      return;
+  selected(event: MatAutocompleteSelectedEvent, filterType: string): void {
+    const value = event.option.viewValue;
+    if (filterType == 'index') {
+      if (this.SelectedIndexes.indexOf(value) === -1) {
+        this.SelectedIndexes.push(value);
+      }
+      this.indexInput.nativeElement.value = '';
+      this.filterForm.get('indexCtrl').setValue(null);
+    } else if (filterType == 'name') {
+      if (this.SelectedNames.indexOf(value) === -1) {
+        this.SelectedNames.push(value);
+      }
+      this.nameInput.nativeElement.value = '';
+      this.filterForm.get('nameCtrl').setValue(null);
     }
-    this.searchFilterInit();
+
+    this.onSelectFilter();
   }
 
-  onSelectFilter(value: string | number, filterName: keyof Mstc) {
-    let filterValue = '';
-    if (value) {
-      filterValue = value.toString().trim().toLowerCase();
-    } else {
-      // // reset input
-      // console.log('matInputSearch => ', this.matInputSearch);
-      // let a: MatInput = this.matInputSearch.toArray()[1];
-      // a.ngControl.reset();
-    }
-
-    filterValue = filterName + '||' + filterValue;
-    this.dataSource.filter = filterValue;
+  onSelectFilter() {
+    const filterObj = { index: this.SelectedIndexes, name: this.SelectedNames };
+    this.dataSource.filter = JSON.stringify(filterObj);
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
   }
 
-  // filterSelection(value: string|number, filterName: keyof Mstc){
-  //   const filter = value.toString().toLowerCase();
-  //   return this.tableData.map((item) => item[filterName]).filter(item => item.toString().startsWith(filter));
-  // }
+  setFilterPredictate() {
+    this.dataSource.filterPredicate = (data: Mstc, filter: string): boolean => {
+      const filterObj: { index: string[]; name: string[] } = JSON.parse(filter);
+      let returnVal = false;
+
+      if (!filterObj.index.length && !filterObj.name.length) {
+        // both empty return true
+        returnVal = true;
+      } else if (filterObj.index.length && filterObj.name.length) {
+        // both exist filter with OR
+        if (filterObj.index.indexOf(data['INDEX_NUM'].toString()) !== -1 || filterObj.name.indexOf(data['NAME']) !== -1) {
+          returnVal = true;
+        }
+      } else {
+        if (filterObj.index.length && filterObj.index.indexOf(data['INDEX_NUM'].toString()) !== -1) {
+          returnVal = true;
+        }
+        if (filterObj.name.length && filterObj.name.indexOf(data['NAME']) !== -1) {
+          returnVal = true;
+        }
+      }
+      return returnVal;
+    };
+  }
+
+  initFilterData() {
+    this.allIndexList = this.tableData.map((item) => item['INDEX_NUM'].toString()).filter(this.onlyUnique);
+    this.allNameList = this.tableData.map((item) => item['NAME']).filter(this.onlyUnique);
+  }
+
+  onlyUnique(value: string, index: number, self: Array<any>): boolean {
+    return self.indexOf(value) === index;
+  }
+
+  ngAfterViewInit(): void {
+    console.log('mat after view', Date.now());
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.setFilterPredictate();
+    this.setDatasource(this.tableData);
+    this.changeDetection.markForCheck();
+    this.changeDetection.detectChanges();
+    this.spinnerService.spin$.next(false);
+  }
 
   setDatasource(tableData: Mstc[], reset: boolean = false) {
-    //this.spinnerService.spin$.next(true);
     if (reset) {
       this.dataSource = new MatTableDataSource<Mstc>(tableData);
     } else {
       this.dataSource.data = tableData;
     }
-
-    //this.spinnerService.spin$.next(false);
-  }
-
-  setFilterPredictate() {
-    this.dataSource.filterPredicate = (data: Mstc, filter: string): boolean => {
-      const filterArray = filter.split('||');
-      const columnName = filterArray[0];
-      const filterKey = filterArray[1];
-      if (data[columnName as keyof Mstc]) {
-        return data[columnName as keyof Mstc].toString().toLowerCase().includes(filterKey);
-      } else {
-        return false;
-      }
-    };
   }
 
   getTotal(param: keyof Mstc): number {
@@ -364,32 +327,6 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
     return item._id;
   }
 
-  // applyFilter(event: Event, column: string) {
-  //   let filterValue = (event.target as HTMLInputElement).value;
-  //   filterValue = filterValue.trim().toLowerCase();
-  //   filterValue = column + '||' + filterValue;
-  //   this.dataSource.filter = filterValue;
-  // }
-
-  // printWindow() {
-  //   const dialogRef = this.dialog.open(InvoiceDialogComponent, {
-  //     height: '85vh',
-  //     width: '60vw'
-  //   });
-  //   dialogRef.afterClosed().subscribe((result) => {
-  //     console.log(`Dialog result: ${result}`);
-  //     if (result) {
-  //       console.log('form data => ', result);
-  //       this.invoiceHeader = result.header ? result.header.split('\n') : null;
-  //       this.invoiceFooter = result.footer ? result.footer.split('\n') : null;
-  //       setTimeout(() => {
-  //         window.print();
-  //       }, 200);
-  //     }
-  //   });
-  //   //window.print();
-  // }
-
   getDefaultCompany(): string {
     let companyName: string;
     if (this.dataSource.filteredData && this.dataSource.filteredData.length) {
@@ -407,13 +344,7 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
         val = null;
       } else {
         val = this.getTotal(col);
-        // if (this.currencyFields.indexOf(col) !== -1) {
-        //   val = this.currencyPipe.transform(this.getTotal(col), 'INR');
-        // } else {
-        //   val = this.getTotal(col);
-        // }
       }
-      //
       if (index == 0 && this.totalParams.indexOf(col) === -1) {
         val = 'Total';
       }
