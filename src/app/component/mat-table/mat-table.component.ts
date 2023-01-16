@@ -401,18 +401,25 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
     // empty sheet
     const worksheet = xlsxUtils.json_to_sheet([]);
 
-    const header: Array<string[]> = this.invoiceHeader.split('\n').map((item) => [item]);
-    const footer: Array<string[]> = this.invoiceFooter.split('\n').map((item) => [item]);
+    const header: Array<string[]> = this.invoiceHeader ? this.invoiceHeader.split('\n').map((item) => [item]): [];
+    const footer: Array<string[]> = this.invoiceFooter ? this.invoiceFooter.split('\n').map((item) => [item]): [];
 
     // header
-    xlsxUtils.sheet_add_aoa(worksheet, header, { origin: `A2` });
+    if(header && header.length){
+      xlsxUtils.sheet_add_aoa(worksheet, header, { origin: `A2` });
+    }
+    
 
     // table
-    xlsxUtils.sheet_add_json(worksheet, data, { header: selectedDisplayNames, origin: `A${header.length + 4}` });
+    const startIndex = header && header.length ? header.length + 4 : 1;
+    xlsxUtils.sheet_add_json(worksheet, data, { header: selectedDisplayNames, origin: `A${startIndex}` });
 
     //footer
-    xlsxUtils.sheet_add_aoa(worksheet, [[''], ['']], { origin: -1 });
-    xlsxUtils.sheet_add_aoa(worksheet, footer, { origin: -1 });
+    if(footer && footer.length){
+      xlsxUtils.sheet_add_aoa(worksheet, [[''], ['']], { origin: -1 });
+      xlsxUtils.sheet_add_aoa(worksheet, footer, { origin: -1 });
+    }
+
 
     const workbook = xlsxUtils.book_new();
     xlsxUtils.book_append_sheet(workbook, worksheet, 'Invoice');
