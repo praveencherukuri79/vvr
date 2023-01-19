@@ -1,0 +1,53 @@
+.spinner-logo {
+    background-image: url('/assets/favicon_io/favicon.ico');
+    //animation: none;
+    animation: animateHeart 1s infinite;
+    //transform: rotate(45deg);
+    background-size: 85%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+// @keyframes animateHeart1 {
+//     // scale down and scale up faster in irregular intervals to get the throbbing effect
+//     0% {
+//       transform: rotate(45deg) scale(0.8);
+//     }
+//     5% {
+//       transform: rotate(45deg) scale(0.9);
+//     }
+//     10% {
+//       transform: rotate(45deg) scale(0.8);
+//     }
+//     15% {
+//       transform: rotate(45deg) scale(1);
+//     }
+//     50% {
+//       transform: rotate(45deg) scale(0.8);
+//     }
+//     100% {
+//       transform: rotate(45deg) scale(0.8);
+//     }
+//   }
+
+  @keyframes animateHeart {
+    // scale down and scale up faster in irregular intervals to get the throbbing effect
+    0% {
+      transform:  scale(1);
+    }
+    // 5% {
+    //   transform:  scale(0.9);
+    // }
+    // 10% {
+    //   transform:  scale(0.8);
+    // }
+    // 15% {
+    //   transform:  scale(1);
+    // }
+    50% {
+      transform:  scale(0.8);
+    }
+    100% {
+      transform:  scale(1);
+    }
+  }
