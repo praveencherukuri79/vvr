@@ -71,7 +71,7 @@ export class SignupComponent implements OnInit {
       next: (data: any) => {
         this.spinnerService.spin$.next(false);
         console.log('sign up sucsess', data);
-        this.notifierService.showNotification(`Signup sucsess, welcome ${data.user.name}, Please login`, 'close', 'success');
+        this.notifierService.showNotification(`Signup sucsess, Admin has to approve before you can login.`, 'close', 'warning', 10000);
         //this.tokenStorageService.saveAuth(data);
         this.router.navigate(['login']);
         if (this.isDialog) {

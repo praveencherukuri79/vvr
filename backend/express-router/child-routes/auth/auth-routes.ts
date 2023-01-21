@@ -83,4 +83,40 @@ app.post('/user/signup', async (req: CustomRequest, res: CustomResponse) => {
   }
 });
 
+app.get('/user/getAll', attachCurrentUser, checkRole('admin'), async (req: CustomRequest, res: CustomResponse) => {
+  try {
+    const authServiceInstance = new AuthService();
+    const data = await authServiceInstance.getAllUsers();
+    return res.status(200).send(data);
+  } catch (e) {
+    console.log('Error getAll User ', e.message);
+    return res.status(500).json({ message: e.message });
+  }
+});
+
+app.post('/user/approve', attachCurrentUser, checkRole('admin'), async (req: CustomRequest, res: CustomResponse) => {
+  try {
+    const body = req.body;
+    const authServiceInstance = new AuthService();
+    const data = await authServiceInstance.approveUser(body);
+    return res.status(200).send(data);
+  } catch (e) {
+    console.log(`user approval is success for ${req.body.email}`, e.message);
+    return res.status(500).json({ message: e.message });
+  }
+});
+
+app.post('/user/delete', attachCurrentUser, checkRole('admin'), async (req: CustomRequest, res: CustomResponse) => {
+  try {
+    const body = req.body;
+    const authServiceInstance = new AuthService();
+    const data = await authServiceInstance.deleteUser(body);
+    return res.status(200).send(data);
+  } catch (e) {
+    console.log(`user Deletion is success for ${req.body.email}`, e.message);
+    return res.status(500).json({ message: e.message });
+  }
+});
+
+
 export default app;

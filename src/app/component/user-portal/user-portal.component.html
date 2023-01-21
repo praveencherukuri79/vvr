@@ -1,0 +1,108 @@
+<form [formGroup]="filterForm" class="input-form">
+    <!--111 class="example-chip-list" appearance="fill"-->
+    <mat-form-field class="example-chip-list">
+        <!-- chip -->
+        <mat-label>Email</mat-label>
+        <mat-chip-grid #chipGridIndex>
+            <mat-chip-row *ngFor="let email of SelectedEmails" (removed)="remove(email, 'email')">
+                {{email}}
+                <button matChipRemove>
+                    <mat-icon>cancel</mat-icon>
+                </button>
+            </mat-chip-row>
+        </mat-chip-grid>
+        <!-- input -->
+        <input matInput #emailInput formControlName="emailCtrl" [matChipInputFor]="chipGridIndex"
+            [matAutocomplete]="indexAuto">
+        <!-- auto complete -->
+        <mat-autocomplete #indexAuto="matAutocomplete" (optionSelected)="selected($event, 'email')">
+            <mat-option *ngFor="let email of filteredEmail | async" [value]="email">
+                {{email}}
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+
+    <!--222-->
+    <mat-form-field class="example-chip-list">
+        <!-- chip -->
+        <mat-label>User Name</mat-label>
+        <mat-chip-grid #chipGridName>
+            <mat-chip-row *ngFor="let name of SelectedNames" (removed)="remove(name, 'name')">
+                {{name}}
+                <button matChipRemove>
+                    <mat-icon>cancel</mat-icon>
+                </button>
+            </mat-chip-row>
+        </mat-chip-grid>
+        <!-- input -->
+        <input matInput #nameInput formControlName="nameCtrl" [matChipInputFor]="chipGridName"
+            [matAutocomplete]="nameAuto">
+        <!-- auto complete -->
+        <mat-autocomplete #nameAuto="matAutocomplete" (optionSelected)="selected($event, 'name')">
+            <mat-option *ngFor="let name of filteredName | async" [value]="name">
+                {{name}}
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+</form>
+
+
+<div class="example-container mat-elevation-z8" [class.hidden]="!dataSource">
+    <!--MAT TABLE 1-->
+    <mat-table id="poker-mat-table" [dataSource]="dataSource" matSort matSortDirection="asc" matSortActive="name"
+        matSortDisableClear [trackBy]="trackBy">
+
+        <!-- <ng-container *ngFor="let column of displayedColumns">
+            <ng-container [matColumnDef]="column">
+                <mat-header-cell *matHeaderCellDef [mat-sort-header]="column">{{displayNames[column]}}
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element"><span class="mobile-label">{{displayNames[column]}}:</span>
+                    {{element[column]}} </mat-cell>
+            </ng-container>
+        </ng-container> -->
+
+        <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef mat-sort-header="name">{{displayNames['name']}}
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element"><span class="mobile-label">{{displayNames['name']}}:</span>
+                {{element['name']}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+            <mat-header-cell *matHeaderCellDef mat-sort-header="email">{{displayNames['email']}}
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element"><span class="mobile-label">{{displayNames['email']}}:</span>
+                {{element['email']}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="approve">
+            <mat-header-cell *matHeaderCellDef>{{displayNames['approve']}}
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element"><span class="mobile-label">{{displayNames['approve']}}:</span>
+                <span *ngIf="element['adminApproved']">
+                    <button mat-button color="accent" disabled>Approved</button>
+                </span>
+                <span *ngIf="!element['adminApproved']">
+                    <button mat-raised-button color="primary" (click)="approveUser(element)">Approve</button>
+                </span>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="delete">
+            <mat-header-cell *matHeaderCellDef>{{displayNames['delete']}}
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element"><span class="mobile-label">{{displayNames['delete']}}:</span>
+                <span>
+                    <button mat-raised-button color="primary" (click)="deleteUser(element)">Delete</button>
+                </span>    
+            </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns; let i=index"
+            [ngClass]="i % 2 == 0 ? 'item-even':'item-odd'"></mat-row>
+    </mat-table>
+    <mat-paginator [pageSizeOptions]="[10, 20, 100, 500]" [pageSize]="20" aria-label="Select page of user data"
+        showFirstLastButtons></mat-paginator>
+
+</div>

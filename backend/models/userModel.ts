@@ -4,6 +4,7 @@ interface UserInterface {
   email: string;
   password: string;
   name: string;
+  adminApproved?: boolean;
   role?: string;
 }
 
@@ -14,17 +15,18 @@ const UserSchema = new mongoose.Schema({
     unique: true,
     lowercase: true,
   },
-
   password: {
     type: String,
     required: true,
   },
-
   name: {
     type: String,
     required: true,
   },
-
+  adminApproved: {
+    type: Boolean,
+    default: false,
+  },
   role: {
     type: String,
     default: 'user', // Possible values: user | admin 

@@ -7,13 +7,16 @@ import * as jwt from 'jsonwebtoken';
 import { setBlackListTokens } from './../express-router/black-list-tokens/blck-list-tokens';
 import { getUserReturnData } from 'backend/utils/util';
 import { sendSignupEmail } from 'backend/nodemailer/signup-success-email';
+import * as mongoose from 'mongoose';
+
+const MongooseId = mongoose.Types.ObjectId;
 
 export default class AuthService {
   constructor() {}
 
   async Login(email: string, password: string): Promise<any> {
     const userRecord = await UserModel.findOne({ email });
-    if (!userRecord) {
+    if (!userRecord || (userRecord.role !== 'admin' && !userRecord.adminApproved)) {
       throw new Error('User not found');
     } else {
       // const isPasswordMatch = await argon2.verify(userRecord.password, password);
@@ -58,6 +61,36 @@ export default class AuthService {
     //const token = this.generateJWT(userRecord);
     sendSignupEmail(userRecord);
     return getUserReturnData(userRecord, '');
+  }
+
+  async getAllUsers(): Promise<any> {
+    const userRecord = await UserModel.find({role: 'user'},{password:0});
+    return userRecord;
+  }
+
+  async approveUser(user): Promise<any> {
+    try {
+      const data = await UserModel.findOneAndUpdate({ email: user.email, _id: new MongooseId(user._id) }, {adminApproved: true}, {
+        new: true,
+        runValidators: true
+      });
+      console.log(`admin approval is success for ${user.email}`);
+      return getUserReturnData(data);
+    }catch(e){
+      console.log(`failed to approve user ${user.email}`, e);
+      throw new Error(`failed to approve user ${user.email}`);
+    }
+  }
+
+  async deleteUser(user): Promise<any> {
+    try {
+      const data = await UserModel.findOneAndDelete({ email: user.email, _id: new MongooseId(user._id) });
+      console.log(`user deletion is success for ${user.email}`);
+      return getUserReturnData(data);
+    }catch(e){
+      console.log(`failed to delete user ${user.email}`, e);
+      throw new Error(`failed to delete user ${user.email}`);
+    }
   }
 
   private generateJWT(user: any) {

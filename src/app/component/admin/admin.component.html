@@ -1,7 +1,7 @@
 <!-- <h3 class="heading-vvr m-40">Welcome to VVR Admin Page, More features coming soon .... (gc test2)</h3> -->
 
 <mat-tab-group>
-    <mat-tab label="Save File">
+    <!-- <mat-tab label="Save File">
         <app-file-save></app-file-save>
     </mat-tab>
     <mat-tab label="Invoice Header Footer">
@@ -9,5 +9,35 @@
     </mat-tab>
     <mat-tab label="Index Rates">
         <app-index-rate></app-index-rate>
+    </mat-tab>
+
+    <mat-tab label="User Portal">
+        <app-user-portal></app-user-portal>
+    </mat-tab> -->
+
+
+
+    <mat-tab label="Save File">
+        <ng-template matTabContent>
+            <app-file-save></app-file-save>
+        </ng-template>
+    </mat-tab>
+
+    <mat-tab label="Invoice Header Footer">
+        <ng-template matTabContent>
+            <app-header-footer></app-header-footer>
+        </ng-template>
+    </mat-tab>
+
+    <mat-tab label="Index Rates">
+        <ng-template matTabContent>
+            <app-index-rate></app-index-rate>
+        </ng-template>
+    </mat-tab>
+
+    <mat-tab label="User Portal">
+        <ng-template matTabContent>
+            <app-user-portal></app-user-portal>
+        </ng-template>
     </mat-tab>
 </mat-tab-group>

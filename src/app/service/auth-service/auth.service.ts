@@ -23,4 +23,16 @@ export class AuthService {
   logInStatus(): Observable<any> {
     return this.http.post<any>('user/login-status-test', null);
   }
+
+  getAllUsers(): Observable<any> {
+    return this.http.get<any>('user/getAll');
+  }
+
+  approveUser(data): Observable<any> {
+    return this.http.post<any>('user/approve', data);
+  }
+
+  DeleteUser(data): Observable<any> {
+    return this.http.post<any>('user/delete', data);
+  }
 }
