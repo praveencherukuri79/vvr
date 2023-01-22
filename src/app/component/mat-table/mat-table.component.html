@@ -11,53 +11,13 @@
 
 <!-- [class.hidden]="!dataSource" -->
 
-<form [formGroup]="filterForm" class="input-form">
-  <!--111 class="example-chip-list" appearance="fill"-->
-  <mat-form-field class="example-chip-list">
-    <!-- chip -->
-    <mat-label>Index Numbers</mat-label>
-    <mat-chip-grid #chipGridIndex>
-      <mat-chip-row *ngFor="let index of SelectedIndexes" (removed)="remove(index, 'index')">
-        {{index}}
-        <button matChipRemove>
-          <mat-icon>cancel</mat-icon>
-        </button>
-      </mat-chip-row>
-    </mat-chip-grid>
-    <!-- input -->
-    <input matInput #indexInput formControlName="indexCtrl" [matChipInputFor]="chipGridIndex"
-      [matAutocomplete]="indexAuto">
-    <!-- auto complete -->
-    <mat-autocomplete #indexAuto="matAutocomplete" (optionSelected)="selected($event, 'index')">
-      <mat-option *ngFor="let index of filteredIndex | async" [value]="index">
-        {{index}}
-      </mat-option>
-    </mat-autocomplete>
-  </mat-form-field>
+<custom-auto-complete *ngIf="allIndexList" [data]="allIndexList" [label]="'Index Numbers'" [placeHolder]="'Index Numbers'"
+    (selectedEmitter)="filterEmitter($event, 'email')">
+</custom-auto-complete>
 
-  <!--222-->
-  <mat-form-field class="example-chip-list">
-    <!-- chip -->
-    <mat-label>Company Name</mat-label>
-    <mat-chip-grid #chipGridName>
-      <mat-chip-row *ngFor="let name of SelectedNames" (removed)="remove(name, 'name')">
-        {{name}}
-        <button matChipRemove>
-          <mat-icon>cancel</mat-icon>
-        </button>
-      </mat-chip-row>
-    </mat-chip-grid>
-    <!-- input -->
-    <input matInput #nameInput formControlName="nameCtrl" [matChipInputFor]="chipGridName" [matAutocomplete]="nameAuto">
-    <!-- auto complete -->
-    <mat-autocomplete #nameAuto="matAutocomplete" (optionSelected)="selected($event, 'name')">
-      <mat-option *ngFor="let name of filteredName | async" [value]="name">
-        {{name}}
-      </mat-option>
-    </mat-autocomplete>
-  </mat-form-field>
-</form>
-
+<custom-auto-complete *ngIf="allNameList" [data]="allNameList" [label]="'Company Name'" [placeHolder]="'Company Name'"
+    (selectedEmitter)="filterEmitter($event, 'name')">
+</custom-auto-complete>
 
 <div class="example-container mat-elevation-z8" [class.hidden]="!dataSource">
 

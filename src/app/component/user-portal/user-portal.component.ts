@@ -24,9 +24,8 @@ interface User {
   styleUrls: ['./user-portal.component.scss']
 })
 export class UserPortalComponent implements OnInit {
-  
   allusers: User[];
-  
+
   dataSource: MatTableDataSource<User> = new MatTableDataSource<User>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -50,10 +49,10 @@ export class UserPortalComponent implements OnInit {
   SelectedEmails: Array<string> = [];
   SelectedNames: Array<string> = [];
 
-  filterForm: FormGroup;
+  // filterForm: FormGroup;
 
-  filteredEmail: Observable<string[]>;
-  filteredName: Observable<string[]>;
+  // filteredEmail: Observable<string[]>;
+  // filteredName: Observable<string[]>;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -74,28 +73,28 @@ export class UserPortalComponent implements OnInit {
   ngOnInit() {
     this.getAllUsers();
 
-    this.filterForm = this.formBuilder.group({
-      emailCtrl: [null],
-      nameCtrl: [null]
-    });
+    //   this.filterForm = this.formBuilder.group({
+    //     emailCtrl: [null],
+    //     nameCtrl: [null]
+    //   });
 
-    this.filteredEmail = this.filterForm.get('emailCtrl').valueChanges.pipe(
-      startWith(null),
-      map((email: string | null) =>
-        email
-          ? this.searchFilter(email, this.allEmailList, this.SelectedEmails)
-          : this.allEmailList.slice().filter((item) => this.SelectedEmails.indexOf(item) == -1)
-      )
-    );
+    //   this.filteredEmail = this.filterForm.get('emailCtrl').valueChanges.pipe(
+    //     startWith(null),
+    //     map((email: string | null) =>
+    //       email
+    //         ? this.searchFilter(email, this.allEmailList, this.SelectedEmails)
+    //         : this.allEmailList.slice().filter((item) => this.SelectedEmails.indexOf(item) == -1)
+    //     )
+    //   );
 
-    this.filteredName = this.filterForm.get('nameCtrl').valueChanges.pipe(
-      startWith(null),
-      map((name: string | null) =>
-        name
-          ? this.searchFilter(name, this.allNameList, this.SelectedNames)
-          : this.allNameList.slice().filter((item) => this.SelectedNames.indexOf(item) == -1)
-      )
-    );
+    //   this.filteredName = this.filterForm.get('nameCtrl').valueChanges.pipe(
+    //     startWith(null),
+    //     map((name: string | null) =>
+    //       name
+    //         ? this.searchFilter(name, this.allNameList, this.SelectedNames)
+    //         : this.allNameList.slice().filter((item) => this.SelectedNames.indexOf(item) == -1)
+    //     )
+    //   );
   }
 
   ngAfterViewInit(): void {
@@ -109,40 +108,54 @@ export class UserPortalComponent implements OnInit {
     //this.spinnerService.spin$.next(false);
   }
 
-  searchFilter(value: string, list: string[], selectedList: string[]): string[] {
-    const filterValue = value.toLowerCase();
-    return list.filter((item) => item.toLowerCase().includes(filterValue) && selectedList.indexOf(item) == -1);
-  }
+  // searchFilter(value: string, list: string[], selectedList: string[]): string[] {
+  //   const filterValue = value.toLowerCase();
+  //   return list.filter((item) => item.toLowerCase().includes(filterValue) && selectedList.indexOf(item) == -1);
+  // }
 
-  remove(item: string, filterType: string): void {
-    if (filterType == 'email') {
-      const index = this.SelectedEmails.indexOf(item);
-      if (index >= 0) {
-        this.SelectedEmails.splice(index, 1);
-      }
-    } else if (filterType == 'name') {
-      const index = this.SelectedNames.indexOf(item);
-      if (index >= 0) {
-        this.SelectedNames.splice(index, 1);
-      }
-    }
-    this.onSelectFilter();
-  }
+  // remove(item: string, filterType: string): void {
+  //   if (filterType == 'email') {
+  //     const index = this.SelectedEmails.indexOf(item);
+  //     if (index >= 0) {
+  //       this.SelectedEmails.splice(index, 1);
+  //     }
+  //     this.emailInput.nativeElement.value = '';
+  //     this.filterForm.get('emailCtrl').setValue(null);
+  //   } else if (filterType == 'name') {
+  //     const index = this.SelectedNames.indexOf(item);
+  //     if (index >= 0) {
+  //       this.SelectedNames.splice(index, 1);
+  //     }
+  //     this.nameInput.nativeElement.value = '';
+  //     this.filterForm.get('nameCtrl').setValue(null);
+  //   }
+  //   this.onSelectFilter();
+  // }
 
-  selected(event: MatAutocompleteSelectedEvent, filterType: string): void {
-    const value = event.option.viewValue;
+  // selected(event: MatAutocompleteSelectedEvent, filterType: string): void {
+  //   const value = event.option.viewValue;
+  //   if (filterType == 'email') {
+  //     if (this.SelectedEmails.indexOf(value) === -1) {
+  //       this.SelectedEmails.push(value);
+  //     }
+  //     this.emailInput.nativeElement.value = '';
+  //     this.filterForm.get('emailCtrl').setValue(null);
+  //   } else if (filterType == 'name') {
+  //     if (this.SelectedNames.indexOf(value) === -1) {
+  //       this.SelectedNames.push(value);
+  //     }
+  //     this.nameInput.nativeElement.value = '';
+  //     this.filterForm.get('nameCtrl').setValue(null);
+  //   }
+
+  //   this.onSelectFilter();
+  // }
+
+  filterEmitter(data, filterType: string) {
     if (filterType == 'email') {
-      if (this.SelectedEmails.indexOf(value) === -1) {
-        this.SelectedEmails.push(value);
-      }
-      this.emailInput.nativeElement.value = '';
-      this.filterForm.get('emailCtrl').setValue(null);
+      this.SelectedEmails = data;
     } else if (filterType == 'name') {
-      if (this.SelectedNames.indexOf(value) === -1) {
-        this.SelectedNames.push(value);
-      }
-      this.nameInput.nativeElement.value = '';
-      this.filterForm.get('nameCtrl').setValue(null);
+      this.SelectedNames = data;
     }
 
     this.onSelectFilter();
@@ -155,8 +168,6 @@ export class UserPortalComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
-
-
 
   setDatasource(tableData: User[], reset: boolean = false) {
     if (reset) {
@@ -199,7 +210,7 @@ export class UserPortalComponent implements OnInit {
         this.allusers = data;
         this.initFilterData(this.allusers);
         this.setDatasource(this.allusers);
-        this.resetFilters();
+        //this.resetFilters();
         console.log(`all users`, data);
       },
       error: (e) => {
@@ -226,8 +237,7 @@ export class UserPortalComponent implements OnInit {
       }
     });
   }
-
-
+  
   deleteUser(user: User) {
     this.spinnerService.spin$.next(true);
     this.authService.DeleteUser(user).subscribe({
@@ -245,7 +255,6 @@ export class UserPortalComponent implements OnInit {
     });
   }
 
-
   initFilterData(tableData) {
     this.allEmailList = tableData.map((item) => item['email']).filter(this.onlyUnique);
     this.allNameList = tableData.map((item) => item['name']).filter(this.onlyUnique);
@@ -255,13 +264,13 @@ export class UserPortalComponent implements OnInit {
     return self.indexOf(value) === index;
   }
 
-  resetFilters(){
-    //this.formDirective.resetForm();
-    this.filterForm.patchValue({
-      emailCtrl: null,
-      nameCtrl: null
-    });
-  }
+  // resetFilters() {
+  //   //this.formDirective.resetForm();
+  //   this.filterForm.patchValue({
+  //     emailCtrl: null,
+  //     nameCtrl: null
+  //   });
+  // }
 
   trackBy(index: number, item: User) {
     return item._id;

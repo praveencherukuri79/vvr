@@ -24,6 +24,7 @@ import { HeaderFooterComponent } from './component/header-footer/header-footer.c
 import { IndexRateComponent } from './component/index-rate/index-rate.component';
 import { CurrencyPipe, DecimalPipe } from '@angular/common';
 import { UserPortalComponent } from './component/user-portal/user-portal.component';
+import { AutoCompleteComponent } from './component/auto-complete/auto-complete.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { UserPortalComponent } from './component/user-portal/user-portal.compone
     DashboardComponent,
     HeaderFooterComponent,
     IndexRateComponent,
-    UserPortalComponent
+    UserPortalComponent,
+    AutoCompleteComponent
   ],
   imports: [
     BrowserAnimationsModule,

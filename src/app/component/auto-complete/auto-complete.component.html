@@ -1,0 +1,23 @@
+<form [formGroup]="filterForm" class="input-form">
+    <mat-form-field class="example-chip-list">
+        <mat-label>{{label}}</mat-label>
+        <!-- chip -->
+        <mat-chip-grid #chipGridIndex>
+            <mat-chip-row *ngFor="let item of SelectedItems" (removed)="remove(item)">
+                {{item}}
+                <button matChipRemove>
+                    <mat-icon>cancel</mat-icon>
+                </button>
+            </mat-chip-row>
+        </mat-chip-grid>
+        <!-- input -->
+        <input matInput #searchInput formControlName="searchControl" [matChipInputFor]="chipGridIndex"
+            [matAutocomplete]="AutoCompleteCustom" placeholder="{{placeHolder}}">
+        <!-- auto complete -->
+        <mat-autocomplete #AutoCompleteCustom="matAutocomplete" (optionSelected)="select($event)">
+            <mat-option *ngFor="let filteredItem of filteredItems | async" [value]="filteredItem">
+                {{filteredItem}}
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+</form>

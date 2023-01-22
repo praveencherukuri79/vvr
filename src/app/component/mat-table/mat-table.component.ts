@@ -42,10 +42,10 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
   SelectedIndexes: Array<string> = [];
   SelectedNames: Array<string> = [];
 
-  filterForm: FormGroup;
+  // filterForm: FormGroup;
 
-  filteredIndex: Observable<string[]>;
-  filteredName: Observable<string[]>;
+  // filteredIndex: Observable<string[]>;
+  // filteredName: Observable<string[]>;
 
   displayedColumns: Array<keyof Mstc> = [
     'NAME',
@@ -174,72 +174,86 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
   ) {}
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes && changes.tableData) {
+    if (changes && changes.tableData && changes.tableData.currentValue) {
       this.initFilterData();
     }
   }
 
   ngOnInit(): void {
-    console.log('mat on in it', Date.now());
+    //console.log('mat on in it', Date.now());
 
-    this.filterForm = this.formBuilder.group({
-      indexCtrl: [null],
-      nameCtrl: [null]
-    });
+    // this.filterForm = this.formBuilder.group({
+    //   indexCtrl: [null],
+    //   nameCtrl: [null]
+    // });
 
-    this.filteredIndex = this.filterForm.get('indexCtrl').valueChanges.pipe(
-      startWith(null),
-      map((index: string | null) =>
-        index
-          ? this.searchFilter(index, this.allIndexList, this.SelectedIndexes)
-          : this.allIndexList.slice().filter((item) => this.SelectedIndexes.indexOf(item) == -1)
-      )
-    );
+    // this.filteredIndex = this.filterForm.get('indexCtrl').valueChanges.pipe(
+    //   startWith(null),
+    //   map((index: string | null) =>
+    //     index
+    //       ? this.searchFilter(index, this.allIndexList, this.SelectedIndexes)
+    //       : this.allIndexList.slice().filter((item) => this.SelectedIndexes.indexOf(item) == -1)
+    //   )
+    // );
 
-    this.filteredName = this.filterForm.get('nameCtrl').valueChanges.pipe(
-      startWith(null),
-      map((index: string | null) =>
-        index
-          ? this.searchFilter(index, this.allNameList, this.SelectedNames)
-          : this.allNameList.slice().filter((item) => this.SelectedNames.indexOf(item) == -1)
-      )
-    );
+    // this.filteredName = this.filterForm.get('nameCtrl').valueChanges.pipe(
+    //   startWith(null),
+    //   map((index: string | null) =>
+    //     index
+    //       ? this.searchFilter(index, this.allNameList, this.SelectedNames)
+    //       : this.allNameList.slice().filter((item) => this.SelectedNames.indexOf(item) == -1)
+    //   )
+    // );
   }
 
-  searchFilter(value: string, list: string[], selectedList: string[]): string[] {
-    const filterValue = value.toLowerCase();
-    return list.filter((item) => item.toLowerCase().includes(filterValue) && selectedList.indexOf(item) == -1);
-  }
+  // searchFilter(value: string, list: string[], selectedList: string[]): string[] {
+  //   const filterValue = value.toLowerCase();
+  //   return list.filter((item) => item.toLowerCase().includes(filterValue) && selectedList.indexOf(item) == -1);
+  // }
 
-  remove(item: string, filterType: string): void {
-    if (filterType == 'index') {
-      const index = this.SelectedIndexes.indexOf(item);
-      if (index >= 0) {
-        this.SelectedIndexes.splice(index, 1);
-      }
+  // remove(item: string, filterType: string): void {
+  //   if (filterType == 'index') {
+  //     const index = this.SelectedIndexes.indexOf(item);
+  //     if (index >= 0) {
+  //       this.SelectedIndexes.splice(index, 1);
+  //     }
+  //     this.indexInput.nativeElement.value = '';
+  //     this.filterForm.get('indexCtrl').setValue(null);
+  //   } else if (filterType == 'name') {
+  //     const index = this.SelectedNames.indexOf(item);
+  //     if (index >= 0) {
+  //       this.SelectedNames.splice(index, 1);
+  //     }
+  //     this.nameInput.nativeElement.value = '';
+  //     this.filterForm.get('nameCtrl').setValue(null);
+  //   }
+  //   this.onSelectFilter();
+  // }
+
+  // selected(event: MatAutocompleteSelectedEvent, filterType: string): void {
+  //   const value = event.option.viewValue;
+  //   if (filterType == 'index') {
+  //     if (this.SelectedIndexes.indexOf(value) === -1) {
+  //       this.SelectedIndexes.push(value);
+  //     }
+  //     this.indexInput.nativeElement.value = '';
+  //     this.filterForm.get('indexCtrl').setValue(null);
+  //   } else if (filterType == 'name') {
+  //     if (this.SelectedNames.indexOf(value) === -1) {
+  //       this.SelectedNames.push(value);
+  //     }
+  //     this.nameInput.nativeElement.value = '';
+  //     this.filterForm.get('nameCtrl').setValue(null);
+  //   }
+
+  //   this.onSelectFilter();
+  // }
+
+  filterEmitter(data, filterType: string) {
+    if (filterType == 'email') {
+      this.SelectedIndexes = data;
     } else if (filterType == 'name') {
-      const index = this.SelectedNames.indexOf(item);
-      if (index >= 0) {
-        this.SelectedNames.splice(index, 1);
-      }
-    }
-    this.onSelectFilter();
-  }
-
-  selected(event: MatAutocompleteSelectedEvent, filterType: string): void {
-    const value = event.option.viewValue;
-    if (filterType == 'index') {
-      if (this.SelectedIndexes.indexOf(value) === -1) {
-        this.SelectedIndexes.push(value);
-      }
-      this.indexInput.nativeElement.value = '';
-      this.filterForm.get('indexCtrl').setValue(null);
-    } else if (filterType == 'name') {
-      if (this.SelectedNames.indexOf(value) === -1) {
-        this.SelectedNames.push(value);
-      }
-      this.nameInput.nativeElement.value = '';
-      this.filterForm.get('nameCtrl').setValue(null);
+      this.SelectedNames = data;
     }
 
     this.onSelectFilter();
@@ -295,7 +309,7 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
     this.setDatasource(this.tableData);
     this.changeDetection.markForCheck();
     this.changeDetection.detectChanges();
-    this.spinnerService.spin$.next(false);
+    //this.spinnerService.spin$.next(false);
   }
 
   setDatasource(tableData: Mstc[], reset: boolean = false) {

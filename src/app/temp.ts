@@ -292,3 +292,100 @@
   //   'deniedCases',
   //   'deniedUnits',
   // ];
+
+
+//   <form [formGroup]="filterForm" class="input-form">
+//     <!--111 class="example-chip-list" appearance="fill"-->
+//     <mat-form-field class="example-chip-list">
+//         <!-- chip -->
+//         <mat-label>Email</mat-label>
+//         <mat-chip-grid #chipGridIndex>
+//             <mat-chip-row *ngFor="let email of SelectedEmails" (removed)="remove(email, 'email')">
+//                 {{email}}
+//                 <button matChipRemove>
+//                     <mat-icon>cancel</mat-icon>
+//                 </button>
+//             </mat-chip-row>
+//         </mat-chip-grid>
+//         <!-- input -->
+//         <input matInput #emailInput formControlName="emailCtrl" [matChipInputFor]="chipGridIndex"
+//             [matAutocomplete]="indexAuto" placeholder="Email">
+//         <!-- auto complete -->
+//         <mat-autocomplete #indexAuto="matAutocomplete" (optionSelected)="selected($event, 'email')">
+//             <mat-option *ngFor="let email of filteredEmail | async" [value]="email">
+//                 {{email}}
+//             </mat-option>
+//         </mat-autocomplete>
+//     </mat-form-field>
+
+//     <!--222-->
+//     <mat-form-field class="example-chip-list">
+//         <!-- chip -->
+//         <mat-label>User Name</mat-label>
+//         <mat-chip-grid #chipGridName>
+//             <mat-chip-row *ngFor="let name of SelectedNames" (removed)="remove(name, 'name')">
+//                 {{name}}
+//                 <button matChipRemove>
+//                     <mat-icon>cancel</mat-icon>
+//                 </button>
+//             </mat-chip-row>
+//         </mat-chip-grid>
+//         <!-- input -->
+//         <input matInput #nameInput formControlName="nameCtrl" [matChipInputFor]="chipGridName"
+//             [matAutocomplete]="nameAuto">
+//         <!-- auto complete -->
+//         <mat-autocomplete #nameAuto="matAutocomplete" (optionSelected)="selected($event, 'name')">
+//             <mat-option *ngFor="let name of filteredName | async" [value]="name">
+//                 {{name}}
+//             </mat-option>
+//         </mat-autocomplete>
+//     </mat-form-field>
+// </form>
+
+
+// <form [formGroup]="filterForm" class="input-form">
+//   <!--111 class="example-chip-list" appearance="fill"-->
+//   <mat-form-field class="example-chip-list">
+//     <!-- chip -->
+//     <mat-label>Index Numbers</mat-label>
+//     <mat-chip-grid #chipGridIndex>
+//       <mat-chip-row *ngFor="let index of SelectedIndexes" (removed)="remove(index, 'index')">
+//         {{index}}
+//         <button matChipRemove>
+//           <mat-icon>cancel</mat-icon>
+//         </button>
+//       </mat-chip-row>
+//     </mat-chip-grid>
+//     <!-- input -->
+//     <input matInput #indexInput formControlName="indexCtrl" [matChipInputFor]="chipGridIndex"
+//       [matAutocomplete]="indexAuto">
+//     <!-- auto complete -->
+//     <mat-autocomplete #indexAuto="matAutocomplete" (optionSelected)="selected($event, 'index')">
+//       <mat-option *ngFor="let index of filteredIndex | async" [value]="index">
+//         {{index}}
+//       </mat-option>
+//     </mat-autocomplete>
+//   </mat-form-field>
+
+//   <!--222-->
+//   <mat-form-field class="example-chip-list">
+//     <!-- chip -->
+//     <mat-label>Company Name</mat-label>
+//     <mat-chip-grid #chipGridName>
+//       <mat-chip-row *ngFor="let name of SelectedNames" (removed)="remove(name, 'name')">
+//         {{name}}
+//         <button matChipRemove>
+//           <mat-icon>cancel</mat-icon>
+//         </button>
+//       </mat-chip-row>
+//     </mat-chip-grid>
+//     <!-- input -->
+//     <input matInput #nameInput formControlName="nameCtrl" [matChipInputFor]="chipGridName" [matAutocomplete]="nameAuto">
+//     <!-- auto complete -->
+//     <mat-autocomplete #nameAuto="matAutocomplete" (optionSelected)="selected($event, 'name')">
+//       <mat-option *ngFor="let name of filteredName | async" [value]="name">
+//         {{name}}
+//       </mat-option>
+//     </mat-autocomplete>
+//   </mat-form-field>
+// </form>
