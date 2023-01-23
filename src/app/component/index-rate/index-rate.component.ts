@@ -1,12 +1,20 @@
 import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
+import { IndexRate } from '@app/interface/index-rate';
 import { IndexRateService } from '@app/service/index-rate/index-rate.service';
 import { NotifierService } from '@app/service/notification-service/notification.service';
 import { SpinnerService } from '@app/service/spinner.service';
 import { getFieldErrorMessage } from '@app/utils/utilities';
 import { map, Observable, startWith } from 'rxjs';
+//import { rateCommOverride } from './rate-comm';
 import { Custom_Validation_Messages } from './validation-messages';
 // import {rateOverride} from './rate';
+
+// interface IndexRate {
+//   INDEX_NUM: number;
+//   rate: number;
+//   canteenRate: number;
+// }
 
 @Component({
   selector: 'app-index-rate',
@@ -17,8 +25,8 @@ export class IndexRateComponent {
   @ViewChild('formDirective') private formDirective: NgForm;
 
   indexRateForm: FormGroup;
-  indexRateData: Array<{ INDEX_NUM: number, rate: number }>;
-  filteredOptions: Observable<Array<{ INDEX_NUM: number, rate: number }>>;
+  indexRateData: Array<IndexRate>;
+  filteredOptions: Observable<Array<IndexRate>>;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -32,7 +40,8 @@ export class IndexRateComponent {
 
     this.indexRateForm = this.formBuilder.group({
       index: [null, Validators.compose([Validators.required])],
-      rate: [null, Validators.compose([Validators.required])]
+      rate: [null, Validators.compose([Validators.required])],
+      canteenRate: [null, Validators.compose([Validators.required])]
     });
   }
 
@@ -46,7 +55,7 @@ export class IndexRateComponent {
     );
   }
 
-  filterAutoComplete(value: string): Array<{ INDEX_NUM: number, rate: number }> {
+  filterAutoComplete(value: string): Array<IndexRate> {
     const filterValue = value ? value.toString().toLowerCase(): '';
     return this.indexRateData.filter((option) => option.INDEX_NUM.toString().toLowerCase().includes(filterValue));
   }
@@ -55,7 +64,8 @@ export class IndexRateComponent {
     //this.formDirective.resetForm();
     this.indexRateForm.patchValue({
       index: null,
-      rate: null
+      rate: null,
+      canteenRate: null
     });
   }
 
@@ -67,7 +77,8 @@ export class IndexRateComponent {
   onIndexSelected(obj) {
     this.indexRateForm.patchValue({
       index: obj.INDEX_NUM,
-      rate: obj.rate
+      rate: obj.rate,
+      canteenRate: obj.canteenRate
     });
   }
 
@@ -90,10 +101,11 @@ export class IndexRateComponent {
 
   submit() {
     if (this.indexRateForm.valid) {
-      const index = this.formData.index.value;
-      const rate = this.formData.rate.value;
+      const index: number = this.formData.index.value;
+      const rate: number = this.formData.rate.value;
+      const canteenRate: number = this.formData.canteenRate.value;
       this.spinnerService.spin$.next(true);
-      this.indexRateService.saveRate({ INDEX_NUM: index, rate: rate }).subscribe({
+      this.indexRateService.saveRate({ INDEX_NUM: index, rate: rate, canteenRate: canteenRate }).subscribe({
         next: (res) => {
           this.spinnerService.spin$.next(false);
           this.formDirective.resetForm();
@@ -113,7 +125,7 @@ export class IndexRateComponent {
 
   // submitOverride() {
   //     this.spinnerService.spin$.next(true);
-  //     this.indexRateService.saveRatesOverride(rateOverride).subscribe({
+  //     this.indexRateService.saveRatesOverride(rateCommOverride).subscribe({
   //       next: (res) => {
   //         this.spinnerService.spin$.next(false);
   //         this.getIndexRateData();

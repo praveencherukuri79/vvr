@@ -3,7 +3,7 @@
 <form class="index-rate-form" [formGroup]="indexRateForm" #formDirective="ngForm">
 
     <div class="display-flex p-10 index-rate-input-area">
-        <mat-form-field class="example-full-width p-5" appearance="fill">
+        <mat-form-field class="example-full-width rate-auto-com p-5" appearance="fill">
             <mat-label>Index Number</mat-label>
             <input type="number" placeholder="Index Rate" matInput formControlName="index" [matAutocomplete]="indexRateAuto" required>
             <button [hidden]="!formData.index.value" matSuffix mat-icon-button aria-label="clear" (click)="resetInput()">
@@ -12,7 +12,7 @@
             <mat-error class="error-message">{{ getErrorMessage('index') }}</mat-error>
             <mat-autocomplete #indexRateAuto="matAutocomplete" (optionSelected)="onIndexSelected($event.option.value)">
                 <mat-option *ngFor="let option of filteredOptions | async; let i=index" [value]="option" [ngClass]="i % 2 == 0 ? 'item-even':'item-odd'">
-                    {{option.INDEX_NUM}} - {{option.rate | currency: 'INR'}}
+                    {{option.INDEX_NUM}} - {{option.rate | currency: 'INR'}} - {{option.canteenRate | currency: 'INR'}}
                 </mat-option>
             </mat-autocomplete>
         </mat-form-field>
@@ -21,6 +21,12 @@
             <mat-label>Rate</mat-label>
             <input matInput formControlName="rate" placeholder="rate" type="number" required />
             <mat-error class="error-message">{{ getErrorMessage('rate') }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="p-5">
+            <mat-label>Commission Rate</mat-label>
+            <input matInput formControlName="canteenRate" placeholder="Commission rate" type="number" required />
+            <mat-error class="error-message">{{ getErrorMessage('canteenRate') }}</mat-error>
         </mat-form-field>
 
     </div>

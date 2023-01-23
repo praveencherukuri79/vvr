@@ -3,6 +3,7 @@ import * as mongoose from 'mongoose';
 interface IndexRateInterface {
   INDEX_NUM: number;
   rate: number;
+  canteenRate: number;
 }
 
 const indexRateSchema = new mongoose.Schema({
@@ -12,6 +13,10 @@ const indexRateSchema = new mongoose.Schema({
     required: true
   },
   rate: {
+    type: Number,
+    default: 0
+  },
+  canteenRate: {
     type: Number,
     default: 0
   }

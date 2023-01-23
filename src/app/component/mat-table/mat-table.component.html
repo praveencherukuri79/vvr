@@ -11,12 +11,12 @@
 
 <!-- [class.hidden]="!dataSource" -->
 
-<custom-auto-complete *ngIf="allIndexList" [data]="allIndexList" [label]="'Index Numbers'" [placeHolder]="'Index Numbers'"
-    (selectedEmitter)="filterEmitter($event, 'email')">
+<custom-auto-complete *ngIf="allIndexList" [data]="allIndexList" [label]="'Index Numbers'"
+  [placeHolder]="'Index Numbers'" (selectedEmitter)="filterEmitter($event, 'email')">
 </custom-auto-complete>
 
 <custom-auto-complete *ngIf="allNameList" [data]="allNameList" [label]="'Company Name'" [placeHolder]="'Company Name'"
-    (selectedEmitter)="filterEmitter($event, 'name')">
+  (selectedEmitter)="filterEmitter($event, 'name')">
 </custom-auto-complete>
 
 <div class="example-container mat-elevation-z8" [class.hidden]="!dataSource">
@@ -27,10 +27,14 @@
 
     <ng-container *ngFor="let column of displayedColumns">
       <ng-container [matColumnDef]="column">
-        <mat-header-cell *matHeaderCellDef [mat-sort-header]="column">{{displayNames[column]}} </mat-header-cell>
-        <mat-cell *matCellDef="let element"><span class="mobile-label">{{displayNames[column]}}:</span>
+        <mat-header-cell *matHeaderCellDef [mat-sort-header]="column">{{displayNames[column]}}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element"
+          [ngClass]="currencyFields.indexOf(column) !== -1 ? 'table-align-right':''"><span
+            class="mobile-label">{{displayNames[column]}}:</span>
           {{currencyFields.indexOf(column) !== -1 ? (element[column] | currency :'INR') : element[column]}} </mat-cell>
-        <mat-footer-cell *matFooterCellDef> {{column == 'NAME' ? 'Total' : currencyFields.indexOf(column) !== -1 ?
+        <mat-footer-cell *matFooterCellDef [ngClass]="currencyFields.indexOf(column) !== -1 ? 'table-align-right':''">
+          {{column == 'NAME' ? 'Total' : currencyFields.indexOf(column) !== -1 ?
           (getTotal(column) | currency :'INR') : getTotal(column)}} </mat-footer-cell>
       </ng-container>
     </ng-container>

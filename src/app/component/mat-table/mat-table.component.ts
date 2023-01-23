@@ -68,7 +68,10 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
     'QTY_DENIED_CASES',
     'QTY_DENIED_UNITS',
     'RATE',
-    'TOTAL_AMOUNT'
+    'TOTAL_AMOUNT',
+    'CANTEEN_RATE',
+    'CANTEEN_TOTAL_AMOUNT',
+    'PROFIT'
   ];
 
   // printColumns: Array<keyof Mstc> = [
@@ -85,7 +88,7 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
   // ];
 
   printColumnHeaders: Array<{ [key: string]: keyof Mstc }> = [
-    { Name: 'NAME' },
+    { 'Name': 'NAME' },
     { 'Year Month': 'YEAR_MONTH' },
     { 'Group Code': 'GROUP_CODE' },
     { 'Index Number': 'INDEX_NUM' },
@@ -103,8 +106,12 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
     { 'Stocked Units (closed)': 'QTY_STOCKED_UNITS' },
     { 'Denied Cases': 'QTY_DENIED_CASES' },
     { 'Denied Units': 'QTY_DENIED_UNITS' },
-    { Rate: 'RATE' },
-    { 'Total Amount': 'TOTAL_AMOUNT' }
+    { 'Rate': 'RATE' },
+    { 'Total Amount': 'TOTAL_AMOUNT' },
+    { 'Commission Rate': 'CANTEEN_RATE' },
+    { 'Commission Total Amount': 'CANTEEN_TOTAL_AMOUNT' },
+    { 'Profit': 'PROFIT' },
+
   ];
 
   displayNames: { [key: string]: string } = {
@@ -128,10 +135,21 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
     QTY_DENIED_CASES: 'Denied Cases',
     QTY_DENIED_UNITS: 'Denied Units',
     RATE: 'Rate',
-    TOTAL_AMOUNT: 'Total Amount'
+    TOTAL_AMOUNT: 'Total Amount',
+    CANTEEN_RATE: 'Commission Rate',
+    CANTEEN_TOTAL_AMOUNT: 'Commission Total Amount',
+    PROFIT: 'Profit'
   };
 
-  nonDefaultColumns = ['NAME', 'YEAR_MONTH', 'GROUP_CODE', 'ITEM_DESC'];
+  nonDefaultColumns: Array<keyof Mstc> = [
+    'NAME',
+    'YEAR_MONTH',
+    'GROUP_CODE',
+    'ITEM_DESC',
+    'CANTEEN_RATE',
+    'CANTEEN_TOTAL_AMOUNT',
+    'PROFIT'
+  ];
 
   totalParams: Array<keyof Mstc> = [
     'QTY_OPENING_CASES',
@@ -146,10 +164,12 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
     'QTY_STOCKED_UNITS',
     'QTY_DENIED_CASES',
     'QTY_DENIED_UNITS',
-    'TOTAL_AMOUNT'
+    'TOTAL_AMOUNT',
+    'CANTEEN_TOTAL_AMOUNT',
+    'PROFIT'
   ];
 
-  currencyFields = ['RATE', 'TOTAL_AMOUNT'];
+  currencyFields = ['RATE', 'TOTAL_AMOUNT', 'CANTEEN_RATE', 'CANTEEN_TOTAL_AMOUNT', 'PROFIT'];
 
   @Input()
   headerFooterData: Array<{ [key: string]: string }>;
@@ -181,12 +201,10 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
 
   ngOnInit(): void {
     //console.log('mat on in it', Date.now());
-
     // this.filterForm = this.formBuilder.group({
     //   indexCtrl: [null],
     //   nameCtrl: [null]
     // });
-
     // this.filteredIndex = this.filterForm.get('indexCtrl').valueChanges.pipe(
     //   startWith(null),
     //   map((index: string | null) =>
@@ -195,7 +213,6 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
     //       : this.allIndexList.slice().filter((item) => this.SelectedIndexes.indexOf(item) == -1)
     //   )
     // );
-
     // this.filteredName = this.filterForm.get('nameCtrl').valueChanges.pipe(
     //   startWith(null),
     //   map((index: string | null) =>
@@ -415,25 +432,23 @@ export class MatTableComponent implements AfterViewInit, OnChanges, OnInit {
     // empty sheet
     const worksheet = xlsxUtils.json_to_sheet([]);
 
-    const header: Array<string[]> = this.invoiceHeader ? this.invoiceHeader.split('\n').map((item) => [item]): [];
-    const footer: Array<string[]> = this.invoiceFooter ? this.invoiceFooter.split('\n').map((item) => [item]): [];
+    const header: Array<string[]> = this.invoiceHeader ? this.invoiceHeader.split('\n').map((item) => [item]) : [];
+    const footer: Array<string[]> = this.invoiceFooter ? this.invoiceFooter.split('\n').map((item) => [item]) : [];
 
     // header
-    if(header && header.length){
+    if (header && header.length) {
       xlsxUtils.sheet_add_aoa(worksheet, header, { origin: `A2` });
     }
-    
 
     // table
     const startIndex = header && header.length ? header.length + 4 : 1;
     xlsxUtils.sheet_add_json(worksheet, data, { header: selectedDisplayNames, origin: `A${startIndex}` });
 
     //footer
-    if(footer && footer.length){
+    if (footer && footer.length) {
       xlsxUtils.sheet_add_aoa(worksheet, [[''], ['']], { origin: -1 });
       xlsxUtils.sheet_add_aoa(worksheet, footer, { origin: -1 });
     }
-
 
     const workbook = xlsxUtils.book_new();
     xlsxUtils.book_append_sheet(workbook, worksheet, 'Invoice');

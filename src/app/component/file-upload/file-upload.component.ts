@@ -92,7 +92,22 @@ export class FileUploadComponent {
         });
         console.log('jsonData => ', jsonData);
 
-        let mstc = jsonData['MSTC'];
+        
+
+        let mstc = jsonData['Sheet1'];
+        const rateArr = [];
+        if (mstc && mstc.length > 0) {
+          mstc.forEach((obj: any) => {
+            const index = obj.Index;
+            const rate = obj.Rate? Math.round((obj.Rate + Number.EPSILON) * 100) / 100 : 0;
+            const commRate = obj.CommRate? Math.round((obj.CommRate + Number.EPSILON) * 100) / 100: 0;
+            rateArr.push({INDEX_NUM: index, rate: rate, canteenRate: commRate});
+          });
+        }
+
+        console.log('rateArr => ', rateArr);
+
+        //Math.round((totalAmount + Number.EPSILON) * 100) / 100;
 
         // save to DB
         // this.mstcService.saveMstc({reportName: 'NOV-2022', reportData: mstc}).subscribe({next: (data)=>{
@@ -100,25 +115,25 @@ export class FileUploadComponent {
         //   //this.mstcService.getMstc('NOV-2022');
         // }});
 
-        if (mstc && mstc.length > 0) {
-          mstc.forEach((obj: IMstc) => {
-            this.mstcArray.push(new Mstc(obj));
-          });
-        }
-        this.mstcArrayVVRProducts = this.mstcArray.filter(
-          (mstc: Mstc) => this.myProductIds.indexOf(mstc.INDEX_NUM) !== -1
-        );
+        // if (mstc && mstc.length > 0) {
+        //   mstc.forEach((obj: IMstc) => {
+        //     this.mstcArray.push(new Mstc(obj));
+        //   });
+        // }
+        // this.mstcArrayVVRProducts = this.mstcArray.filter(
+        //   (mstc: Mstc) => this.myProductIds.indexOf(mstc.INDEX_NUM) !== -1
+        // );
 
-        this.mstcArrayVVRProductsGroup = this.prepareDataGroup(
-          JSON.parse(JSON.stringify(this.mstcArrayVVRProducts))
-        );
+        // this.mstcArrayVVRProductsGroup = this.prepareDataGroup(
+        //   JSON.parse(JSON.stringify(this.mstcArrayVVRProducts))
+        // );
 
-        console.log('mstcArray => ', this.mstcArray);
-        console.log('mstcArrayVVRProducts => ', this.mstcArrayVVRProducts);
-        console.log(
-          'mstcArrayVVRProductsGroup => ',
-          this.mstcArrayVVRProductsGroup
-        );
+        // console.log('mstcArray => ', this.mstcArray);
+        // console.log('mstcArrayVVRProducts => ', this.mstcArrayVVRProducts);
+        // console.log(
+        //   'mstcArrayVVRProductsGroup => ',
+        //   this.mstcArrayVVRProductsGroup
+        // );
         this.spinnerService.spin$.next(false);
       };
 

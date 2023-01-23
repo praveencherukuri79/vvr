@@ -3,7 +3,7 @@ import IndexRateModel from '../mongo-schemas/index-rate-schema';
 export default class IndexRateService {
   constructor() {}
 
-  async saveRate(rate: { INDEX_NUM: number, rate: number }): Promise<any> {
+  async saveRate(rate: { INDEX_NUM: number, rate: number, canteenRate: number }): Promise<any> {
     try {
       const data = await IndexRateModel.findOneAndUpdate({ INDEX_NUM: rate.INDEX_NUM }, rate, {
         upsert: true,
@@ -18,7 +18,7 @@ export default class IndexRateService {
     }
   }
 
-  async saveRates(rates: Array<{ INDEX_NUM: number, rate: number }>): Promise<any> {
+  async saveRates(rates: Array<{ INDEX_NUM: number, rate: number, canteenRate: number }>): Promise<any> {
     try {
       await IndexRateModel.deleteMany({});
       const data = await IndexRateModel.create(rates);

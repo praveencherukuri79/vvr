@@ -4,5 +4,8 @@ export const Custom_Validation_Messages = {
   ],
   rate: [
     { type: 'required', message: 'Rate is required' },
+  ],
+  canteenRate: [
+    { type: 'required', message: 'Rate is required' },
   ]
 };

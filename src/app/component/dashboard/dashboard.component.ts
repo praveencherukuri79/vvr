@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnIn
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IMstc } from '@app/interface/mstc';
+import { IndexRate } from '@app/interface/index-rate';
 import { Mstc } from '@app/model/mstc';
 import { HeaderFooterService } from '@app/service/header-footer/header-footer.service';
 import { IndexRateService } from '@app/service/index-rate/index-rate.service';
@@ -25,7 +26,7 @@ export class DashboardComponent {
 
   selectedTableType: string = 'product';
   headerFooterData: Array<{ [key: string]: string }>;
-  indexRateData: Array<{ INDEX_NUM: number, rate: number }>;
+  indexRateData: Array<IndexRate>;
 
   //showSpinner: boolean = false;
 
@@ -42,7 +43,9 @@ export class DashboardComponent {
     'QTY_STOCKED_UNITS',
     'QTY_DENIED_CASES',
     'QTY_DENIED_UNITS',
-    'TOTAL_AMOUNT'
+    'TOTAL_AMOUNT',
+    'CANTEEN_TOTAL_AMOUNT',
+    'PROFIT'
   ];
 
   constructor(
@@ -116,28 +119,45 @@ export class DashboardComponent {
     }, 100);
   }
 
-  getRate(obj: IMstc): number{
+  getRate(obj: IMstc): {rate: number, canteenRate: number} {
     const rateObj = this.indexRateData.find(item=> item.INDEX_NUM === obj.INDEX_NUM);
-    return rateObj ? rateObj.rate : 0;
+    const rate = rateObj ? rateObj.rate : 0;
+    const canteenRate = rateObj ? rateObj.canteenRate : 0;
+    return {rate, canteenRate}
   }
 
-  getTotalAmount(obj: IMstc): number{
+  getTotalAmount(obj: IMstc): {totalAmount: number, canteenTotalAmount: number} {
     //const totalSold = (obj.QTY_SOLD_CASES * obj.CASE_PACK) + (obj.QTY_SOLD_UNITS);
     let totalAmount: number = 0;
+    let canteenTotalAmount: number = 0;
     if(obj.rate){
       totalAmount = (obj.QTY_SOLD_CASES * obj.rate) + ((obj.rate/obj.CASE_PACK) * obj.QTY_SOLD_UNITS);
     }
 
-    return Math.round((totalAmount + Number.EPSILON) * 100) / 100;
+    if(obj.canteenRate){
+      canteenTotalAmount = (obj.QTY_SOLD_CASES * obj.canteenRate) + ((obj.canteenRate/obj.CASE_PACK) * obj.QTY_SOLD_UNITS);
+    }
+
+    totalAmount = Math.round((totalAmount + Number.EPSILON) * 100) / 100;
+    canteenTotalAmount = Math.round((canteenTotalAmount + Number.EPSILON) * 100) / 100;
+    return {totalAmount, canteenTotalAmount}
   }
+
+  // getCanteenRate(obj: IMstc): number{
+  //   const rateObj = this.indexRateData.find(item=> item.INDEX_NUM === obj.INDEX_NUM);
+  //   return rateObj ? rateObj.canteenRate : 0;
+  // }
 
   prepareDataSource(mstc) {
     console.log('prepare start', Date.now());
     //this.spinnerService.spin$.next(true);
     if (mstc && mstc.length > 0) {
       mstc.forEach((obj: IMstc) => {
-        obj.rate = this.getRate(obj);
-        obj.totalAmount = this.getTotalAmount(obj);
+        obj.rate = this.getRate(obj).rate;
+        obj.canteenRate = this.getRate(obj).canteenRate;
+        obj.totalAmount = this.getTotalAmount(obj).totalAmount;
+        obj.canteenTotalAmount = this.getTotalAmount(obj).canteenTotalAmount;
+        obj.profit = obj.totalAmount - obj.canteenTotalAmount;
         this.mstcArray.push(new Mstc(obj));
       });
     }

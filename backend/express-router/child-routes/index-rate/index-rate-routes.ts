@@ -30,7 +30,7 @@ app.get('/rate/:index', attachCurrentUser, async (req: CustomRequest, res: Custo
 
 app.post('/rate/save', attachCurrentUser, checkRole('admin'), async (req: CustomRequest, res: CustomResponse) => {
   try {
-    const body: { INDEX_NUM: number, rate: number } = req.body;
+    const body: { INDEX_NUM: number, rate: number, canteenRate: number } = req.body;
 
     const service = new IndexRateService();
     const data = await service.saveRate(body);
@@ -43,7 +43,7 @@ app.post('/rate/save', attachCurrentUser, checkRole('admin'), async (req: Custom
 
 app.post('/rate/save/override', attachCurrentUser, checkRole('admin'), async (req: CustomRequest, res: CustomResponse) => {
   try {
-    const body: [{ INDEX_NUM: number, rate: number }] = req.body;
+    const body: [{ INDEX_NUM: number, rate: number, canteenRate: number }] = req.body;
 
     const service = new IndexRateService();
     const data = await service.saveRates(body);
