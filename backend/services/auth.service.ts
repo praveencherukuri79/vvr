@@ -82,6 +82,20 @@ export default class AuthService {
     }
   }
 
+  async unApproveUser(user): Promise<any> {
+    try {
+      const data = await UserModel.findOneAndUpdate({ email: user.email, _id: new MongooseId(user._id) }, {adminApproved: false}, {
+        new: true,
+        runValidators: true
+      });
+      console.log(`admin un-approval is success for ${user.email}`);
+      return getUserReturnData(data);
+    }catch(e){
+      console.log(`failed to un-approve user ${user.email}`, e);
+      throw new Error(`failed to un-approve user ${user.email}`);
+    }
+  }
+
   async deleteUser(user): Promise<any> {
     try {
       const data = await UserModel.findOneAndDelete({ email: user.email, _id: new MongooseId(user._id) });

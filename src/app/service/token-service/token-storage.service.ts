@@ -1,22 +1,33 @@
 import { isPlatformBrowser } from '@angular/common';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { Router } from '@angular/router';
 import * as utils from '@app/utils/utilities';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, interval, Observable, Subject, Subscription } from 'rxjs';
 import { AuthService } from '../auth-service/auth.service';
 const TOKEN_KEY = 'auth-token';
 const USER_KEY = 'auth-user';
+
 // const user =  '0';
 @Injectable({
   providedIn: 'root'
 })
 export class TokenStorageService {
+  loginStatusSub: Subscription;
   tokenObsorvable: BehaviorSubject<any> = new BehaviorSubject(null);
   loginStatus: Subject<boolean> = new BehaviorSubject<boolean>(this.isUserLoggedIn());
   isBrowser: boolean;
-  constructor(@Inject(PLATFORM_ID) platformId: string, private authService: AuthService) {
+
+  constructor(
+    @Inject(PLATFORM_ID) platformId: string, 
+    private authService: AuthService,
+    private router: Router
+    ) {
     this.isBrowser = isPlatformBrowser(platformId);
     if (this.isBrowser) {
       this.verifyLogin();
+      this.loginStatusSub = interval(10000).subscribe(x => {
+        this.verifyLogin();
+    });
     }
   }
 
@@ -28,18 +39,22 @@ export class TokenStorageService {
         },
         error: (error: any) => {
           this.logOut();
+          this.router.navigate(['login']);
           console.log('error in lon in check', error);
         }
     });
+    }else{
+      this.loginStatus.next(false);
+      //this.router.navigate(['login']);
     }
   }
 
-  signOut(): Observable<any> {
-    console.log('sessionStorage cleared on signOut');
-    window.sessionStorage.clear();
-    this.loginStatus.next(false);
-    return this.tokenObsorvable.asObservable();
-  }
+  // signOut(): Observable<any> {
+  //   console.log('sessionStorage cleared on signOut');
+  //   window.sessionStorage.clear();
+  //   this.loginStatus.next(false);
+  //   return this.tokenObsorvable.asObservable();
+  // }
 
   logOut() {
     console.log('sessionStorage cleared on logOut');

@@ -1,5 +1,6 @@
-<h4 class="p-10">Approve Or Delete Users</h4>
+<h4 class="p-10 text-align-center">Approve Or Delete Users</h4>
 
+<h5>Filters:</h5>
 <custom-auto-complete *ngIf="allEmailList" [data]="allEmailList" [label]="'Email'" [placeHolder]="'Email'"
     (selectedEmitter)="filterEmitter($event, 'email')">
 </custom-auto-complete>
@@ -33,6 +34,7 @@
             <mat-cell *matCellDef="let element"><span class="mobile-label">{{displayNames['approve']}}:</span>
                 <span *ngIf="element['adminApproved']">
                     <button mat-button color="accent" disabled>Approved</button>
+                    <button mat-raised-button color="primary" (click)="unApproveUser(element)">un-approve</button>
                 </span>
                 <span *ngIf="!element['adminApproved']">
                     <button mat-raised-button color="primary" (click)="approveUser(element)">Approve</button>

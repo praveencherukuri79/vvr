@@ -107,7 +107,7 @@ export class HeaderFooterComponent implements OnInit {
       this.spinnerService.spin$.next(true);
       this.headerFooterService.saveHeaderFooterData({ name, header, footer }).subscribe({
         next: (res) => {
-          this.spinnerService.spin$.next(false);
+          //this.spinnerService.spin$.next(false);
           this.formDirective.resetForm();
           //this.resetForm();
           this.getHeaderFooterData();

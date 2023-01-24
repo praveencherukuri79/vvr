@@ -225,7 +225,7 @@ export class UserPortalComponent implements OnInit {
     this.spinnerService.spin$.next(true);
     this.authService.approveUser(user).subscribe({
       next: (data: any) => {
-        this.spinnerService.spin$.next(false);
+        //this.spinnerService.spin$.next(false);
         this.notifierService.showNotification(`User Approval is success for , ${user.email}`, 'close', 'success');
         console.log(`approved user => `, data);
         this.getAllUsers();
@@ -237,12 +237,29 @@ export class UserPortalComponent implements OnInit {
       }
     });
   }
+
+  unApproveUser(user: User) {
+    this.spinnerService.spin$.next(true);
+    this.authService.unApproveUser(user).subscribe({
+      next: (data: any) => {
+        //this.spinnerService.spin$.next(false);
+        this.notifierService.showNotification(`User un-approval is success for , ${user.email}`, 'close', 'success');
+        console.log(`un-approved user => `, data);
+        this.getAllUsers();
+      },
+      error: (e) => {
+        this.spinnerService.spin$.next(false);
+        console.log('Error in un-approve User ', e);
+        this.notifierService.showNotification(`Error in un-approve user ${user.email} , ${e.error.message}`, 'close', 'error');
+      }
+    });
+  }
   
   deleteUser(user: User) {
     this.spinnerService.spin$.next(true);
     this.authService.DeleteUser(user).subscribe({
       next: (data: any) => {
-        this.spinnerService.spin$.next(false);
+        //this.spinnerService.spin$.next(false);
         this.notifierService.showNotification(`User Deletion is success for , ${user.email}`, 'close', 'success');
         console.log(`deleted user => `, data);
         this.getAllUsers();

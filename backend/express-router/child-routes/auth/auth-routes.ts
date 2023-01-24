@@ -101,7 +101,19 @@ app.post('/user/approve', attachCurrentUser, checkRole('admin'), async (req: Cus
     const data = await authServiceInstance.approveUser(body);
     return res.status(200).send(data);
   } catch (e) {
-    console.log(`user approval is success for ${req.body.email}`, e.message);
+    console.log(`user approval is failed for ${req.body.email}`, e.message);
+    return res.status(500).json({ message: e.message });
+  }
+});
+
+app.post('/user/unapprove', attachCurrentUser, checkRole('admin'), async (req: CustomRequest, res: CustomResponse) => {
+  try {
+    const body = req.body;
+    const authServiceInstance = new AuthService();
+    const data = await authServiceInstance.unApproveUser(body);
+    return res.status(200).send(data);
+  } catch (e) {
+    console.log(`user un-approval is failed for ${req.body.email}`, e.message);
     return res.status(500).json({ message: e.message });
   }
 });
@@ -113,7 +125,7 @@ app.post('/user/delete', attachCurrentUser, checkRole('admin'), async (req: Cust
     const data = await authServiceInstance.deleteUser(body);
     return res.status(200).send(data);
   } catch (e) {
-    console.log(`user Deletion is success for ${req.body.email}`, e.message);
+    console.log(`user Deletion is failed for ${req.body.email}`, e.message);
     return res.status(500).json({ message: e.message });
   }
 });

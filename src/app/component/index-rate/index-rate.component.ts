@@ -107,7 +107,7 @@ export class IndexRateComponent {
       this.spinnerService.spin$.next(true);
       this.indexRateService.saveRate({ INDEX_NUM: index, rate: rate, canteenRate: canteenRate }).subscribe({
         next: (res) => {
-          this.spinnerService.spin$.next(false);
+          //this.spinnerService.spin$.next(false);
           this.formDirective.resetForm();
           //this.resetForm();
           this.getIndexRateData();

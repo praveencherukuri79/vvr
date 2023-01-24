@@ -41,6 +41,7 @@ export class AuthGuardService implements CanActivate {
         return true;
       } else if (['admin'].includes(trimUrl(state.url))) {
         this.notifierService.showNotification(`Please login as Admin to continue to Admin page.`, 'close', 'warning', 8000);
+        this.router.navigate(['login']);
         return false;
       }
     }
