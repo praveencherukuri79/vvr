@@ -18,7 +18,8 @@ const PROXY_CONFIG = [
       '/mstc',
       '/mstcReportNames',
       '/header-footer',
-      '/rate'
+      '/rate',
+      '/twilio'
     ],
     target: target_server,
     secure: false,

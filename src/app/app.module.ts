@@ -25,6 +25,7 @@ import { IndexRateComponent } from './component/index-rate/index-rate.component'
 import { CurrencyPipe, DecimalPipe } from '@angular/common';
 import { UserPortalComponent } from './component/user-portal/user-portal.component';
 import { AutoCompleteComponent } from './component/auto-complete/auto-complete.component';
+import { ResetPasswordComponent } from './component/reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { AutoCompleteComponent } from './component/auto-complete/auto-complete.c
     HeaderFooterComponent,
     IndexRateComponent,
     UserPortalComponent,
-    AutoCompleteComponent
+    AutoCompleteComponent,
+    ResetPasswordComponent
   ],
   imports: [
     BrowserAnimationsModule,

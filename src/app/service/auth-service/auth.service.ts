@@ -36,7 +36,11 @@ export class AuthService {
     return this.http.post<any>('user/unapprove', data);
   }
 
-  DeleteUser(data): Observable<any> {
+  deleteUser(data): Observable<any> {
     return this.http.post<any>('user/delete', data);
+  }
+
+  changePassword(data): Observable<any> {
+    return this.http.post<any>('user/changePassword', data);
   }
 }

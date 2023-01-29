@@ -2,6 +2,7 @@ import * as mongoose from 'mongoose';
 
 interface UserInterface {
   email: string;
+  phone: string;
   password: string;
   name: string;
   adminApproved?: boolean;
@@ -10,6 +11,12 @@ interface UserInterface {
 
 const UserSchema = new mongoose.Schema({
   email: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+  },
+  phone: {
     type: String,
     required: true,
     unique: true,

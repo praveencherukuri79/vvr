@@ -43,20 +43,21 @@ export default class AuthService {
     return getUserReturnData(userRecord, this.generateJWT(userRecord));
   }
 
-  async SignUp(email: string, password: string, name: string): Promise<any> {
-    const isUserExist = await UserModel.findOne({ email });
+  async SignUp(user): Promise<any> {
+    const isUserExist = await UserModel.findOne({ email: user.email });
     if (isUserExist) {
       throw new Error('User Email already exist');
     }
     //const salt = randomBytes(32);
     //const passwordHashed = await argon2.hash(password, { salt });
-    const passwordHashed = await bcrypt.hash(password, 10);
+    const passwordHashed = await bcrypt.hash(user.password, 10);
 
     const userRecord = await UserModel.create({
       password: passwordHashed,
-      email,
+      email: user.email,
+      phone: user.phone,
       //salt: salt.toString('hex'),
-      name
+      name: user.name
     });
     //const token = this.generateJWT(userRecord);
     sendSignupEmail(userRecord);
@@ -106,6 +107,36 @@ export default class AuthService {
       throw new Error(`failed to delete user ${user.email}`);
     }
   }
+
+  async findUserforOTP(reqBody): Promise<any> {
+    try {
+      const findQuery = reqBody.channel == 'email' ? { email: reqBody.email }: {phone: reqBody.phone};
+      const data = await UserModel.findOne(findQuery, {password:0});
+      console.log(`user found`);
+      return getUserReturnData(data);
+    }catch(e){
+      console.log(`user not found`, e);
+      throw new Error(`user not found`);
+    }
+  }
+
+  async changePassword(userData, password): Promise<any> {
+    try {
+      const findQuery = userData.channel == 'email' ? { email: userData.email }: {phone: userData.phone};
+      const passwordHashed = await bcrypt.hash(password, 10);
+      const data = await UserModel.findOneAndUpdate(findQuery, {password: passwordHashed}, {
+        new: true,
+        runValidators: true
+      });
+      console.log(`change password is success`);
+      //delete data.password;
+      return getUserReturnData(data);
+    }catch(e){
+      console.log(`failed to change password`, e);
+      throw new Error(`failed to change password`);
+    }
+  }
+
 
   private generateJWT(user: any) {
     return jwt.sign(

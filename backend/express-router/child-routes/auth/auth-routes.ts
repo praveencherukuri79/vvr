@@ -2,7 +2,9 @@ import AuthService from '../../../services/auth.service';
 import { checkRole, attachCurrentUser, getTokenFromHeader } from '../../express-middleware/middleware';
 import * as express from 'express';
 import { CustomRequest, CustomResponse } from 'backend/models/expressTypes';
-import { getUserReturnData } from 'backend/utils/util';
+import { getUserReturnData, verifyJWT } from 'backend/utils/util';
+import TwilioService from 'backend/services/twilio.service';
+import EmailOtpService from 'backend/nodemailer/email-otp.service';
 //import express, {Request, Response} from 'express';
 //import checkRole from '../../express-middleware/checkRole';
 //import isAuth from '../../express-middleware/isAuth';
@@ -73,9 +75,9 @@ app.post('/user/login-status-test', attachCurrentUser, async (req: CustomRequest
 
 app.post('/user/signup', async (req: CustomRequest, res: CustomResponse) => {
   try {
-    const { name, email, password } = req.body.user;
+    const user = req.body.user;
     const authServiceInstance = new AuthService();
-    const data = await authServiceInstance.SignUp(email, password, name);
+    const data = await authServiceInstance.SignUp(user);
     return res.status(200).send(data);
   } catch (e) {
     console.log('Error sign up: ', e.message);
@@ -126,6 +128,36 @@ app.post('/user/delete', attachCurrentUser, checkRole('admin'), async (req: Cust
     return res.status(200).send(data);
   } catch (e) {
     console.log(`user Deletion is failed for ${req.body.email}`, e.message);
+    return res.status(500).json({ message: e.message });
+  }
+});
+
+app.post('/user/changePassword', async (req: CustomRequest, res: CustomResponse) => {
+  try {
+    const body = req.body;
+    let data;
+    // verify JWT
+    const decodedJwt = verifyJWT(body.token, process.env.JWT_TWILIO_SECRET);
+    if (!decodedJwt || (decodedJwt.channel === 'sms' && !decodedJwt.phone) || (decodedJwt.channel === 'email' && !decodedJwt.email)) {
+      console.log('code verify is failed');
+      return res.status(500).json({ message: 'Invalid token' });
+    }
+    // verify OTP
+    if(decodedJwt.channel === 'sms'){
+      const twilioService = new TwilioService();
+      data = await twilioService.verifyCustomCode(decodedJwt.phone, body.code);
+    } else if(decodedJwt.channel === 'email'){
+      const emailOtpService = new EmailOtpService();
+      data = await emailOtpService.verifyCustomCode(decodedJwt.email, body.code);
+    } else{
+      return res.status(500).json({ message: 'Invalid Channel' });
+    }
+    // change password
+    const authServiceInstance = new AuthService();
+    const passwordChanged = await authServiceInstance.changePassword(decodedJwt, body.password);
+    return res.status(200).send(passwordChanged);
+  } catch (e) {
+    console.log('Error verifying otp ', e.message);
     return res.status(500).json({ message: e.message });
   }
 });

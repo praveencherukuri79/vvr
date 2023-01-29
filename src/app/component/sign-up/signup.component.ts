@@ -22,8 +22,14 @@ export class SignupComponent implements OnInit {
   @Output() loginEvent: EventEmitter<any> = new EventEmitter();
   showPassword:boolean = false;
 
+  countryCodes = [
+    { displayName: 'India', code: '+91' },
+    { displayName: 'USA', code: '+1' }
+  ];
+
   passwordPattern = '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{5,}$';
   emailPattern = '^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$';
+  numberPattern = '^[0-9]*$';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -40,6 +46,8 @@ export class SignupComponent implements OnInit {
     this.signupForm = this.formBuilder.group({
       name: ['', Validators.compose([Validators.required, Validators.minLength(5)])],
       email: ['', Validators.compose([Validators.required, Validators.pattern(this.emailPattern)])],
+      countryCode: ['', Validators.compose([Validators.required])],
+      phone: ['', Validators.compose([Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern(this.numberPattern)])],
       password: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.pattern(this.passwordPattern)])]
     });
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
@@ -64,8 +72,9 @@ export class SignupComponent implements OnInit {
     }
     let name = this.formData.name.value;
     let email = this.formData.email.value;
+    let phone = this.formData.countryCode.value.code + this.formData.phone.value;
     let password = this.formData.password.value;
-    let postData = { user: { name, email, password } };
+    let postData = { user: { name, email, phone, password } };
     this.spinnerService.spin$.next(true);
     this.authService.signUp(postData).subscribe({
       next: (data: any) => {

@@ -20,7 +20,7 @@ app.get('/rate/:index', attachCurrentUser, async (req: CustomRequest, res: Custo
   try {
     const index: string = req.params.index;
     const service = new IndexRateService();
-    const data = await service.getRate(parseInt(index));
+    const data = await service.getRate(parseInt(index, 10));
     return res.status(200).send(data);
   } catch (e) {
     console.log('Error getting rate data', e.message);

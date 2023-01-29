@@ -7,6 +7,7 @@ let blackListTokens = [];
 console.log('Before job instantiation');
 
 const job = new CronJob('0 */20 * * * *', async function () {
+  console.log('cron job triggered, active keys => ', blackListTokens.length);
   let timeStamp = Math.floor(Date.now() / 1000);
   for (let token of blackListTokens) {
     //let decoded = await jws.decode(token, { complete: true });

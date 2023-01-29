@@ -20,7 +20,8 @@ import { CustomRequest, CustomResponse } from 'backend/models/expressTypes';
 import authRoutes from './child-routes/auth/auth-routes';
 import mstcRoutes from './child-routes/mstc/mstc-routes';
 import headerFooterRoutes from './child-routes/header-footer/header-footer-routes';
-import IndexRateRoutes from './child-routes/index-rate/index-rate-routes';
+import indexRateRoutes from './child-routes/index-rate/index-rate-routes';
+import twilioRoutes from './child-routes/otp/otp-routes';
 //import stripePayment from './child-routes/stripe-payments';
 
 //import {mongoConnect} from './mongoDB';
@@ -86,7 +87,8 @@ export function express_app(): express.Express {
   app.use(authRoutes);
   app.use(mstcRoutes);
   app.use(headerFooterRoutes);
-  app.use(IndexRateRoutes);
+  app.use(indexRateRoutes);
+  app.use(twilioRoutes);
   //app.use(stripePayment);
 
   // app.get('/print-db', async (req: CustomRequest, res: CustomResponse) => {

@@ -257,7 +257,7 @@ export class UserPortalComponent implements OnInit {
   
   deleteUser(user: User) {
     this.spinnerService.spin$.next(true);
-    this.authService.DeleteUser(user).subscribe({
+    this.authService.deleteUser(user).subscribe({
       next: (data: any) => {
         //this.spinnerService.spin$.next(false);
         this.notifierService.showNotification(`User Deletion is success for , ${user.email}`, 'close', 'success');

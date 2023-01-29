@@ -96,6 +96,10 @@ export class LoginComponent implements OnInit {
     });
   }
 
+  forgotPassword(){
+    this.router.navigate(['resetPassword']);
+  }
+
   getErrorMessage(controlName): string {
     return getFieldErrorMessage(this.loginForm, controlName, Custom_Validation_Messages);
   }

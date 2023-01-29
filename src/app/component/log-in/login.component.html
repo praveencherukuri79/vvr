@@ -1,6 +1,6 @@
 
 <mat-card class="container" [ngClass]="isDialog ? 'dialog-comp' : 'non-dialog-comp'">
-  <h2>Login</h2>
+  <h2 class="p-left-10">Login</h2>
 
   <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
     <mat-card-content>
@@ -29,5 +29,6 @@
       <button mat-raised-button type="submit" color="primary">Login</button>
       <button mat-raised-button type="text" (click)="signUp()" color="basic">Sign up</button>
     </mat-card-actions>
+    <button mat-button (click)="forgotPassword()">Forgot Password?</button>
   </form>
 </mat-card>
