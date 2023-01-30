@@ -1,9 +1,10 @@
 const CronJob = require('cron').CronJob;
 //const jws = require('jws');
 import * as jwt from 'jsonwebtoken';
-
-/***  Cron job for removing expired tokens */
 let blackListTokens = [];
+
+try{
+/***  Cron job for removing expired tokens */
 console.log('Before job instantiation');
 
 const job = new CronJob('0 */20 * * * *', async function () {
@@ -22,6 +23,11 @@ const job = new CronJob('0 */20 * * * *', async function () {
 
 console.log('After job instantiation');
 job.start();
+console.log('After job start');
+}catch(e){
+  console.log('error in cron job', e);
+}
+
 
 export function getBlackListTokens() {
   return blackListTokens;
