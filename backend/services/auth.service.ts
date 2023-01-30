@@ -18,13 +18,14 @@ export default class AuthService {
     const userRecord = await UserModel.findOne({ email });
     if (!userRecord) {
       throw new Error('User not found');
-    }else if(userRecord.role !== 'admin' && !userRecord.adminApproved){
-      throw new Error('Pending Admin Approval');
-    } else {
+    }else {
       // const isPasswordMatch = await argon2.verify(userRecord.password, password);
       const isPasswordMatch = await bcrypt.compare(password, userRecord.password);
       if (!isPasswordMatch) {
         throw new Error('Incorrect password');
+      }
+      if(userRecord.role !== 'admin' && !userRecord.adminApproved){
+        throw new Error('Pending Admin Approval');
       }
     }
     console.log('loggenin user => ', userRecord.email);
