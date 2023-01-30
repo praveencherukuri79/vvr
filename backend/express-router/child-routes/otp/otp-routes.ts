@@ -58,7 +58,7 @@ app.post('/twilio/sendOtp', async (req: CustomRequest, res: CustomResponse) => {
     const authServiceInstance = new AuthService();
     const userRecord = await authServiceInstance.findUserforOTP(body);
     const user = userRecord.user;
-    if(!user){
+    if(!user || (user.role !== 'admin' && !user.adminApproved)){
       console.log('Error sending otp - no user found');
       return res.status(500).json({ message: 'Error sending otp - no user found' });
     }

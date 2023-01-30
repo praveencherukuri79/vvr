@@ -16,8 +16,10 @@ export default class AuthService {
 
   async Login(email: string, password: string): Promise<any> {
     const userRecord = await UserModel.findOne({ email });
-    if (!userRecord || (userRecord.role !== 'admin' && !userRecord.adminApproved)) {
+    if (!userRecord) {
       throw new Error('User not found');
+    }else if(userRecord.role !== 'admin' && !userRecord.adminApproved){
+      throw new Error('Pending Admin Approval');
     } else {
       // const isPasswordMatch = await argon2.verify(userRecord.password, password);
       const isPasswordMatch = await bcrypt.compare(password, userRecord.password);
