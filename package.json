@@ -6,7 +6,7 @@
     "prettier-format:staged": "prettier --config .prettierrc --write",
     "create-env": "printenv > .env",
     "ng": "ng",
-    "start": "node dist/vvr/server/main.js",
+    "start": "node -r dotenv/config dist/vvr/server/main.js dotenv_config_path=.env",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",

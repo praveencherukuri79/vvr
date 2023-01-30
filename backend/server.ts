@@ -3,7 +3,9 @@ import { express_app } from './express-router/routes';
 import * as mongoose from 'mongoose';
 //import { sendMail } from './nodemailer/node-mailer';
 //if (process.env.NODE_ENV !== 'production') {
-require('dotenv').config();
+//import * as dotenv from 'dotenv';
+//dotenv.config();
+//require('dotenv').config();
 //}
 
 //import * as  Window from 'window';
