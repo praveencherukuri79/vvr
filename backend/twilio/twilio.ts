@@ -1,9 +1,9 @@
 import twilio from 'twilio';
-
+console.log('export twilio client1');
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const twilioClient = twilio(accountSid, authToken);
-
+console.log('export twilio client2');
 export { twilioClient };
 
 // const sendSms = (phone: string, message: string) => {
