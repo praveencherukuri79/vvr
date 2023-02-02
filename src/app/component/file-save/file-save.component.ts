@@ -1,9 +1,11 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { IMstc } from '@app/interface/mstc';
 import { MstcService } from '@app/service/mstc-service/mstc.service';
 import { NotifierService } from '@app/service/notification-service/notification.service';
 import { SpinnerService } from '@app/service/spinner.service';
-import { getFieldErrorMessage } from '@app/utils/utilities';
+import { getFieldErrorMessage, sliceIntoChunks } from '@app/utils/utilities';
+import { concatMap, delay, from } from 'rxjs';
 import { read as xlsxread, utils as xlsxUtils, WorkBook } from 'xlsx';
 import { Custom_Validation_Messages } from './validation-messages';
 
@@ -24,7 +26,7 @@ export class FileSaveComponent {
     private spinnerService: SpinnerService,
     private mstcService: MstcService,
     private formBuilder: FormBuilder,
-    private notifierService: NotifierService,
+    private notifierService: NotifierService
   ) {}
 
   ngOnInit(): void {
@@ -71,22 +73,50 @@ export class FileSaveComponent {
         });
         console.log('jsonData => ', jsonData);
 
-        const mstc = jsonData['MSTC'];
+        const mstc: Array<IMstc> = jsonData['MSTC'];
 
         //save to DB
         let fileName = this.formData.fileName.value;
-        this.mstcService.saveMstc({ reportName: fileName, reportData: mstc }).subscribe({
-          next: (data) => {
-            this.spinnerService.spin$.next(false);
-            this.notifierService.showNotification(`"${data.reportName}" File is saved succesfully`, 'close', 'success');
-            console.log('mongo saved data => ', data);
-          },
-          error: (error) =>{
-            this.spinnerService.spin$.next(false);
-            this.notifierService.showNotification(`Error in saving file`, 'close', 'error');
-            console.log('mongo error in saving data => ', error);
-          }
-        });
+
+        //this.mstcService.saveMstc({ reportName: fileName, reportData: mstc });
+        //const mstcArray:Array<IMstc> = sliceIntoChunks(mstc, 500);
+
+        from(sliceIntoChunks(mstc, 500))
+          .pipe(
+            concatMap((el, index) =>
+              this.mstcService.saveMstc({ reportName: fileName, reportData: el, isFirstBatch: index === 0 }).pipe(delay(100))
+            )
+          )
+          .subscribe({
+            next: (data) => {
+              // this.spinnerService.spin$.next(false);
+              // this.notifierService.showNotification(`"${data.reportName}" File is saved succesfully`, 'close', 'success');
+              // console.log('mongo saved data => ', data);
+            },
+            error: (error) => {
+              this.spinnerService.spin$.next(false);
+              this.notifierService.showNotification(`Error in saving file`, 'close', 'error');
+              console.log('mongo error in saving data => ', error);
+            },
+            complete: () => {
+              this.spinnerService.spin$.next(false);
+              this.notifierService.showNotification(`File is saved succesfully`, 'close', 'success');
+              console.log('mongo saved data => ', data);
+            }
+          });
+
+        // this.mstcService.saveMstc({ reportName: fileName, reportData: mstc }).subscribe({
+        //   next: (data) => {
+        //     this.spinnerService.spin$.next(false);
+        //     this.notifierService.showNotification(`"${data.reportName}" File is saved succesfully`, 'close', 'success');
+        //     console.log('mongo saved data => ', data);
+        //   },
+        //   error: (error) =>{
+        //     this.spinnerService.spin$.next(false);
+        //     this.notifierService.showNotification(`Error in saving file`, 'close', 'error');
+        //     console.log('mongo error in saving data => ', error);
+        //   }
+        // });
       };
       reader.readAsBinaryString(this.excelFile);
     } catch (e) {
@@ -105,7 +135,7 @@ export class FileSaveComponent {
       }
     });
   }
-  
+
   get formData() {
     return this.fileUploadForm.controls;
   }

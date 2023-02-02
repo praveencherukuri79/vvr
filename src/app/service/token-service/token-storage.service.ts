@@ -25,9 +25,9 @@ export class TokenStorageService {
     this.isBrowser = isPlatformBrowser(platformId);
     if (this.isBrowser) {
       this.verifyLogin();
-      this.loginStatusSub = interval(10000).subscribe(x => {
-        this.verifyLogin();
-    });
+    //   this.loginStatusSub = interval(10000).subscribe(x => {
+    //     this.verifyLogin();
+    // });
     }
   }
 

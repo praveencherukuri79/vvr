@@ -75,3 +75,12 @@ export function getFieldErrorMessage(form: FormGroup, control: string, messages:
 export const trimUrl = (url: string) => {
   return url.replace(/^\/|\/$/g, '');
 };
+
+export const sliceIntoChunks= <T>(arr: Array<T>, chunkSize: number):Array<T> => {
+  const result = [];
+  for (let i = 0; i < arr.length; i += chunkSize) {
+      const chunk = arr.slice(i, i + chunkSize);
+      result.push(chunk);
+  }
+  return result;
+}

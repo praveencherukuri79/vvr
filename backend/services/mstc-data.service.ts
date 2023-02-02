@@ -4,16 +4,26 @@ import MstcReportModel from '../mongo-schemas/mstc';
 export default class MstcDataService {
   constructor() {}
 
-  async saveMstc(reportName: string, mstcData: Array<IMstc>): Promise<any> {
+  async saveMstc(reportName: string, mstcData: Array<IMstc>, isFirstBatch: boolean): Promise<any> {
     try {
-      const data = await MstcReportModel.findOneAndUpdate(
-        { reportName: reportName },
-        {
+      let updateData;
+      if (isFirstBatch) {
+        updateData = {
           reportName: reportName,
           reportData: mstcData
-        },
-        { upsert: true, new: true, runValidators: true }
-      );
+        };
+      } else {
+        updateData = {
+          $push: { reportData: mstcData }
+        };
+      }
+
+      const data = await MstcReportModel.findOneAndUpdate({ reportName: reportName }, updateData, {
+        upsert: true,
+        new: true,
+        runValidators: true
+      });
+      
       console.log('save mstc is success');
       return this.returnData(data);
     } catch (e) {
@@ -21,6 +31,23 @@ export default class MstcDataService {
       throw new Error('failed to save mstc');
     }
   }
+
+  // async appendMstc(reportName: string, mstcData: Array<IMstc>): Promise<any> {
+  //   try {
+  //     const data = await MstcReportModel.findOneAndUpdate(
+  //       { reportName: reportName },
+  //       {
+  //         $push: {reportData : mstcData}
+  //       },
+  //       { upsert: true, new: true, runValidators: true }
+  //     );
+  //     console.log('save mstc is success');
+  //     return this.returnData(data);
+  //   } catch (e) {
+  //     console.log('failed to save mstc');
+  //     throw new Error('failed to save mstc');
+  //   }
+  // }
 
   async getMstc(reportName: string): Promise<any> {
     try {
@@ -33,7 +60,7 @@ export default class MstcDataService {
 
   async getMstcReportNames(): Promise<any> {
     try {
-      const report = await MstcReportModel.find({}, { 'reportName': 1, '_id': 0 });
+      const report = await MstcReportModel.find({}, { reportName: 1, _id: 0 });
       const reportNames = [];
       report.forEach((item) => {
         reportNames.push(item.reportName);

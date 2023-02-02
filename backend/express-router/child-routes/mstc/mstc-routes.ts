@@ -6,7 +6,7 @@ import { attachCurrentUser, checkRole } from 'backend/express-router/express-mid
 
 const app = express();
 
-app.get('/mstc/:reportName',attachCurrentUser, async (req: CustomRequest, res: CustomResponse) => {
+app.get('/mstc/:reportName', attachCurrentUser, async (req: CustomRequest, res: CustomResponse) => {
   try {
     const reportName: string = req.params.reportName;
     const mstcDataInstance = new MstcDataService();
@@ -18,7 +18,7 @@ app.get('/mstc/:reportName',attachCurrentUser, async (req: CustomRequest, res: C
   }
 });
 
-app.get('/mstcReportNames',attachCurrentUser, async (req: CustomRequest, res: CustomResponse) => {
+app.get('/mstcReportNames', attachCurrentUser, async (req: CustomRequest, res: CustomResponse) => {
   try {
     const mstcDataInstance = new MstcDataService();
     const data = await mstcDataInstance.getMstcReportNames();
@@ -33,8 +33,11 @@ app.post('/mstc/save', attachCurrentUser, checkRole('admin'), async (req: Custom
   try {
     const reportName: string = req.body.reportName;
     const reportData: Array<IMstc> = req.body.reportData;
+    const isFirstBatch: boolean = req.body.isFirstBatch;
     const mstcDataInstance = new MstcDataService();
-    const data = await mstcDataInstance.saveMstc(reportName, reportData);
+
+    const data = await mstcDataInstance.saveMstc(reportName, reportData, isFirstBatch);
+
     return res.status(200).send(data);
   } catch (e) {
     console.log('Error saving mstc report ', e.message);
