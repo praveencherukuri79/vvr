@@ -4,7 +4,7 @@
 // //import { MongoClient } from 'mongodb';
 
 // export async function mongoConnect() {
-//     //const mongoDB_uri = 'mongodb+srv://admin:PraveenVudu99@corecluster.fney4.mongodb.net/test?retryWrites=true&w=majority';
+//
 
 //     let DB_URI = process.env.DATABASE_URI.replace('{{user}}', process.env.DATABASE_USER);
 //     DB_URI.replace('{{password}}', process.env.DATABASE_PASSWORD);
