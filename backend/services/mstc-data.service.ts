@@ -51,7 +51,7 @@ export default class MstcDataService {
 
   async getMstc(reportName: string): Promise<any> {
     try {
-      const report = await MstcReportModel.findOne({ reportName });
+      const report = await MstcReportModel.findOne({ reportName }).lean();
       return report;
     } catch (e) {
       throw new Error('failed to retrive mstc');
