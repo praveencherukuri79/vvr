@@ -84,7 +84,7 @@ export class FileSaveComponent {
         from(sliceIntoChunks(mstc, 500))
           .pipe(
             concatMap((el, index) =>
-              this.mstcService.saveMstc({ reportName: fileName, reportData: el, isFirstBatch: index === 0 }).pipe(delay(100))
+              this.mstcService.saveMstc({ reportName: fileName, reportData: el, isFirstBatch: index === 0 }).pipe(delay(200))
             )
           )
           .subscribe({

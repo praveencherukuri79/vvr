@@ -18,14 +18,15 @@ export default class MstcDataService {
         };
       }
 
-      const data = await MstcReportModel.findOneAndUpdate({ reportName: reportName }, updateData, {
+      await MstcReportModel.findOneAndUpdate({ reportName: reportName }, updateData, {
         upsert: true,
         new: true,
         runValidators: true
       });
       
       console.log('save mstc is success');
-      return this.returnData(data);
+      //return this.returnData(data);
+      return {response: 'success'};
     } catch (e) {
       console.log('failed to save mstc');
       throw new Error('failed to save mstc');
