@@ -59,6 +59,15 @@ export default class MstcDataService {
     }
   }
 
+  async deleteMstc(id: string): Promise<any> {
+    try {
+      const report = await MstcReportModel.deleteOne({ _id: id}).lean();
+      return report;
+    } catch (e) {
+      throw new Error('failed to delete mstc');
+    }
+  }
+
   async getMstcReportNames(): Promise<any> {
     try {
       const report = await MstcReportModel.find({}, { reportName: 1, _id: 0 });
@@ -69,6 +78,19 @@ export default class MstcDataService {
       return reportNames;
     } catch (e) {
       throw new Error('failed to retrive mstc');
+    }
+  }
+
+  async getMstcReportList(): Promise<any> {
+    try {
+      const report = await MstcReportModel.find({}, { reportName: 1, _id: 1 });
+      // const reportNames = [];
+      // report.forEach((item) => {
+      //   reportNames.push(item.reportName);
+      // });
+      return report;
+    } catch (e) {
+      throw new Error('failed to retrive mstc2');
     }
   }
 

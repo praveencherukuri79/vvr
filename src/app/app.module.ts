@@ -26,6 +26,8 @@ import { CurrencyPipe, DecimalPipe } from '@angular/common';
 import { UserPortalComponent } from './component/user-portal/user-portal.component';
 import { AutoCompleteComponent } from './component/auto-complete/auto-complete.component';
 import { ResetPasswordComponent } from './component/reset-password/reset-password.component';
+import { ManageFileComponent } from './component/manage-file/manage-file.component';
+import { ConfirmationDialogComponent } from './component/confirmation-dialog/confirmation-dialog.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +48,9 @@ import { ResetPasswordComponent } from './component/reset-password/reset-passwor
     IndexRateComponent,
     UserPortalComponent,
     AutoCompleteComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    ManageFileComponent,
+    ConfirmationDialogComponent
   ],
   imports: [
     BrowserAnimationsModule,
@@ -58,7 +62,7 @@ import { ResetPasswordComponent } from './component/reset-password/reset-passwor
     MaterialModule
   ],
   providers: [authInterceptorProviders, CurrencyPipe, DecimalPipe],
-  entryComponents: [InvoiceDialogComponent, DialogComponent, AdminErrorComponent, CustomSnackbarComponent],
+  entryComponents: [InvoiceDialogComponent, DialogComponent, AdminErrorComponent, CustomSnackbarComponent, ConfirmationDialogComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

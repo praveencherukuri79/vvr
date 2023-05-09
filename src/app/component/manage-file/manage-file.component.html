@@ -1,0 +1,38 @@
+<app-file-save></app-file-save>
+
+
+<h2>File List</h2>
+<custom-auto-complete *ngIf="allNameList" [data]="allNameList" [label]="'User Name Filter'" [placeHolder]="'User Name Filter'"
+    (selectedEmitter)="filterEmitter($event)">
+</custom-auto-complete>
+
+<div class="example-container mat-elevation-z8" [class.hidden]="!dataSource">
+    <!--MAT TABLE 1-->
+    <mat-table id="poker-mat-table" [dataSource]="dataSource" matSort matSortDirection="asc" matSortActive="name"
+        matSortDisableClear [trackBy]="trackBy">
+
+        <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef mat-sort-header="name">{{displayNames['name']}}
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element"><span class="mobile-label">{{displayNames['name']}}:</span>
+                {{element['reportName']}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="delete">
+            <mat-header-cell *matHeaderCellDef>{{displayNames['delete']}}
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element"><span class="mobile-label">{{displayNames['delete']}}:</span>
+                <span>
+                    <button mat-raised-button color="primary" (click)="deleteFileConfirmation(element)">Delete</button>
+                </span>
+            </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns; let i=index"
+            [ngClass]="i % 2 == 0 ? 'item-even':'item-odd'"></mat-row>
+    </mat-table>
+    <mat-paginator [pageSizeOptions]="[10, 20, 100, 500]" [pageSize]="20" aria-label="Select page of user data"
+        showFirstLastButtons></mat-paginator>
+
+</div>

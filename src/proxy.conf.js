@@ -17,7 +17,9 @@ const PROXY_CONFIG = [
       '/user',
       '/mstc',
       '/mstcReportNames',
+      '/mstcReportList',
       '/header-footer',
+      '/deleteReport',
       '/rate',
       '/twilio'
     ],

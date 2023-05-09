@@ -29,6 +29,17 @@ app.get('/mstcReportNames', attachCurrentUser, async (req: CustomRequest, res: C
   }
 });
 
+app.get('/mstcReportList', attachCurrentUser, async (req: CustomRequest, res: CustomResponse) => {
+  try {
+    const mstcDataInstance = new MstcDataService();
+    const data = await mstcDataInstance.getMstcReportList();
+    return res.status(200).send(data);
+  } catch (e) {
+    console.log('Error getting mstc report list', e.message);
+    return res.status(500).json({ message: e.message });
+  }
+});
+
 app.post('/mstc/save', attachCurrentUser, checkRole('admin'), async (req: CustomRequest, res: CustomResponse) => {
   try {
     const reportName: string = req.body.reportName;
@@ -41,6 +52,18 @@ app.post('/mstc/save', attachCurrentUser, checkRole('admin'), async (req: Custom
     return res.status(200).send(data);
   } catch (e) {
     console.log('Error saving mstc report ', e.message);
+    return res.status(500).json({ message: e.message });
+  }
+});
+
+app.post('/mstc/deleteReport', attachCurrentUser, checkRole('admin'), async (req: CustomRequest, res: CustomResponse) => {
+  try {
+    const id: string = req.body._id;
+    const mstcDataInstance = new MstcDataService();
+    const data = await mstcDataInstance.deleteMstc(id);
+    return res.status(200).send(data);
+  } catch (e) {
+    console.log('Error deleting mstc report ', e.message);
     return res.status(500).json({ message: e.message });
   }
 });

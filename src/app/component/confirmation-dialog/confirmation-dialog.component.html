@@ -1,0 +1,16 @@
+<div class="p-20">
+    <div mat-dialog-title class="dialog-title">
+        <h3>{{heading}}</h3>
+        <button mat-raised-button aria-label="close dialog" color="primary" (click)="close(false)">
+            <mat-icon fontIcon="close" class="no-margin"></mat-icon></button>
+    </div>
+    
+    <mat-dialog-content>
+        <div>{{content}}</div>
+    </mat-dialog-content>
+    
+    <mat-dialog-actions align="center">
+        <button mat-button color="primary" (click)="close(false)">{{closeLabel}}</button>
+        <button mat-raised-button color="primary" (click)="close(true)">{{continueLabel}}</button>
+    </mat-dialog-actions>
+</div>
